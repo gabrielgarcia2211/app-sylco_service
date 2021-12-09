@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\LoginController;
 
@@ -38,4 +39,8 @@ Route::post('routes/password/reset', 'Auth\ResetPasswordController@reset')->name
 
 
 
-Route::get('/create', [App\Http\Controllers\Auth\LoginController::class, 'username']);
+
+//Route::get('/create', [App\Http\Controllers\Auth\LoginController::class, 'username']);
+
+
+Route::get('/test', [App\Http\Controllers\DriveController::class, 'createDirectory']);

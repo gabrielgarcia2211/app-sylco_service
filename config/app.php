@@ -178,6 +178,7 @@ return [
 
         Spatie\Permission\PermissionServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
+        App\Providers\GoogleDriveServiceProvider::class,
 
     ],
 
