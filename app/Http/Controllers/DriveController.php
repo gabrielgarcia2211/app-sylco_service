@@ -9,12 +9,12 @@ use Illuminate\Support\Facades\Storage;
 class DriveController extends Controller
 {
     //CREAR UN DIRECTORIO PRINCIPAL
-    public function createDirectory($nombre="hola"){
-        
+    public function createDirectory($nombre = "")
+    {
 
-        try{
+        try {
 
-            if(!$this->findDirectory($nombre)){
+            if (!$this->findDirectory($nombre)) {
 
                 Storage::disk('google')->makeDirectory($nombre);
 
@@ -22,48 +22,225 @@ class DriveController extends Controller
                     'response' => true,
                     'message' => 'Directorio Creado'
                 ]);
-
-            }else{
+            } else {
 
                 return response()->json([
                     'response' => false,
                     'message' => 'El Directorio ya Existe'
                 ]);
-
             }
-
-           
-
-        }catch (Exception $e) {
+        } catch (Exception $e) {
 
             return response()->json([
                 'response' => false,
                 'message' =>  $e->getMessage()
             ]);
-        
         }
-
     }
-    
-    //ENCONTRAR UN DIRECTORIO
-    public function findDirectory($folder){
 
-        $dir = '/';
-        $recursive = false; 
+    //CREAR UN SUB DIRECTORIO 
+    public function createSubDirectory($carpetaPadre = "", $carpetaHijo = "")
+    {
+
+        $dataPadre = $this->findDirectory($carpetaPadre);
+
+        try {
+            if ($dataPadre) {
+
+                if (!$this->findDirectory($carpetaHijo, $dataPadre['path'])) {
+
+                    Storage::disk('google')->makeDirectory($dataPadre['path'] . '/' . $carpetaHijo);
+
+                    return response()->json([
+                        'response' => true,
+                        'message' => 'Directorio Creado (HIJO)'
+                    ]);
+                } else {
+                    return response()->json([
+                        'response' => false,
+                        'message' => 'El Directorio ya Existe (HIJO)'
+                    ]);
+                }
+            } else {
+                return response()->json([
+                    'response' => false,
+                    'message' => 'El Directorio no Existe (PADRE)'
+                ]);
+            }
+        } catch (Exception $e) {
+            return response()->json([
+                'response' => false,
+                'message' =>  $e->getMessage()
+            ]);
+        }
+    }
+
+    //ENCONTRAR UN DIRECTORIO (PADRE O HIJO)
+    public function findDirectory($folder, $dir = '/')
+    {
+
+        $recursive = false;
         $contents = collect(Storage::disk('google')->listContents($dir, $recursive));
 
-        // Find the folder you are looking for...
+
         $dir = $contents->where('type', '=', 'dir')
             ->where('filename', '=', $folder)
-            ->first(); // There could be duplicate directory names!
+            ->first();
 
         if (!$dir) {
             return false;
         }
 
-        return true;
- 
-
+        return $dir;
     }
-   
+
+
+    //LISTAR DIRECTORIOS (PADRE O HIJO)
+    public function listDirectory($carpetaPadre = "", $carpetaHijo = "/")
+    {
+
+        $dataPadre = $this->findDirectory($carpetaPadre);
+
+        try {
+
+            if ($dataPadre) {
+
+                if ($carpetaHijo === "/") {
+
+                    $files = collect(Storage::disk('google')
+                        ->listContents($dataPadre['path'], false))
+                        ->where('type', '=', 'file');
+                } else {
+
+                    $dataHijo = $this->findDirectory($carpetaHijo, $dataPadre['path']);
+
+                    if ($dataHijo) {
+
+                        $files = collect(Storage::disk('google')
+                            ->listContents($dataPadre['path'] . '/' . $dataHijo['path'], false))
+                            ->where('type', '=', 'file');
+                    } else {
+
+                        return response()->json([
+                            'response' => false,
+                            'message' => 'El Directorio no Existe (HIJO)'
+                        ]);
+                    }
+                }
+
+                $data = $files->mapWithKeys(function ($file) {
+                    return [$file['name'] => Storage::disk('google')->url($file['path'])];
+                });
+
+
+                return $data;
+            } else {
+
+                return response()->json([
+                    'response' => false,
+                    'message' => 'El Directorio no Existe (PADRE)'
+                ]);
+            }
+        } catch (Exception $e) {
+            return response()->json([
+                'response' => false,
+                'message' =>  $e->getMessage()
+            ]);
+        }
+    }
+
+
+    //GUARDAR ARCHIVOS EN DIRECTORIOS (PADRE O HIJO)
+    public function putFile($carpetaPadre = "hola", $carpetaHijo = "prueba", $file = "test.txt")
+    {
+
+        $dataPadre = $this->findDirectory($carpetaPadre);
+        $name = time() . random_int(0, 100);
+
+        try {
+
+            if ($dataPadre) {
+
+                if ($carpetaHijo === "/") {
+
+                    Storage::disk('google')->put($dataPadre['path'] . '/' . $name, $file);
+                } else {
+
+                    $dataHijo = $this->findDirectory($carpetaHijo, $dataPadre['path']);
+
+                    if ($dataHijo) {
+
+                        Storage::disk('google')->put($dataPadre['path'] . '/' . $dataHijo['path'] . '/' . $name, $file);
+                    } else {
+
+                        return response()->json([
+                            'response' => false,
+                            'message' => 'El Directorio no Existe (HIJO)'
+                        ]);
+                    }
+                }
+
+                return response()->json([
+                    'response' => true,
+                    'message' => 'Archivo Subido'
+                ]);
+            } else {
+
+                return response()->json([
+                    'response' => false,
+                    'message' => 'El Directorio no Existe (PADRE)'
+                ]);
+            }
+        } catch (Exception $e) {
+            return response()->json([
+                'response' => false,
+                'message' =>  $e->getMessage()
+            ]);
+        }
+    }
+
+    //ELIMINAR DIRECTORIO(PADRE)
+    public function deleteFile($carpetaPadre = "hola", $carpetaHijo = "prueba", $filename = "ss.txt", $tipo = "1")
+    {
+        /** 
+         *  1 -> Archivo
+         *  2 -> subCarpeta
+         *  3 -> Carpeta
+         */
+        switch ($tipo) {
+            case 1:
+                $dataPadre = $this->findDirectory($carpetaPadre);
+                $dataHijo = $this->findDirectory($carpetaHijo, $dataPadre['path']);
+
+
+                $contents = collect(Storage::disk('google')->listContents($dataPadre['path'] . '/' . $dataHijo['path'], false));
+
+                $file = $contents
+                    ->where('type', '=', 'file')
+                    ->where('filename', '=', pathinfo($filename, PATHINFO_FILENAME))
+                    ->where('extension', '=', pathinfo($filename, PATHINFO_EXTENSION))
+                    ->first();
+
+                if (!$file) {
+                    return response()->json([
+                        'response' => false,
+                        'message' => 'Archivo no encontrado'
+                    ]);
+                } else {
+                    Storage::disk('google')->delete($file['path']);
+                    return response()->json([
+                        'response' => true,
+                        'message' => 'Archivo eliminado'
+                    ]);
+                }
+
+                break;
+            case 2:
+                echo "i es igual a 1";
+                break;
+            case 3:
+                echo "i es igual a 2";
+                break;
+        }
+    }
 }

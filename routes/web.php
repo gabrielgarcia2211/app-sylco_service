@@ -43,4 +43,4 @@ Route::post('routes/password/reset', 'Auth\ResetPasswordController@reset')->name
 //Route::get('/create', [App\Http\Controllers\Auth\LoginController::class, 'username']);
 
 
-Route::get('/test', [App\Http\Controllers\DriveController::class, 'createDirectory']);
+Route::get('/test', [App\Http\Controllers\DriveController::class, 'deleteFile']);
