@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Mail\TestMail;
+use Mail;
 
 class DriveController extends Controller
 {
@@ -199,8 +201,9 @@ class DriveController extends Controller
         }
     }
 
+
     //ELIMINAR DIRECTORIO(PADRE)
-    public function deleteFile($carpetaPadre = "hola", $carpetaHijo = "prueba", $filename = "ss.txt", $tipo = "1")
+    public function deleteFile($carpetaPadre = "hola", $carpetaHijo = "prueba", $filename = "ss.txt", $tipo = 4)
     {
         /** 
          *  1 -> Archivo
@@ -210,8 +213,22 @@ class DriveController extends Controller
         switch ($tipo) {
             case 1:
                 $dataPadre = $this->findDirectory($carpetaPadre);
+
+                if (!$dataPadre) {
+                    return response()->json([
+                        'response' => false,
+                        'message' => 'El Directorio no Existe (PADRE)'
+                    ]);
+                }
+
                 $dataHijo = $this->findDirectory($carpetaHijo, $dataPadre['path']);
 
+                if (!$dataHijo) {
+                    return response()->json([
+                        'response' => false,
+                        'message' => 'El Directorio no Existe (HIJO)'
+                    ]);
+                }
 
                 $contents = collect(Storage::disk('google')->listContents($dataPadre['path'] . '/' . $dataHijo['path'], false));
 
@@ -236,11 +253,63 @@ class DriveController extends Controller
 
                 break;
             case 2:
-                echo "i es igual a 1";
+
+                $dataPadre = $this->findDirectory($carpetaPadre);
+
+                if (!$dataPadre) {
+                    return response()->json([
+                        'response' => false,
+                        'message' => 'El Directorio no Existe (PADRE)'
+                    ]);
+                }
+
+                $dataHijo = $this->findDirectory($carpetaHijo, $dataPadre['path']);
+
+                if ($dataHijo) {
+                    Storage::disk('google')->deleteDirectory($dataPadre['path'] . '/' . $dataHijo['path']);
+                    return response()->json([
+                        'response' => false,
+                        'message' => 'El Directorio Eliminado (HIJO)'
+                    ]);
+                } else {
+                    return response()->json([
+                        'response' => false,
+                        'message' => 'El Directorio no Existe (HIJO)'
+                    ]);
+                }
                 break;
             case 3:
-                echo "i es igual a 2";
+                $dataPadre = $this->findDirectory($carpetaPadre);
+
+                if ($dataPadre) {
+                    Storage::disk('google')->deleteDirectory($dataPadre['path']);
+                    return response()->json([
+                        'response' => true,
+                        'message' => 'El Directorio Eliminado (PADRE)'
+                    ]);
+                } else {
+                    return response()->json([
+                        'response' => false,
+                        'message' => 'El Directorio no Existe (PADRE)'
+                    ]);
+                }
                 break;
+            default:
+                return response()->json([
+                    'response' => false,
+                    'message' => 'Error, No se Encontro el Directorio'
+                ]);
         }
+    }
+
+
+    public function getMail($data = "hola")
+    {
+        $data = [
+            "name" => 'gabriel',
+            "message" => 'message',
+            "asunto" => 'prueba'
+        ];
+        Mail::to('garciaquinteroga@gmail.com')->send(new TestMail($data)); //aca se cambie por el remitente
     }
 }
