@@ -2,8 +2,11 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RolController;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\DriveController;
 use App\Http\Controllers\Auth\LoginController;
 
 /*
@@ -21,11 +24,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+/** ----------------------------------------------------------------------------------------------------------------
+ * CONTROL DE ACCESO AL APLICATIVO */
 
 //RUTAS PARA LOGIN
-Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login'])->name('login');
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login'])->name('login');
 
 //LOGIN POR GOOGLE
 Route::get('login/google', [LoginController::class, 'redirectToProvider'])->name('login.google');
@@ -38,9 +44,35 @@ Route::get('routes/password/{token}', 'Auth\ResetPasswordController@showResetFor
 Route::post('routes/password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
 
 
+/** ----------------------------------------------------------------------------------------------------------------
+ * CONTROL DE ROLES */
+
+Route::group(['prefix' => '/', 'middleware' => []], function() {
+
+    Route::get('rol/list', [RolController::class, 'index'])->name('rol.list');
+    Route::post('rol/create', [RolController::class, 'store'])->name('rol.store');
+    Route::post('rol/show', [RolController::class, 'show'])->name('rol.show');
+    Route::post('rol/edit', [RolController::class, 'edit'])->name('rol.edit');
+    Route::post('rol/delete', [RolController::class, 'destroy'])->name('rol.delete');
+
+});
+
+/** ----------------------------------------------------------------------------------------------------------------
+ * CONTROL DE USUARIOS */
+
+Route::group(['prefix' => '/', 'middleware' => []], function() {
+
+    Route::get('user/list', [UserController::class, 'index'])->name('user.list');
+    Route::post('user/create', [UserController::class, 'store'])->name('user.store');
+    Route::post('user/show', [UserController::class, 'show'])->name('user.show');
+    Route::post('user/edit', [UserController::class, 'edit'])->name('user.edit');
+    Route::post('user/delete', [UserController::class, 'destroy'])->name('user.delete');
+    Route::post('user/rol/add', [UserController::class, 'aggRole'])->name('user.rol.add');
+    Route::post('user/rol/destroy', [UserController::class, 'deleteRole'])->name('user.rol.destroy');
+
+});
 
 
-//Route::get('/create', [App\Http\Controllers\Auth\LoginController::class, 'username']);
 
 
-Route::get('/test', [App\Http\Controllers\DriveController::class, 'getMail']);
+//Route::get('/test', [App\Http\Controllers\DriveController::class, 'getMail']);
