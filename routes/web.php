@@ -72,6 +72,19 @@ Route::group(['prefix' => '/', 'middleware' => []], function() {
 
 });
 
+/** ----------------------------------------------------------------------------------------------------------------
+ * CONTROL DE PROYECTOS */
+
+Route::group(['prefix' => '/', 'middleware' => []], function() {
+
+    Route::get('proyect/list', [ProyectoController::class, 'index'])->name('proyect.list');
+    Route::post('proyect/create', [ProyectoController::class, 'store'])->name('proyect.store');
+    Route::post('proyect/show', [ProyectoController::class, 'show'])->name('proyect.show');
+    Route::post('proyect/edit', [ProyectoController::class, 'edit'])->name('proyect.edit');
+    Route::post('proyect/delete', [ProyectoController::class, 'destroy'])->name('proyect.delete');
+
+});
+
 
 
 

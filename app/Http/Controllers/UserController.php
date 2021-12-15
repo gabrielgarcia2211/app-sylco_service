@@ -219,7 +219,6 @@ class UserController extends Controller
        
     }
 
-
     public function deleteRole(Request $request){
 
         //$this->validateaggRole($request);
