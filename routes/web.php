@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RolController;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DriveController;
@@ -85,7 +86,20 @@ Route::group(['prefix' => '/', 'middleware' => []], function() {
 
 });
 
+/** ----------------------------------------------------------------------------------------------------------------
+ * CONTROL DE FILES */
+
+Route::group(['prefix' => '/', 'middleware' => []], function() {
+
+    Route::get('files/list', [FileController::class, 'index'])->name('file.list');
+    Route::post('files/create', [FileController::class, 'store'])->name('file.store');
+    Route::post('files/show', [FileController::class, 'show'])->name('file.show');
+    Route::post('files/edit', [FileController::class, 'edit'])->name('file.edit');
+    Route::post('files/delete', [FileController::class, 'destroy'])->name('file.delete');
+
+});
 
 
 
-//Route::get('/test', [App\Http\Controllers\DriveController::class, 'getMail']);
+
+Route::get('/test', [App\Http\Controllers\DriveController::class, 'getMail']);

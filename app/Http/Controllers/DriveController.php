@@ -309,7 +309,7 @@ class DriveController extends Controller
         $data = [
             "name" => 'gabriel',
             "message" => 'message',
-            "asunto" => 'prueba'
+            "asunto" => 'prueba',
         ];
         Mail::to('garciaquinteroga@gmail.com')->send(new TestMail($data)); //aca se cambie por el remitente
     }
