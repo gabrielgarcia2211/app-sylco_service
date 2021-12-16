@@ -92,7 +92,7 @@ Route::group(['prefix' => '/', 'middleware' => []], function() {
 Route::group(['prefix' => '/', 'middleware' => []], function() {
 
     Route::get('files/list', [FileController::class, 'index'])->name('file.list');
-    Route::post('files/create', [FileController::class, 'store'])->name('file.store');
+    Route::get('files/create', [FileController::class, 'store'])->name('file.store');
     Route::post('files/show', [FileController::class, 'show'])->name('file.show');
     Route::post('files/edit', [FileController::class, 'edit'])->name('file.edit');
     Route::post('files/delete', [FileController::class, 'destroy'])->name('file.delete');

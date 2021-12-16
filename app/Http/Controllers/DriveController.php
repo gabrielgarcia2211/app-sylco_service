@@ -20,23 +20,23 @@ class DriveController extends Controller
 
                 Storage::disk('google')->makeDirectory($nombre);
 
-                return response()->json([
+                return [
                     'response' => true,
                     'message' => 'Directorio Creado'
-                ]);
+                ];
             } else {
 
-                return response()->json([
+                return [
                     'response' => false,
                     'message' => 'El Directorio ya Existe'
-                ]);
+                ];
             }
         } catch (Exception $e) {
 
-            return response()->json([
+            return [
                 'response' => false,
                 'message' =>  $e->getMessage()
-            ]);
+            ];
         }
     }
 
@@ -53,31 +53,31 @@ class DriveController extends Controller
 
                     Storage::disk('google')->makeDirectory($dataPadre['path'] . '/' . $carpetaHijo);
 
-                    return response()->json([
+                    return [
                         'response' => true,
                         'message' => 'Directorio Creado (HIJO)'
-                    ]);
+                    ];
                 } else {
-                    return response()->json([
+                    return [
                         'response' => false,
                         'message' => 'El Directorio ya Existe (HIJO)'
-                    ]);
+                    ];
                 }
             } else {
-                return response()->json([
+                return [
                     'response' => false,
                     'message' => 'El Directorio no Existe (PADRE)'
-                ]);
+                ];
             }
         } catch (Exception $e) {
-            return response()->json([
+            return [
                 'response' => false,
                 'message' =>  $e->getMessage()
-            ]);
+            ];
         }
     }
 
-    
+
     //ENCONTRAR UN DIRECTORIO (PADRE O HIJO)
     public function findDirectory($folder, $dir = '/')
     {
@@ -112,7 +112,7 @@ class DriveController extends Controller
 
                     $files = collect(Storage::disk('google')
                         ->listContents($dataPadre['path'], false))
-                        ->where('type', '=', 'file');
+                        ->where('type', '=', 'dir');
                 } else {
 
                     $dataHijo = $this->findDirectory($carpetaHijo, $dataPadre['path']);
@@ -131,24 +131,25 @@ class DriveController extends Controller
                     }
                 }
 
-                $data = $files->mapWithKeys(function ($file) {
-                    return [$file['name'] => Storage::disk('google')->url($file['path'])];
-                });
+                $dataJson = array();
 
+                foreach ($files as &$file) {
+                    array_push($dataJson, [$file['name'], Storage::disk('google')->url($file['path'])]);
+                }
 
-                return $data;
+                return $dataJson;
             } else {
 
-                return response()->json([
+                return [
                     'response' => false,
                     'message' => 'El Directorio no Existe (PADRE)'
-                ]);
+                ];
             }
         } catch (Exception $e) {
-            return response()->json([
+            return [
                 'response' => false,
                 'message' =>  $e->getMessage()
-            ]);
+            ];
         }
     }
 
@@ -176,29 +177,29 @@ class DriveController extends Controller
                         Storage::disk('google')->put($dataPadre['path'] . '/' . $dataHijo['path'] . '/' . $name, $file);
                     } else {
 
-                        return response()->json([
+                        return [
                             'response' => false,
                             'message' => 'El Directorio no Existe (HIJO)'
-                        ]);
+                        ];
                     }
                 }
 
-                return response()->json([
+                return [
                     'response' => true,
-                    'message' => 'Archivo Subido'
-                ]);
+                    'message' => $name
+                ];
             } else {
 
-                return response()->json([
+                return [
                     'response' => false,
                     'message' => 'El Directorio no Existe (PADRE)'
-                ]);
+                ];
             }
         } catch (Exception $e) {
-            return response()->json([
+            return [
                 'response' => false,
                 'message' =>  $e->getMessage()
-            ]);
+            ];
         }
     }
 
@@ -216,19 +217,19 @@ class DriveController extends Controller
                 $dataPadre = $this->findDirectory($carpetaPadre);
 
                 if (!$dataPadre) {
-                    return response()->json([
+                    return [
                         'response' => false,
                         'message' => 'El Directorio no Existe (PADRE)'
-                    ]);
+                    ];
                 }
 
                 $dataHijo = $this->findDirectory($carpetaHijo, $dataPadre['path']);
 
                 if (!$dataHijo) {
-                    return response()->json([
+                    return [
                         'response' => false,
                         'message' => 'El Directorio no Existe (HIJO)'
-                    ]);
+                    ];
                 }
 
                 $contents = collect(Storage::disk('google')->listContents($dataPadre['path'] . '/' . $dataHijo['path'], false));
@@ -240,16 +241,16 @@ class DriveController extends Controller
                     ->first();
 
                 if (!$file) {
-                    return response()->json([
+                    return [
                         'response' => false,
                         'message' => 'Archivo no encontrado'
-                    ]);
+                    ];
                 } else {
                     Storage::disk('google')->delete($file['path']);
-                    return response()->json([
+                    return [
                         'response' => true,
                         'message' => 'Archivo eliminado'
-                    ]);
+                    ];
                 }
 
                 break;
@@ -268,15 +269,15 @@ class DriveController extends Controller
 
                 if ($dataHijo) {
                     Storage::disk('google')->deleteDirectory($dataPadre['path'] . '/' . $dataHijo['path']);
-                    return response()->json([
+                    return [
                         'response' => false,
                         'message' => 'El Directorio Eliminado (HIJO)'
-                    ]);
+                    ];
                 } else {
-                    return response()->json([
+                    return [
                         'response' => false,
                         'message' => 'El Directorio no Existe (HIJO)'
-                    ]);
+                    ];
                 }
                 break;
             case 3:
@@ -284,22 +285,22 @@ class DriveController extends Controller
 
                 if ($dataPadre) {
                     Storage::disk('google')->deleteDirectory($dataPadre['path']);
-                    return response()->json([
+                    return [
                         'response' => true,
                         'message' => 'El Directorio Eliminado (PADRE)'
-                    ]);
+                    ];
                 } else {
-                    return response()->json([
+                    return [
                         'response' => false,
                         'message' => 'El Directorio no Existe (PADRE)'
-                    ]);
+                    ];
                 }
                 break;
             default:
-                return response()->json([
+                return [
                     'response' => false,
                     'message' => 'Error, No se Encontro el Directorio'
-                ]);
+                ];
         }
     }
 
@@ -309,7 +310,7 @@ class DriveController extends Controller
         $data = [
             "name" => 'gabriel',
             "message" => 'message',
-            "asunto" => 'prueba',
+            "asunto" => 'prueba'
         ];
         Mail::to('garciaquinteroga@gmail.com')->send(new TestMail($data)); //aca se cambie por el remitente
     }
