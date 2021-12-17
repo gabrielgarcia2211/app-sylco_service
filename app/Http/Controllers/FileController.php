@@ -51,10 +51,10 @@ class FileController extends Controller
 
                 ]);
                 
-                return response()->json([
+                return [
                     'response' => true,
                     'message' => 'file upload'
-                ]);
+                ];
 
                 
             } else {

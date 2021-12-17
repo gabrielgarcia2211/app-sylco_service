@@ -7,39 +7,54 @@ use Illuminate\Http\Request;
 
 class ProyectoController extends Controller
 {
+
+    private $driveData;
+
+    function __construct()
+    {
+        $this->driveData = new DriveController();
+    }
+
+
     public function index()
     {
         return response()->json([
-            'response' => true, 
+            'response' => true,
             'message' => Proyecto::all()
         ]);
         //return csrf_token(); 
     }
-    
+
     public function store(Request $request)
     {
-        
-        $this->validateStore($request);
+
+        //$this->validateStore($request);
 
         try {
 
-            $role = Proyecto::create([
-                'name' =>  $request->name,
-                'descripcion' =>  $request->descripcion,
-                'ubicacion' =>  $request->ubicacion,
-            ]);
-            return response()->json([
-                'response' => true,
-                'message' => 'create proyect'
-            ]);
+            $carp = $this->driveData->createDirectory(strtoupper($request->nombre));
+            
+            if ($carp['response']) {
 
+                Proyecto::create([
+                    'name' =>  $request->nombre,
+                    'descripcion' =>  $request->descripcion,
+                    'ubicacion' =>  $request->ubicacion,
+                ]);
+
+                return [
+                    'response' => true,
+                    'message' => 'Proyecto Creado'
+                ];
+            } else {
+                dd($carp['message']);
+            }
         } catch (\Illuminate\Database\QueryException $e) {
             return response()->json([
                 'response' => false,
                 'message' => $e->getMessage()
             ]);
         }
-        
     }
 
     protected function validateStore(Request $request)
@@ -49,7 +64,6 @@ class ProyectoController extends Controller
             'descripcion' => 'required',
             'ubicacion' => 'required',
         ]);
-
     }
 
     public function show(Request $request)
@@ -57,28 +71,26 @@ class ProyectoController extends Controller
         $this->validateShow($request);
         $proyect = Proyecto::find($request->id);
 
-        if(empty($proyect)){
+        if (empty($proyect)) {
 
             return response()->json([
                 'response' => false,
                 'message' => 'proyect not found'
             ]);
-
         }
 
         return response()->json([
             'response' => true,
             'message' => $proyect
         ]);
-
     }
 
-    protected function validateShow(Request $request){
+    protected function validateShow(Request $request)
+    {
 
         $this->validate($request, [
             'id' => 'required',
         ]);
-
     }
 
     public function edit(Request $request)
@@ -86,13 +98,12 @@ class ProyectoController extends Controller
         $this->validateEdit($request);
         $proyect = Proyecto::find($request->id);
 
-        if(empty($proyect)){
+        if (empty($proyect)) {
 
             return response()->json([
                 'response' => false,
                 'message' => 'proyect not found'
             ]);
-
         }
 
         try {
@@ -107,7 +118,6 @@ class ProyectoController extends Controller
                 'response' => true,
                 'message' => 'proyect update'
             ]);
-
         } catch (\Illuminate\Database\QueryException $e) {
 
             return response()->json([
@@ -115,7 +125,6 @@ class ProyectoController extends Controller
                 'message' => $e->getMessage()
             ]);
         }
-
     }
 
     protected function validateEdit(Request $request)
@@ -131,7 +140,7 @@ class ProyectoController extends Controller
     {
         $proyect = Proyecto::find($request->id);
 
-        if(empty($role)){
+        if (empty($role)) {
             return response()->json([
                 'response' => false,
                 'message' =>  "Proyect no register!"
@@ -145,14 +154,12 @@ class ProyectoController extends Controller
                 'response' => true,
                 'message' =>  'Rol delete'
             ]);
-                    
-            } catch (\Illuminate\Database\QueryException $e) {
+        } catch (\Illuminate\Database\QueryException $e) {
 
             return response()->json([
                 'response' => false,
                 'message' => $e->getMessage()
             ]);
         }
-
     }
 }

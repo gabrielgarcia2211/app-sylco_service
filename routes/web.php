@@ -8,6 +8,7 @@ use App\Http\Controllers\FileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DriveController;
+use App\Http\Controllers\ProyectoController;
 use App\Http\Controllers\Auth\LoginController;
 
 /*
