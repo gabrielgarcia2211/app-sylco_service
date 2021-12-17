@@ -2,7 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Database\Seeders\UserSeeder;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,6 +16,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        Role::create([
+            'name' => 'Coordinador',
+            'guard_name' => 'web'
+        ]);
+        Role::create([
+            'name' => 'Aux',
+            'guard_name' => 'web'
+        ]);
+        Role::create([
+            'name' => 'Contratista',
+            'guard_name' => 'web'
+        ]);
+        User::factory(10)->create();
     }
 }

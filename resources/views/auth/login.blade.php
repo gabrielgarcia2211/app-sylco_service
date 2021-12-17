@@ -21,7 +21,7 @@
                     <h3>CONTRATISTA</h3>
 
                     <div class="form-floating">
-                    <input type="email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}"  id="email" name="email"  placeholder="Correo Electronico" >
+                    <input type="email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}"  id="email" name="email"  placeholder="Correo Electronico" required>
                         <label for="email">Correo Electronico</label>
                         @if ($errors->has('email'))
                             <span style="margin-bottom:18px" class="invalid-feedback" role="alert">
@@ -31,7 +31,7 @@
                     </div>
 
                     <div class="form-floating">
-                    <input type="password" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" value="{{ old('password') }}"  id="password" name="password"  placeholder="Contraseña" >
+                    <input type="password" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" value="{{ old('password') }}"  id="password" name="password"  placeholder="Contraseña" required>
                         <label for="password">Contraseña</label>
                         @if ($errors->has('password'))
                             <span style="margin-bottom:18px" class="invalid-feedback" role="alert">

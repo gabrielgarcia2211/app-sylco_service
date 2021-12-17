@@ -38,6 +38,9 @@ Route::post('/login', [LoginController::class, 'login'])->name('login');
 Route::get('login/google', [LoginController::class, 'redirectToProvider'])->name('login.google');
 Route::get('login/google/callback', [LoginController::class, 'handleProviderCallback']);
 
+//LOGOUT
+Route::get('logout', [LoginController::class, 'logout'])->name('logout');
+
 //RUTAS PARA CONTRASEÑA
 Route::get('routes/password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
 Route::post('routes/password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');

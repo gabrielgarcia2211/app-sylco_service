@@ -72,18 +72,16 @@ class LoginController extends Controller
 
     public function sendLoginResponse(Request $request){
 
-        $user = User::where('email',$request['email'])->first();
+        $ingresoError= array();
 
-        if(!is_null($user) && Hash::check( $request['password'] , $user->password )){
-            return response()->json([
-                'response' => true,
-                'message' => 'Welcome'
-            ]);
+        $user = User::where('email',$request['email'])->get();
+
+        if(!is_null($user) && Hash::check( $request['password'] , $user->first()->password )){
+            $this->guard()->login($user[0]);
+            return redirect('/home');
         }else{
-            return response()->json([
-                'response' => false,
-                'message' => '¡data incorrect!'
-            ]);
+            array_push($ingresoError,"¡Datos incorrectos!");
+            return view('auth.login')->with(compact('ingresoError'));
         }     
 
     }
