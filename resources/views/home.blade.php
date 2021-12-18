@@ -62,6 +62,31 @@
         </div>
     </div>
 
+    <div class="row">
+        <p>CARPETA PADRE(DELETE)</p>
+        <div class="col-md-10 col-md-offset-1">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <form method="POST" action="{{route('proyect.delete')}}">
+                    @csrf
+                        <div class="form-group">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="nombre">
+                            </div>
+                        </div>
+             
+
+                        <div class="form-group">
+                            <div class="col-md-6 col-md-offset-4">
+                                <button type="submit" class="btn btn-primary mt-2 ">Enviar3</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 </div>
 

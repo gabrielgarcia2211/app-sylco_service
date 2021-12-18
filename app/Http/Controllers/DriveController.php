@@ -210,7 +210,7 @@ class DriveController extends Controller
         /** 
          *  1 -> Archivo
          *  2 -> subCarpeta
-         *  3 -> Carpeta
+         *  3 -> Carpeta(proyecto)
          */
         switch ($tipo) {
             case 1:

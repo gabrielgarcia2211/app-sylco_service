@@ -9,6 +9,8 @@ class Proyecto extends Model
 
     protected $table = 'proyectos';
 
+    public $timestamps = false;
+
     protected $fillable =[
      'name',
      'descripcion',

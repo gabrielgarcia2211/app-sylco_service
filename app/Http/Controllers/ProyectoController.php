@@ -22,18 +22,17 @@ class ProyectoController extends Controller
             'response' => true,
             'message' => Proyecto::all()
         ]);
-        //return csrf_token(); 
     }
 
     public function store(Request $request)
     {
 
-        //$this->validateStore($request);
+        $this->validateStore($request);
 
         try {
 
             $carp = $this->driveData->createDirectory(strtoupper($request->nombre));
-            
+
             if ($carp['response']) {
 
                 Proyecto::create([
@@ -60,7 +59,7 @@ class ProyectoController extends Controller
     protected function validateStore(Request $request)
     {
         $request->validate([
-            'name' => 'required',
+            'nombre' => 'required',
             'descripcion' => 'required',
             'ubicacion' => 'required',
         ]);
@@ -138,22 +137,24 @@ class ProyectoController extends Controller
 
     public function destroy(Request $request)
     {
-        $proyect = Proyecto::find($request->id);
-
-        if (empty($role)) {
-            return response()->json([
-                'response' => false,
-                'message' =>  "Proyect no register!"
-            ]);
-        }
+        $this->validateDestroy($request);
+        $carp = $this->driveData->deleteFile(strtoupper($request->nombre),  "/", "", 3);
 
         try {
+            if ($carp['response']) {
 
-            $proyect->delete();
-            return response()->json([
-                'response' => true,
-                'message' =>  'Rol delete'
-            ]);
+                $proyect = Proyecto::where('name', $request->nombre)->first();
+
+                $proyect->delete();
+                return [
+                    'response' => true,
+                    'message' =>  'Proyect delete'
+                ];
+            }
+            return [
+                'response' => false,
+                'message' =>  "Proyect no register!"
+            ];
         } catch (\Illuminate\Database\QueryException $e) {
 
             return response()->json([
@@ -161,5 +162,12 @@ class ProyectoController extends Controller
                 'message' => $e->getMessage()
             ]);
         }
+    }
+
+    protected function validateDestroy(Request $request)
+    {
+        $this->validate($request, [
+            'nombre' => 'required',
+        ]);
     }
 }
