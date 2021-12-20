@@ -14,23 +14,32 @@
 
     @if(isset($user))
     <?php $cont = 0 ?>
-    @for($m = 0; $m < count($user) / 3; $m++) <div>
-        <div class="card-group">
-            @for ($j = $cont; $j < count($user) ; $j++) <?php $cont++ ?> <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">{{$user[$j]['name']}} {{$user[$j]['last_name']}}</h5>
-                    <h6 class="card-title"><b>Nit: </b>{{$user[$j]['nit']}}</h6>
-                    <p class="card-text">{{$user[$j]['email']}}</p>
+    @for($m = 0; $m < count($user) / 3; $m++) 
+        <div class="row">
+            @for ($j = $cont; $j < count($user) ; $j++) <?php $cont++ ?>
+            <div class="col-sm">
+                <div class="card" style="width: 100%">
+                    <div class="card-header">
+                    <b>Nit: </b>{{$user[$j]->nit}}
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{$user[$j]->name}} {{$user[$j]->last_name}}</h5>
+                        <p class="card-text"><b>Correo Electronico: </b>{{$user[$j]->email}}</p>
+                    </div>
+                    <div class="card-footer">
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-success"><b>Proyecto Asociado: </b>{{$user[$j]->proyecto}}</li>
+                            <li class="list-group-item list-group-item-primary"><b>Cantidad de Archivos Cargados: </b>{{$user[$j]->cantidad}}</li>
+                        </ul>
+                    </div>  
                 </div>
-        </div>
-
-
+            </div>
         @if (($cont % 3) == 0)
         @break
         @endif
         @endfor
         </div>
-        </div>
+        
         <br>
         @endfor
 

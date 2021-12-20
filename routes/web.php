@@ -81,6 +81,7 @@ Route::group(['prefix' => 'coordinador/', 'middleware' => []], function() {
 
     Route::get('contratista/list', [ContratistaController::class, 'index'])->name('coordinador.contratista.list');
     Route::get('contratista/files', [ContratistaController::class, 'file'])->name('coordinador.contratista.file');
+    Route::post('contratista/files', [ContratistaController::class, 'fileShow'])->name('coordinador.contratista.file');
 
 });
 

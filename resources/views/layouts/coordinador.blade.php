@@ -25,8 +25,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Staatliches&display=swap" rel="stylesheet">
 
 </head>
-<body>
+<body >
         @yield('content')
-        @yield('script')
+        <!--@yield('script')-->
 </body>
 </html>
