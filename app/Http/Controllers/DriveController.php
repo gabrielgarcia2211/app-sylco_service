@@ -124,20 +124,26 @@ class DriveController extends Controller
                             ->where('type', '=', 'file');
                     } else {
 
-                        return response()->json([
+                        return[
                             'response' => false,
                             'message' => 'El Directorio no Existe (HIJO)'
-                        ]);
+                        ];
                     }
                 }
 
                 $dataJson = array();
 
+
+
                 foreach ($files as &$file) {
                     array_push($dataJson, [$file['name'], Storage::disk('google')->url($file['path'])]);
                 }
+                
 
-                return $dataJson;
+                return [
+                    'response' => true,
+                    'message' =>  $dataJson
+                ];
             } else {
 
                 return [

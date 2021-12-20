@@ -10,6 +10,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\DriveController;
 use App\Http\Controllers\ProyectoController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\ContratistaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,7 +66,7 @@ Route::group(['prefix' => '/', 'middleware' => []], function() {
 /** ----------------------------------------------------------------------------------------------------------------
  * CONTROL DE USUARIOS */
 
-Route::group(['prefix' => '/', 'middleware' => []], function() {
+Route::group(['prefix' => 'coordinador/', 'middleware' => []], function() {
 
     Route::get('user/list', [UserController::class, 'index'])->name('user.list');
     Route::post('user/create', [UserController::class, 'store'])->name('user.store');
@@ -74,6 +75,12 @@ Route::group(['prefix' => '/', 'middleware' => []], function() {
     Route::post('user/delete', [UserController::class, 'destroy'])->name('user.delete');
     Route::post('user/rol/add', [UserController::class, 'aggRole'])->name('user.rol.add');
     Route::post('user/rol/destroy', [UserController::class, 'deleteRole'])->name('user.rol.destroy');
+
+
+    // CONTRATISTA
+
+    Route::get('contratista/list', [ContratistaController::class, 'index'])->name('coordinador.contratista.list');
+    Route::get('contratista/files', [ContratistaController::class, 'file'])->name('coordinador.contratista.file');
 
 });
 
