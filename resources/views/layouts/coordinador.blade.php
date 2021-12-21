@@ -29,6 +29,18 @@
         @yield('content')
         @include('sweetalert::alert', ['cdn' => "https://cdn.jsdelivr.net/npm/sweetalert2@9"])
 
+
+
+        <footer style="background-color:  #fe5f55;" class="fixed-bottom py-4 mt-auto">
+            <div class="container px-5">
+                <div class="row align-items-center justify-content-between flex-column flex-sm-row">
+                    <div class="col-auto">
+                        <div class="small m-0 text-white" style="font-size:12px">Copyright &copy; Sylco SAS</div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         @yield('script')
 

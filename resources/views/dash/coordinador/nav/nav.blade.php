@@ -37,7 +37,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="proyectos.html">
+                        <a class="nav-link" href="{{route('proyect.list')}}">
                             <span data-feather="file"></span> Listado Proyectos
                         </a>
                     </li>

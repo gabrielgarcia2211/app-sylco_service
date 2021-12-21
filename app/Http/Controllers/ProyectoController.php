@@ -20,10 +20,8 @@ class ProyectoController extends Controller
 
     public function index()
     {
-        return [
-            'response' => true,
-            'message' => Proyecto::all()
-        ];
+        $data = Proyecto::all();
+        return view('dash.coordinador.listProyecto')->with(compact('data'));
     }
 
     public function indexStore()
@@ -156,8 +154,9 @@ class ProyectoController extends Controller
 
     public function destroy(Request $request)
     {
-        $this->validateDestroy($request);
-        $carp = $this->driveData->deleteFile(strtoupper($request->nombre),  "/", "", 3);
+        dd($request->namesssss);
+
+        //$carp = $this->driveData->deleteFile(strtoupper($request->nombre),  "/", "", 3);
 
         try {
             if ($carp['response']) {
@@ -183,10 +182,4 @@ class ProyectoController extends Controller
         }
     }
 
-    protected function validateDestroy(Request $request)
-    {
-        $this->validate($request, [
-            'nombre' => 'required',
-        ]);
-    }
 }

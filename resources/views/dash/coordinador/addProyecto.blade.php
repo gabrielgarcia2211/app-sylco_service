@@ -42,9 +42,6 @@
                             </span>
                     @endif
                 </div>
-                    <div style="padding:10px;width: 5%">
-                        <img id="carga" style="display: none" src="{{asset('/img/carga.gif')}}" alt="Funny image">
-                    </div>
                 <div id="boton">
                     <button type="submit " class="btn">AGREGAR</button>
                 </div>
