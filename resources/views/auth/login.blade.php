@@ -17,8 +17,10 @@
                 <form id="login" class="form-signin" method="POST" action="{{ route('login') }}">
                     @csrf
 
-                    <img class="img-fluid" src="/img/sylco-logo.jpg" alt="" width="280" height="80">
-                    <h3>CONTRATISTA</h3>
+                    <img class="img-fluid" src="/img/sylco-logo.jpg" alt="" width="110" height="60">
+                    <img class="img-fluid" src="/img/sylco-logo.jpg" alt="" width="110" height="60">
+                    <img class="img-fluid" src="/img/sylco-logo.jpg" alt="" width="110" height="60">
+                    
 
                     <div class="form-floating">
                     <input type="email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}"  id="email" name="email"  placeholder="Correo Electronico" required>

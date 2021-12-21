@@ -8,7 +8,7 @@
     <div class="form-control w-100"></div>
     <div class="navbar-nav">
         <div class="text-nowrap">
-            <a class="nav-link px-3" href="index.html">Cerrar Sesion</a>
+            <a class="nav-link px-3" href="{{route('logout')}}">Cerrar Sesion</a>
         </div>
     </div>
 </header>
