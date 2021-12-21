@@ -33,7 +33,6 @@ class ProyectoController extends Controller
 
     public function store(Request $request)
     {
-       
         $this->validateStore($request);
 
         try {
@@ -48,11 +47,25 @@ class ProyectoController extends Controller
                     'ubicacion' =>  $request->ubicacion,
                 ]);
 
-                Alert::success('Proceso Realizado', 'Proyecto Creado');
-                return back();
+                $json[] = array(
+                    'response' => true,
+                    'message' => 'Proyecto Creado!',
+                );
+    
+                $JString = json_encode($json);
+                echo $JString;
+                return;
+
             } else {
-                Alert::error('Error', $carp['message']);
-                return back();
+
+                $json[] = array(
+                    'response' => false,
+                    'message' => 'El Proyecto ya Existe!',
+                );
+    
+                $JString = json_encode($json);
+                echo $JString;
+                return;
             }
         } catch (\Illuminate\Database\QueryException $e) {
             return [

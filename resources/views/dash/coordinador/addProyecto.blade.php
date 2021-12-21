@@ -13,11 +13,11 @@
             </h1>
         </div>
         <div>
-            <form action="{{route('proyect.store')}}" method="POST">
+            <form action="{{route('proyect.store')}}" method="POST" id="form-proyecto" onsubmit="return guardarProyecto()">
                 @csrf
                 <div class="mb-3">
                     <label for="nombre" class="form-label">NOMBRE</label>
-                    <input type="text" class="form-control {{ $errors->has('nombre') ? ' is-invalid' : '' }}" value="{{ old('nombre') }}"  id="nombre" name="nombre">
+                    <input type="text" class="form-control {{ $errors->has('nombre') ? ' is-invalid' : '' }}" value="{{ old('nombre') }}"  id="nombre" name="nombre" aria-describedby="emailHelp"  >
                     @if ($errors->has('nombre'))
                         <span style="margin-bottom:18px" class="invalid-feedback" role="alert">
                                 <strong>{{ $errors->first('nombre') }}</strong>
@@ -26,7 +26,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="descripcion" class="form-label">DESCRIPCION</label>
-                    <textarea class="form-control {{ $errors->has('descripcion') ? ' is-invalid' : '' }}" value="{{ old('descripcion') }}"  id="descripcion" name="descripcion"></textarea>
+                    <textarea class="form-control {{ $errors->has('descripcion') ? ' is-invalid' : '' }}" value="{{ old('descripcion') }}"  id="descripcion" name="descripcion" aria-describedby="emailHelp" ></textarea>
                     @if ($errors->has('descripcion'))
                         <span style="margin-bottom:18px" class="invalid-feedback" role="alert">
                                 <strong>{{ $errors->first('descripcion') }}</strong>
@@ -35,13 +35,16 @@
                 </div>
                 <div class="mb-3">
                     <label for="ubicacion" class="form-label">UBICACION</label>
-                    <input type="text" class="form-control {{ $errors->has('ubicacion') ? ' is-invalid' : '' }}" value="{{ old('ubicacion') }}"  id="ubicacion" name="ubicacion" aria-describedby="emailHelp">
+                    <input type="text" class="form-control {{ $errors->has('ubicacion') ? ' is-invalid' : '' }}" value="{{ old('ubicacion') }}"  id="ubicacion" name="ubicacion" aria-describedby="emailHelp" required>
                     @if ($errors->has('ubicacion'))
                         <span style="margin-bottom:18px" class="invalid-feedback" role="alert">
                                 <strong>{{ $errors->first('ubicacion') }}</strong>
                             </span>
                     @endif
                 </div>
+                    <div style="padding:10px;width: 5%">
+                        <img id="carga" style="display: none" src="{{asset('/img/carga.gif')}}" alt="Funny image">
+                    </div>
                 <div id="boton">
                     <button type="submit " class="btn">AGREGAR</button>
                 </div>
@@ -51,7 +54,11 @@
     </main>
     
 
-<!-- Page content -->
 
 
+@endsection
+
+
+@section('script')
+    <script src="{{asset('js/coordinador/index.js')}}"></script>
 @endsection
