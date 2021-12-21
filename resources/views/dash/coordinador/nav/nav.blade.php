@@ -32,7 +32,7 @@
                     <hr class="my-3">
 
                     <li class="nav-item">
-                        <a class="nav-link" href="agproyecto.html">
+                        <a class="nav-link" href="{{route('proyect.store')}}">
                             <span data-feather="file"></span> Agregar Proyecto
                         </a>
                     </li>

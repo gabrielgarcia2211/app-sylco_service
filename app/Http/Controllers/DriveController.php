@@ -22,13 +22,13 @@ class DriveController extends Controller
 
                 return [
                     'response' => true,
-                    'message' => 'Directorio Creado'
+                    'message' => 'Proyecto Creado'
                 ];
             } else {
 
                 return [
                     'response' => false,
-                    'message' => 'El Directorio ya Existe'
+                    'message' => 'El Proyecto ya Existe'
                 ];
             }
         } catch (Exception $e) {

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Proyecto;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
+
 
 class ProyectoController extends Controller
 {
@@ -18,15 +20,20 @@ class ProyectoController extends Controller
 
     public function index()
     {
-        return response()->json([
+        return [
             'response' => true,
             'message' => Proyecto::all()
-        ]);
+        ];
+    }
+
+    public function indexStore()
+    {
+        return view('dash.coordinador.addProyecto');
     }
 
     public function store(Request $request)
     {
-
+       
         $this->validateStore($request);
 
         try {
@@ -36,23 +43,22 @@ class ProyectoController extends Controller
             if ($carp['response']) {
 
                 Proyecto::create([
-                    'name' =>  $request->nombre,
+                    'name' =>  strtoupper($request->nombre),
                     'descripcion' =>  $request->descripcion,
                     'ubicacion' =>  $request->ubicacion,
                 ]);
 
-                return [
-                    'response' => true,
-                    'message' => 'Proyecto Creado'
-                ];
+                Alert::success('Proceso Realizado', 'Proyecto Creado');
+                return back();
             } else {
-                dd($carp['message']);
+                Alert::error('Error', $carp['message']);
+                return back();
             }
         } catch (\Illuminate\Database\QueryException $e) {
-            return response()->json([
+            return [
                 'response' => false,
                 'message' => $e->getMessage()
-            ]);
+            ];
         }
     }
 
@@ -72,16 +78,16 @@ class ProyectoController extends Controller
 
         if (empty($proyect)) {
 
-            return response()->json([
+            return [
                 'response' => false,
                 'message' => 'proyect not found'
-            ]);
+            ];
         }
 
-        return response()->json([
+        return [
             'response' => true,
             'message' => $proyect
-        ]);
+        ];
     }
 
     protected function validateShow(Request $request)
@@ -99,10 +105,10 @@ class ProyectoController extends Controller
 
         if (empty($proyect)) {
 
-            return response()->json([
+            return [
                 'response' => false,
                 'message' => 'proyect not found'
-            ]);
+            ];
         }
 
         try {
@@ -113,16 +119,16 @@ class ProyectoController extends Controller
 
             $proyect->update();
 
-            return response()->json([
+            return [
                 'response' => true,
                 'message' => 'proyect update'
-            ]);
+            ];
         } catch (\Illuminate\Database\QueryException $e) {
 
-            return response()->json([
+            return[
                 'response' => false,
                 'message' => $e->getMessage()
-            ]);
+            ];
         }
     }
 

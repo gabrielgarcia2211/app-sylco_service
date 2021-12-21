@@ -19,6 +19,7 @@ class ContratistaController extends Controller
 
     private function cargaContratista()
     {
+        
         $user = DB::select("SELECT users.name, users.last_name, users.nit, users.email, proyectos.name as proyecto, COUNT(users.name) AS cantidad
         FROM users INNER JOIN model_has_roles ON model_has_roles.model_id = users.id
         INNER JOIN roles ON roles.id = model_has_roles.role_id
@@ -27,7 +28,6 @@ class ContratistaController extends Controller
         INNER JOIN file_users ON file_users.user_nit  =  users.nit
         INNER JOIN files ON files.id = file_users.file_id
         WHERE roles.name = 'Contratista' GROUP BY users.name, users.nit, users.email, proyectos.name ORDER BY users.nit");
-
 
         return $user;
 
