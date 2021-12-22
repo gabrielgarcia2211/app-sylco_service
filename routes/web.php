@@ -1,16 +1,15 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RolController;
-use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\DriveController;
 use App\Http\Controllers\ProyectoController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ContratistaController;
+use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,29 +43,28 @@ Route::get('login/google/callback', [LoginController::class, 'handleProviderCall
 Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 
 //RUTAS PARA CONTRASEÑA
-Route::get('routes/password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
-Route::post('routes/password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
-Route::get('routes/password/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
-Route::post('routes/password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
+Route::get('routes/password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+Route::post('routes/password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('routes/password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('routes/password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 
 
 /** ----------------------------------------------------------------------------------------------------------------
  * CONTROL DE ROLES */
 
-Route::group(['prefix' => '/', 'middleware' => []], function() {
+Route::group(['prefix' => '/', 'middleware' => []], function () {
 
     Route::get('rol/list', [RolController::class, 'index'])->name('rol.list');
     Route::post('rol/create', [RolController::class, 'store'])->name('rol.store');
     Route::post('rol/show', [RolController::class, 'show'])->name('rol.show');
     Route::post('rol/edit', [RolController::class, 'edit'])->name('rol.edit');
     Route::post('rol/delete', [RolController::class, 'destroy'])->name('rol.delete');
-
 });
 
 /** ----------------------------------------------------------------------------------------------------------------
  * CONTROL DE USUARIOS */
 
-Route::group(['prefix' => 'coordinador/', 'middleware' => []], function() {
+Route::group(['prefix' => 'coordinador/', 'middleware' => []], function () {
 
     Route::get('user/list', [UserController::class, 'index'])->name('user.list');
     Route::post('user/create', [UserController::class, 'store'])->name('user.store');
@@ -82,13 +80,12 @@ Route::group(['prefix' => 'coordinador/', 'middleware' => []], function() {
     Route::get('contratista/list', [ContratistaController::class, 'index'])->name('coordinador.contratista.list');
     Route::get('contratista/files', [ContratistaController::class, 'file'])->name('coordinador.contratista.file');
     Route::post('contratista/files', [ContratistaController::class, 'fileShow'])->name('coordinador.contratista.file');
-
 });
 
 /** ----------------------------------------------------------------------------------------------------------------
  * CONTROL DE PROYECTOS */
 
-Route::group(['prefix' => '/', 'middleware' => []], function() {
+Route::group(['prefix' => '/', 'middleware' => []], function () {
 
     Route::get('proyect/list', [ProyectoController::class, 'index'])->name('proyect.list');
     Route::get('proyect/create', [ProyectoController::class, 'indexStore'])->name('proyect.store');
@@ -96,20 +93,18 @@ Route::group(['prefix' => '/', 'middleware' => []], function() {
     Route::post('proyect/show', [ProyectoController::class, 'show'])->name('proyect.show');
     Route::post('proyect/edit', [ProyectoController::class, 'edit'])->name('proyect.edit');
     Route::post('proyect/delete', [ProyectoController::class, 'destroy'])->name('proyect.delete');
-
 });
 
 /** ----------------------------------------------------------------------------------------------------------------
  * CONTROL DE FILES */
 
-Route::group(['prefix' => '/', 'middleware' => []], function() {
+Route::group(['prefix' => '/', 'middleware' => []], function () {
 
     Route::get('files/list', [FileController::class, 'index'])->name('file.list');
     Route::get('files/create', [FileController::class, 'store'])->name('file.store');
     Route::post('files/show', [FileController::class, 'show'])->name('file.show');
     Route::post('files/edit', [FileController::class, 'edit'])->name('file.edit');
     Route::post('files/delete', [FileController::class, 'destroy'])->name('file.delete');
-
 });
 
 
