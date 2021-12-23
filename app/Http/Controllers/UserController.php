@@ -93,7 +93,8 @@ class UserController extends Controller
 
     }
 
-    protected function validateShow(Request $request){
+    protected function validateShow(Request $request)
+    {
 
         $request->validate([
             'nit' => 'required|integer',
