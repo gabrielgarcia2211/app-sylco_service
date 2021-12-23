@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Models\Proyecto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -26,11 +26,25 @@ class HomeController extends Controller
     public function index()
     {
 
+
         if (auth()->user()->hasRole('Coordinador')) {
 
             $dataContratista = DB::select("SELECT count('role_id') as contratista FROM model_has_roles WHERE role_id = 3 ");
-            return view('dash.coordinador.index')->with(compact('dataContratista'));
+            $proyectos = Proyecto::all(['name', 'descripcion']);
 
+            $dataProyecto = array();
+
+            for ($i = 0; $i < count($proyectos); $i++) {
+                array_push($dataProyecto, [$proyectos[$i]->name, $proyectos[$i]->descripcion, $this->randColor()]);
+            }
+
+            return view('dash.coordinador.index')->with(compact('dataContratista', 'dataProyecto'));
         }
+    }
+
+
+    function randColor()
+    {
+        return sprintf('#%06X', mt_Rand(0, 0xFFFFFF));
     }
 }
