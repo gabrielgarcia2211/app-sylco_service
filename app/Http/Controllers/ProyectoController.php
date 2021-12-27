@@ -152,9 +152,10 @@ class ProyectoController extends Controller
         ]);
     }
 
-    public function destroy(Request $request)
+    public function delete(Request $request)
     {
-        dd($request->namesssss);
+        $id = $request->input('nombre');
+        dd($id);
 
         //$carp = $this->driveData->deleteFile(strtoupper($request->nombre),  "/", "", 3);
 

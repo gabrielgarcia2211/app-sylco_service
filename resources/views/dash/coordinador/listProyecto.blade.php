@@ -36,8 +36,7 @@
                                         <th>Nombre</th>
                                         <th>Descripcion</th>
                                         <th>Ubicacion</th>
-                                        <th>Eliminar</th>
-                                        <th>Editar</th>
+                                        <th>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
@@ -45,20 +44,35 @@
                                         <th>Nombre</th>
                                         <th>Descripcion</th>
                                         <th>Ubicacion</th>
-                                        <th>Eliminar</th>
-                                        <th>Editar</th>
+                                        <th>Acciones</th>
                                     </tr>
                                 </tfoot>
                                 <tbody>
-                                    @for($m = 0; $m < count($dataProyecto); $m++)
-                                    <tr>
+                                    @isset($dataProyecto)
+                                    @for($m = 0; $m < count($dataProyecto); $m++) <tr>
                                         <td>{{$dataProyecto[$m]->name}}</td>
                                         <td>{{$dataProyecto[$m]->descripcion}}</td>
                                         <td>{{$dataProyecto[$m]->ubicacion}}</td>
-                                        <td>61</td>
-                                        <td>2011/04/25</td>
-                                    </tr>
-                                    @endfor       
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <form action="formu-proyecto-edit" method="POST">
+                                                        @csrf
+                                                        <button class="btn btn-warning" style="width: 100%"><i class="fas fa-edit"></i></button>
+                                                    </form>
+                                                </div>
+                                                <div class="col-6">
+                                                    <form id="formu-proyecto-delete" action="{{route('proyect.delete')}}" method="POST" onsubmit="return eliminarProyecto();">
+                                                        @csrf
+                                                        <input type="hidden" name="nombre" value="{{$dataProyecto[$m]->name}}">
+                                                        <button class="btn btn-danger" style="width: 100%"><i class="far fa-trash-alt"></i></button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        </tr>
+                                        @endfor
+                                        @endisset
                                 </tbody>
                             </table>
                         </div>
@@ -115,4 +129,9 @@
 
 
 
+    @endsection
+
+
+    @section('script')
+    <script src="{{asset('js/coordinador/index.js')}}"></script>
     @endsection
