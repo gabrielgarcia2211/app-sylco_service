@@ -3,69 +3,116 @@
 
 @section('content')
 
-<!-- Sidenav -->
-<!-- Main content -->
-@include('dash.coordinador.nav.nav')
+<!-- Page Wrapper -->
+<div id="wrapper">
 
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 style="font-family: 'Staatliches', cursive;" class="h2">Proyectos <i class="fas fa-paste"></i></h1>
+    <!-- Sidebar -->
+    @include('dash.coordinador.nav.navi')
 
-                </div>
-                @if(isset($data))
-                <?php $cont = 0 ?>
-                @for($m = 0; $m < count($data) / 3; $m++) 
-                    <div class="row">
-                        @for ($j = $cont; $j < count($data) ; $j++) 
-                        <div class="col-sm">
-                            <div class="card" style="width: 100%">
-                                <div class="card-header">
-                                <b>Nombre: </b>{{$data[$j]->name}}
-                                </div>
-                                <div class="card-body">
-                                    <p class="card-title"><b>Ubicacion: </b>{{$data[$j]->ubicacion}}</p>
-                                    <p class="card-text"><b>Descripcion: </b>{{$data[$j]->descripcion}}</p>
-                                </div>
-                                <div class="card-footer">
-                                    <div class="row">
-                                        <div class="col" style="text-align: center;">
-                                            <button type="button" class="btn btn-success">EDITAR</button>
-                                        </div>
-                                        <div class="col" style="text-align: center;">
-                                            <form id="formu-delete-proyecto" action="{{ route('proyect.delete')}}"  method="POST" onsubmit="return eliminarProyecto()">
-                                                @csrf
-                                                    <input id="name" name="namesssss" type="hidden" value="{{$data[$j]->name}}">
-                                                    <button class="btn btn-danger" >Eliminar</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>  
-                            </div>
-                        </div>
-                        <?php $cont++ ?>
-                    @if (($cont % 3) == 0)
-                    @break
-                    @endif
-                    @endfor
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            @include('dash.coordinador.nav.navs')
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <h1 class="h3 mb-2 text-gray-800">Tabla</h1>
+                <p class="mb-4">Gestion de Proyectos.</p>
+
+                <!-- DataTales Example -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Listado de Proyectos</h6>
                     </div>
-                    
-                    <br>
-                    @endfor
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Descripcion</th>
+                                        <th>Ubicacion</th>
+                                        <th>Eliminar</th>
+                                        <th>Editar</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Descripcion</th>
+                                        <th>Ubicacion</th>
+                                        <th>Eliminar</th>
+                                        <th>Editar</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    @for($m = 0; $m < count($dataProyecto); $m++)
+                                    <tr>
+                                        <td>{{$dataProyecto[$m]->name}}</td>
+                                        <td>{{$dataProyecto[$m]->descripcion}}</td>
+                                        <td>{{$dataProyecto[$m]->ubicacion}}</td>
+                                        <td>61</td>
+                                        <td>2011/04/25</td>
+                                    </tr>
+                                    @endfor       
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
 
-                    @endif
-                <br>
-            
-                
-        </main>
+            </div>
+
+
+        </div>
+        <!-- /.container-fluid -->
+
+
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Copyright &copy; SYLCO S.A.S 2021</span>
+                </div>
+            </div>
+        </footer>
+        <!-- End of Footer -->
+
+    </div>
+
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Salir?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">¿Desea salir y cerrar la sesion?.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                    <a class="btn btn-primary" href="{{route('logout')}}">Salir</a>
+                </div>
+            </div>
         </div>
     </div>
 
 
-    <!-- Page content -->
 
 
-@endsection
-
-@section('script')
-    <script src="{{asset('js/coordinador/index.js')}}"></script>
-@endsection
+    @endsection

@@ -3,9 +3,6 @@
 
 @section('content')
 
-
-
-
 <!-- Page Wrapper -->
 <div id="wrapper">
 
@@ -127,48 +124,51 @@
                             <div class="card-body">
 
                                 @isset($dataProyecto)
-
-                                @for ($i = 0; $i < count($dataProyecto); $i++) <div class="col-lg-3 mb-4">
-                                    <div class="card text-white shadow" style="background: {{$dataProyecto[$i][2]}}">
-                                        <div class="card-body">
-                                            {{$dataProyecto[$i][0]}}
-                                            <div class="text-white-50 small"> {{$dataProyecto[$i][1]}}</div>
+                                <?php $cont = 0 ?>
+                                @for($m = 0; $m < count($dataProyecto) / 3; $m++) <div class="row">
+                                    @for ($i = $cont; $i < count($dataProyecto); $i++) <div class="col-lg mb-4">
+                                        <div class="card text-white shadow" style="background: {{$dataProyecto[$i][2]}}">
+                                            <div class="card-body">
+                                                {{$dataProyecto[$i][0]}}
+                                                <div class="text-white-50 small"> {{$dataProyecto[$i][1]}}</div>
+                                            </div>
                                         </div>
-                                    </div>
                             </div>
+                            <?php $cont++ ?>
+                            @if (($cont % 3) == 0)
+                            @break
+                            @endif
                             @endfor
-
-                            @endisset
                         </div>
+                        @endfor
+                        @endisset
                     </div>
                 </div>
-
-
-
-
             </div>
-
-
         </div>
-        <!-- /.container-fluid -->
+
+
+
 
     </div>
-    <!-- End of Main Content -->
 
-    <!-- Footer -->
-    <footer class="sticky-footer bg-white">
-        <div class="container my-auto">
-            <div class="copyright text-center my-auto">
-                <span>Copyright &copy; SYLCO S.A.S 2021</span>
-            </div>
+
+</div>
+<!-- /.container-fluid -->
+
+
+<!-- Footer -->
+<footer class="sticky-footer bg-white">
+    <div class="container my-auto">
+        <div class="copyright text-center my-auto">
+            <span>Copyright &copy; SYLCO S.A.S 2021</span>
         </div>
-    </footer>
-    <!-- End of Footer -->
+    </div>
+</footer>
+<!-- End of Footer -->
 
 </div>
 
-
-</div>
 <!-- End of Page Wrapper -->
 
 <!-- Scroll to Top Button-->

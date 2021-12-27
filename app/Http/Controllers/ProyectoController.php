@@ -20,8 +20,8 @@ class ProyectoController extends Controller
 
     public function index()
     {
-        $data = Proyecto::all();
-        return view('dash.coordinador.listProyecto')->with(compact('data'));
+        $dataProyecto = Proyecto::all();
+        return view('dash.coordinador.listProyecto')->with(compact('dataProyecto'));
     }
 
     public function indexStore()
