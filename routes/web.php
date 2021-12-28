@@ -48,7 +48,7 @@ Route::get('routes/password/reset', [ForgotPasswordController::class, 'showLinkR
 Route::post('routes/password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 Route::get('routes/password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('routes/password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
-
+//LISTO
 
 /** ----------------------------------------------------------------------------------------------------------------
  * CONTROL DE ROLES */
@@ -68,8 +68,8 @@ Route::group(['prefix' => '/', 'middleware' => []], function () {
 Route::group(['prefix' => 'coordinador/', 'middleware' => []], function () {
 
     Route::get('user/list', [UserController::class, 'index'])->name('user.list');
+    Route::get('user/create', [UserController::class, 'indexStore'])->name('user.store');
     Route::post('user/create', [UserController::class, 'store'])->name('user.store');
-    Route::post('user/show', [UserController::class, 'show'])->name('user.show');
     Route::post('user/edit', [UserController::class, 'edit'])->name('user.edit');
     Route::post('user/delete', [UserController::class, 'destroy'])->name('user.delete');
     Route::post('user/rol/add', [UserController::class, 'aggRole'])->name('user.rol.add');
@@ -93,7 +93,7 @@ Route::group(['prefix' => '/', 'middleware' => []], function () {
     Route::post('proyect/create', [ProyectoController::class, 'store'])->name('proyect.store');
     Route::post('proyect/edit', [ProyectoController::class, 'edit'])->name('proyect.edit');
     Route::post('proyect/delete', [ProyectoController::class, 'delete'])->name('proyect.delete');
-});
+});//LISTO
 
 /** ----------------------------------------------------------------------------------------------------------------
  * CONTROL DE FILES */

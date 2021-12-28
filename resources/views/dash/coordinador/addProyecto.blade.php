@@ -28,7 +28,7 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Añadir Proyecto</h1>
                                     </div>
-                                    <form action="{{route('proyect.store')}}" class="user" id="form-proyecto" onsubmit="return guardarProyecto()">
+                                    <form action="{{route('proyect.store')}}" class="user" id="form-proyecto" method="POST" onsubmit="return guardarProyecto()">
                                         @csrf
                                         <div class="form-group row">
                                             <div class="col-sm-6 mb-3 mb-sm-0">

@@ -94,28 +94,37 @@ class ProyectoController extends Controller
             ];
         }
 
-        //$carp = $this->driveData->
+        $carp = $this->driveData->editDirectory($proyect->name, '/' , $name );
 
+        if($carp['response']){
+            try {
 
-        try {
-
-            $proyect->name =  $name;
-            $proyect->descripcion =  $descripcion;
-            $proyect->ubicacion =  $ubicacion;
-
-            $proyect->update();
-
-            return [
-                'response' => true,
-                'message' => 'Proyecto Actualizado'
-            ];
-        } catch (\Illuminate\Database\QueryException $e) {
-
+                $proyect->name =  $name;
+                $proyect->descripcion =  $descripcion;
+                $proyect->ubicacion =  $ubicacion;
+    
+                $proyect->update();
+    
+                return [
+                    'response' => true,
+                    'message' => 'Proyecto Actualizado'
+                ];
+            } catch (\Illuminate\Database\QueryException $e) {
+    
+                return [
+                    'response' => false,
+                    'message' => $e->getMessage()
+                ];
+            }
+        }else{
             return [
                 'response' => false,
-                'message' => $e->getMessage()
+                'message' => $carp['message']
             ];
         }
+
+
+        
     }
 
 

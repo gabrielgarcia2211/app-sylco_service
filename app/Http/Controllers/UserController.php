@@ -2,133 +2,123 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Proyecto;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
+use RealRashid\SweetAlert\Facades\Alert;
+
 
 class UserController extends Controller
 {
     public function index()
     {
-        return response()->json([
-            'response' => true, 
-            'message' => User::all()
-        ]);
-        //return csrf_token(); 
+        $dataUser = User::all();
+        return view('dash.coordinador.listUsuario')->with(compact('dataUser'));
     }
-    
+
+    public function indexStore()
+    {
+        $dataRol = Role::all(['name']);
+        $dataProyecto = Proyecto::all(['name']);
+        return view('dash.coordinador.addUsuario')->with(compact('dataRol', 'dataProyecto'));
+    }
+
     public function store(Request $request)
     {
-        
+
         $this->validateStore($request);
 
-        $role = Role::where('name', $request->role )->first();
+        $role = Role::where('name', $request->rol)->first();
 
-        if(empty($role)){
-            return response()->json([
-                'response' => false,
-                'message' => 'Role not found'
-            ]);
+        if (empty($role)) {
+            Alert::success('Opss', 'Error!');
+            return redirect()->back();
         }
 
         try {
 
             $user = User::create([
-                    'nit'=>  $request->nit,
-                    'name' =>  strtoupper($request->name),
-                    'last_name'=>  strtoupper($request->last_name),
-                    'email'=>  $request->email,
-                    'password' => Hash::make($request->password),
-                    'role' =>  $request->role
-                ]);
-            
+                'nit' =>  $request->nit,
+                'name' =>  strtoupper($request->nombre),
+                'last_name' =>  strtoupper($request->apellido),
+                'email' =>  $request->correo,
+                'password' => Hash::make($request->contrasenia),
+                'role' =>  $request->rol
+            ]);
+
+
+
+
             $user->assignRole($role);
 
-            return response()->json([
-                'response' => true,
-                'message' => 'create user'
-            ]);
+            Alert::success('Usario Creado', 'Hecho!');
+            return redirect()->back();
 
         } catch (\Illuminate\Database\QueryException $e) {
-            return response()->json([
+            return [
                 'response' => false,
                 'message' => $e->getMessage()
-            ]);
+            ];
         }
-        
     }
 
     protected function validateStore(Request $request)
     {
         $request->validate([
-            'nit'=> 'required|integer|unique:users,nit',
-            'last_name'=> 'required',
-            'email'=> 'required|unique:users,email',
-            'password'=> 'required',
-            'name' => 'required',
-            'role' => 'required'
+            'nit' => 'required|integer|unique:users,nit',
+            'apellido' => 'required',
+            'correo' => 'required|unique:users,email',
+            'contrasenia' => 'required',
+            'nombre' => 'required',
+            'rol' => 'required'
         ]);
-
     }
 
-    public function show(Request $request)
+    public function edit()
     {
-        $this->validateShow($request);
-        $user = User::where('nit', '=',  $request->nit)->first();
+        $nuevoId = $_POST['nuevoId'];
+        $nombre = $_POST['nombre'];
+        $apellido = $_POST['apellido'];
+        $correo = $_POST['correo'];
+        $nit = $_POST['nit'];
 
-        if(empty($user)){
 
-            return response()->json([
+        $userNuevo = User::where('nit', '=',  $nuevoId)->first();
+
+        if(!empty($userNuevo) && $nuevoId != $nit){
+            return [
                 'response' => false,
-                'message' => 'user not found'
-            ]);
-
+                'message' => 'Nit ya Existe!'
+            ];
         }
 
-        return response()->json([
-            'response' => true,
-            'message' => $user
-        ]);
 
-    }
-
-    protected function validateShow(Request $request)
-    {
-
-        $request->validate([
-            'nit' => 'required|integer',
-        ]);
-
-    }
-
-    public function edit(Request $request)
-    {
-        //$this->validateEdit($request);
-        $user = User::where('nit', '=',  $request->nit)->first();
+        $user = User::where('nit', '=',  $nit)->first();
 
 
-        if(empty($user)){
+        if (empty($user)) {
 
-            return response()->json([
+            return [
                 'response' => false,
-                'message' => 'user not found'
-            ]);
-
+                'message' => 'Usuario no Encontrado'
+            ];
         }
 
         try {
-            $user->nit = $request->nit;
-            $user->last_name = strtoupper($request->last_name);
-            $user->email = $request->email;
-            $user->name = strtoupper($request->name);
+
+            $user->nit = $nuevoId;
+            $user->last_name = strtoupper($apellido);
+            $user->email = $correo;
+            $user->name = strtoupper($nombre);
 
             $user->update();
 
-            return response()->json([
+            return [
                 'response' => true,
-                'message' => 'user update'
-            ]);
+                'message' => 'Usuario Actualizado!'
+            ];
 
         } catch (\Illuminate\Database\QueryException $e) {
 
@@ -137,24 +127,42 @@ class UserController extends Controller
                 'message' => $e->getMessage()
             ]);
         }
-
-    }
-
-    protected function validateEdit(Request $request)
-    {
-        $request->validate([
-            'nit'=> 'required|integer|unique:users,nit',
-            'last_name'=> 'required',
-            'email'=> 'required|unique:users,email',
-            'name' => 'required',
-        ]);
     }
 
     public function destroy(Request $request)
     {
-        $user = User::where('nit', '=',  $request->nit)->first();
 
-        if(empty($user)){
+
+        /*$nombre = $_POST['search'];
+
+
+        $carp = $this->driveData->deleteFile(strtoupper($nombre),  "/", "", 2);
+
+        try {
+            if ($carp['response']) {
+
+                $user = User::where('nit', '=',  $nombre)->first();
+
+                $proyect->delete();
+                return [
+                    'response' => true,
+                    'message' =>  'Proyecto eliminado'
+                ];
+            }
+            return [
+                'response' => false,
+                'message' =>  "Proyecto no registrado!"
+            ];
+        } catch (\Illuminate\Database\QueryException $e) {
+
+            return response()->json([
+                'response' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+        if (empty($user)) {
             return response()->json([
                 'response' => false,
                 'message' =>  "user no register!"
@@ -168,38 +176,37 @@ class UserController extends Controller
                 'response' => true,
                 'message' =>  'user delete'
             ]);
-                    
-            } catch (\Illuminate\Database\QueryException $e) {
+        } catch (\Illuminate\Database\QueryException $e) {
 
             return response()->json([
                 'response' => false,
                 'message' => $e->getMessage()
             ]);
-        }
-
+        }*/
     }
 
 
     //-------------------------------------
 
-    public function aggRole(Request $request){
+    public function aggRole(Request $request)
+    {
 
         //$this->validateaggRole($request);
 
         $user = User::where('nit', $request->nit)->first();
-        $role = Role::where('name', $request->name )->first();
+        $role = Role::where('name', $request->name)->first();
 
 
 
-        if(empty($role)){
+        if (empty($role)) {
             return response()->json([
                 'response' => false,
                 'message' => 'Role not found'
             ]);
         }
-        
 
-        if(!empty($user)){
+
+        if (!empty($user)) {
 
             $user->assignRole($role);
 
@@ -207,37 +214,34 @@ class UserController extends Controller
                 'response' => true,
                 'token' => 'Rol agg'
             ]);
+        } else {
 
-
-        }else{
-            
             return response()->json([
                 'response' => false,
                 'token' => "User no found"
             ]);
         }
-
-       
     }
 
-    public function deleteRole(Request $request){
+    public function deleteRole(Request $request)
+    {
 
         //$this->validateaggRole($request);
 
         $user = User::where('nit', $request->nit)->first();
-        $role = Role::where('name', $request->name )->first();
+        $role = Role::where('name', $request->name)->first();
 
 
 
-        if(empty($role)){
+        if (empty($role)) {
             return response()->json([
                 'response' => false,
                 'message' => 'Role not found'
             ]);
         }
-        
 
-        if(!empty($user)){
+
+        if (!empty($user)) {
 
             $user->removeRole($role);
 
@@ -245,20 +249,17 @@ class UserController extends Controller
                 'response' => true,
                 'token' => 'Rol delete'
             ]);
+        } else {
 
-
-        }else{
-            
             return response()->json([
                 'response' => false,
                 'token' => "User no found"
             ]);
         }
-
-
     }
 
-    protected function validateaggRole(Request $request){
+    protected function validateaggRole(Request $request)
+    {
 
         $request->validate([
 
@@ -266,8 +267,5 @@ class UserController extends Controller
             'role' => 'required'
 
         ]);
-
     }
-
-
 }
