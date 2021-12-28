@@ -312,7 +312,7 @@ class DriveController extends Controller
 
 
     //EDITAR DIRECTORIO (PADRE O HIJO)
-    public function editDirectory($carpetaPadre = "NATURA", $carpetaHijo = "NATURA2", $name = "NATURA266"){
+    public function editDirectory($carpetaPadre = "NATURA", $carpetaHijo = "NATURA266", $name = "NATURA266"){
 
         $dataPadre = $this->findDirectory($carpetaPadre);
 
@@ -335,8 +335,10 @@ class DriveController extends Controller
                     $dataHijo = $this->findDirectory($carpetaHijo, $dataPadre['path']);
 
                     if ($dataHijo) {
-                        //dd($dataHijo['path']);
-                        Storage::disk('google')->move('1QLpZtlufdxzPjIYAfHB8rocSlcDPCr1Z', $name);
+                        $porciones = explode("/", $dataHijo['path']);
+                       
+                        dd($porciones);
+                        Storage::disk('google')->move($porciones[1], $name);
 
                         return[
                             'response' => true,
