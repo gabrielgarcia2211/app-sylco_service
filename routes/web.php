@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ContratistaController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\DriveController;
 
 /*
 |--------------------------------------------------------------------------
@@ -107,6 +108,6 @@ Route::group(['prefix' => '/', 'middleware' => []], function () {
 });
 
 
-
+Route::get('/test2', [DriveController::class, 'editDirectory']);
 
 Route::get('/test', [App\Http\Controllers\DriveController::class, 'getMail']);

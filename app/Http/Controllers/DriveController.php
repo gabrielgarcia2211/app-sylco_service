@@ -311,6 +311,67 @@ class DriveController extends Controller
     }
 
 
+    //EDITAR DIRECTORIO (PADRE O HIJO)
+    public function editDirectory($carpetaPadre = "NATURA", $carpetaHijo = "NATURA2", $name = "NATURA266"){
+
+        $dataPadre = $this->findDirectory($carpetaPadre);
+
+        try {
+
+            if ($dataPadre) {
+
+                if ($carpetaHijo === "/") {
+
+                    //dd($dataPadre['path']);
+                    Storage::disk('google')->move($dataPadre['path'], $name);
+
+                    return[
+                        'response' => true,
+                        'message' => 'Directorio Actualizado (PADRE)'
+                    ];
+
+                } else {
+
+                    $dataHijo = $this->findDirectory($carpetaHijo, $dataPadre['path']);
+
+                    if ($dataHijo) {
+                        //dd($dataHijo['path']);
+                        Storage::disk('google')->move('1QLpZtlufdxzPjIYAfHB8rocSlcDPCr1Z', $name);
+
+                        return[
+                            'response' => true,
+                            'message' => 'Directorio Actualizado (HIJO)'
+                        ];
+
+
+                    } else {
+
+                        return[
+                            'response' => false,
+                            'message' => 'El Directorio no Existe (HIJO)'
+                        ];
+                    }
+                }
+
+            } else {
+
+                return [
+                    'response' => false,
+                    'message' => 'El Directorio no Existe (PADRE)'
+                ];
+            }
+
+
+        } catch (Exception $e) {
+            return [
+                'response' => false,
+                'message' =>  $e->getMessage()
+            ];
+        }
+       
+    }
+
+
     public function getMail($data = "hola")
     {
         $data = [
