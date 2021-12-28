@@ -144,14 +144,20 @@ class UserController extends Controller
         }
     }
 
-    public function destroy(Request $request)
+    public function destroy()
     {
 
 
-        /*$nombre = $_POST['search'];
+        $id = $_POST['search'];
 
 
-        $carp = $this->driveData->deleteFile(strtoupper($nombre),  "/", "", 2);
+        return [
+            'response' => true,
+            'message' =>   $id
+        ];
+
+
+        /*$carp = $this->driveData->deleteFile(strtoupper($nombre),  "/", "", 2);
 
         try {
             if ($carp['response']) {
