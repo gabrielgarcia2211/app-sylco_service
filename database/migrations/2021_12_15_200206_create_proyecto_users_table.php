@@ -19,10 +19,10 @@ class CreateProyectoUsersTable extends Migration
             $table->bigInteger("proyecto_id")->unsigned();
             $table->foreign('user_nit')
                 ->references('nit')
-                ->on('users');
+                ->on('users')->onDelete('cascade');
             $table->foreign('proyecto_id')
                 ->references('id')
-                ->on('proyectos');
+                ->on('proyectos')->onDelete('cascade');
 
         });
     }

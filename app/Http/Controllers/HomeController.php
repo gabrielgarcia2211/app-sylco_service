@@ -25,8 +25,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-
-
+       
         if (auth()->user()->hasRole('Coordinador')) {
 
             $dataContratista = DB::select("SELECT count('role_id') as contratista FROM model_has_roles WHERE role_id = 3 ");
@@ -39,6 +38,8 @@ class HomeController extends Controller
             }
 
             return view('dash.coordinador.index')->with(compact('dataContratista', 'dataProyecto'));
+        }else{
+            dd("nada");
         }
     }
 

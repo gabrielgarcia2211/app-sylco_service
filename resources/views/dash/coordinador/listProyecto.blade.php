@@ -62,10 +62,10 @@
                                                     </form>
                                                 </div>
                                                 <div class="col-6">
-                                                    <form id="formu-proyecto-delete" action="{{route('proyect.delete')}}" method="POST" onsubmit="return eliminarProyecto();">
+                                                    <form id="formu-proyecto-delete" action="{{route('proyect.delete')}}">
                                                         @csrf
                                                         <input type="hidden" name="nombre" value="{{$dataProyecto[$m]->name}}">
-                                                        <button class="btn btn-danger" style="width: 100%"><i class="far fa-trash-alt"></i></button>
+                                                        <button type="submit" class="btn btn-danger" style="width: 100%" id="btn-delete-proyecto" value="{{$dataProyecto[$m]->name}}" onclick="return eliminarProyecto(value)"><i class="far fa-trash-alt"></i></button>
                                                     </form>
                                                 </div>
                                             </div>

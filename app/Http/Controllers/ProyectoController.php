@@ -152,17 +152,18 @@ class ProyectoController extends Controller
         ]);
     }
 
-    public function delete(Request $request)
+    public function delete()
     {
-        $id = $request->input('nombre');
-        dd($id);
 
-        //$carp = $this->driveData->deleteFile(strtoupper($request->nombre),  "/", "", 3);
+        $nombre = $_POST['search'];
+       
+
+        $carp = $this->driveData->deleteFile(strtoupper($nombre),  "/", "", 3);
 
         try {
             if ($carp['response']) {
 
-                $proyect = Proyecto::where('name', $request->nombre)->first();
+                $proyect = Proyecto::where('name', $nombre)->first();
 
                 $proyect->delete();
                 return [
