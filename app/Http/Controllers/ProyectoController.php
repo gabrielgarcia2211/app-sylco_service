@@ -31,6 +31,7 @@ class ProyectoController extends Controller
 
     public function store(Request $request)
     {
+        
         $this->validateStore($request);
 
         try {
@@ -45,25 +46,17 @@ class ProyectoController extends Controller
                     'ubicacion' =>  $request->ubicacion,
                 ]);
 
-                $json[] = array(
+                return [
                     'response' => true,
-                    'message' => 'Proyecto Creado!',
-                );
-    
-                $JString = json_encode($json);
-                echo $JString;
-                return;
-
+                    'message' => 'Proyecto Creado!'
+                ];
             } else {
 
-                $json[] = array(
+
+                return [
                     'response' => false,
                     'message' => 'El Proyecto ya Existe!',
-                );
-    
-                $JString = json_encode($json);
-                echo $JString;
-                return;
+                ];
             }
         } catch (\Illuminate\Database\QueryException $e) {
             return [
@@ -136,7 +129,7 @@ class ProyectoController extends Controller
             ];
         } catch (\Illuminate\Database\QueryException $e) {
 
-            return[
+            return [
                 'response' => false,
                 'message' => $e->getMessage()
             ];
@@ -156,7 +149,7 @@ class ProyectoController extends Controller
     {
 
         $nombre = $_POST['search'];
-       
+
 
         $carp = $this->driveData->deleteFile(strtoupper($nombre),  "/", "", 3);
 
@@ -168,12 +161,12 @@ class ProyectoController extends Controller
                 $proyect->delete();
                 return [
                     'response' => true,
-                    'message' =>  'Proyect delete'
+                    'message' =>  'Proyecto eliminado'
                 ];
             }
             return [
                 'response' => false,
-                'message' =>  "Proyect no register!"
+                'message' =>  "Proyecto no registrado!"
             ];
         } catch (\Illuminate\Database\QueryException $e) {
 
@@ -183,5 +176,4 @@ class ProyectoController extends Controller
             ]);
         }
     }
-
 }
