@@ -37,6 +37,7 @@
                                         <th>Nombre</th>
                                         <th>Apellido</th>
                                         <th>Correo</th>
+                                        <th>Proyecto Asociado</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
@@ -46,6 +47,7 @@
                                         <th>Nombre</th>
                                         <th>Apellido</th>
                                         <th>Correo</th>
+                                        <th>Proyecto Asociado</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </tfoot>
@@ -56,12 +58,13 @@
                                         <td>{{$dataUser[$m]->name}}</td>
                                         <td>{{$dataUser[$m]->last_name}}</td>
                                         <td>{{$dataUser[$m]->email}}</td>
+                                        <td>{{$dataUser[$m]->proyecto}}</td>
                                         <td>
                                             <div class="row">
                                                 <div class="col-6">
                                                     <form id="formu-user-edit" action="{{route('user.edit')}}">
                                                         @csrf
-                                                        <button type="submit" class="btn btn-warning" style="width: 100%" id="btn-edit-proyecto" value="{{$dataUser[$m]}}" onclick="return editUsuario(value)"><i class="fas fa-edit"></i></button>
+                                                        <button type="submit" class="btn btn-warning" style="width: 100%" id="btn-edit-proyecto" value="{{$dataUser[$m]}}" onclick="return editUsuario(value, '{{$dataProyecto}}') "><i class="fas fa-edit"></i></button>
                                                     </form>
                                                 </div>
                                                 <div class="col-6">

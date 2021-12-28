@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Proyecto;
+use App\Models\Proyecto_User;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
@@ -14,8 +15,11 @@ class UserController extends Controller
 {
     public function index()
     {
-        $dataUser = User::all();
-        return view('dash.coordinador.listUsuario')->with(compact('dataUser'));
+        $dataProyecto = Proyecto::all(['id','name']);
+        $dataUser = User::select('users.nit', 'users.name', 'users.last_name', 'users.email' , 'proyectos.name AS proyecto', 'proyectos.id AS proyectoId')
+        ->join('proyecto_users', 'proyecto_users.user_nit', '=', 'users.nit')
+        ->join('proyectos', 'proyecto_users.proyecto_id', '=', 'proyectos.id')->get();
+        return view('dash.coordinador.listUsuario')->with(compact('dataUser', 'dataProyecto'));
     }
 
     public function indexStore()
@@ -31,6 +35,7 @@ class UserController extends Controller
         $this->validateStore($request);
 
         $role = Role::where('name', $request->rol)->first();
+        $proyecto = Proyecto::where('name', $request->proyecto)->first();
 
         if (empty($role)) {
             Alert::success('Opss', 'Error!');
@@ -38,7 +43,7 @@ class UserController extends Controller
         }
 
         try {
-
+            
             $user = User::create([
                 'nit' =>  $request->nit,
                 'name' =>  strtoupper($request->nombre),
@@ -48,7 +53,10 @@ class UserController extends Controller
                 'role' =>  $request->rol
             ]);
 
-
+            Proyecto_User::create([
+                'user_nit' =>    $request->nit,
+                'proyecto_id' =>  $proyecto->id
+            ]);
 
 
             $user->assignRole($role);
@@ -56,7 +64,7 @@ class UserController extends Controller
             Alert::success('Usario Creado', 'Hecho!');
             return redirect()->back();
 
-        } catch (\Illuminate\Database\QueryException $e) {
+        } catch (\Exception $e) {
             return [
                 'response' => false,
                 'message' => $e->getMessage()
@@ -83,21 +91,18 @@ class UserController extends Controller
         $apellido = $_POST['apellido'];
         $correo = $_POST['correo'];
         $nit = $_POST['nit'];
+        $nuevoProyecto = $_POST['nuevoProyecto'];
+        $antProyecto = $_POST['antProyecto'];
 
 
         $userNuevo = User::where('nit', '=',  $nuevoId)->first();
-
         if(!empty($userNuevo) && $nuevoId != $nit){
             return [
                 'response' => false,
                 'message' => 'Nit ya Existe!'
             ];
         }
-
-
         $user = User::where('nit', '=',  $nit)->first();
-
-
         if (empty($user)) {
 
             return [
@@ -113,14 +118,24 @@ class UserController extends Controller
             $user->email = $correo;
             $user->name = strtoupper($nombre);
 
+
+            //$findProyecto = Proyecto::find($nuevoProyecto)->fisrt();
+
+            $findUserp = Proyecto_User::where('user_nit','=' , $nit)->where('proyecto_id','=' , $antProyecto)->first();
+
+            $findUserp->user_nit = $nuevoId;
+            $findUserp->proyecto_id = $nuevoProyecto;
+
+            
             $user->update();
+            $findUserp->update();
 
             return [
                 'response' => true,
                 'message' => 'Usuario Actualizado!'
             ];
 
-        } catch (\Illuminate\Database\QueryException $e) {
+        } catch (\Exception $e) {
 
             return response()->json([
                 'response' => false,

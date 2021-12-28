@@ -198,10 +198,15 @@ async function editProyecto(proyecto) {
 
 //-------USUARIOS
 
-
-async function editUsuario(proyecto) {
+//
+async function editUsuario(proyecto, listProyecto) {
     event.preventDefault();
+    var listaP = "";
     const data = JSON.parse(proyecto);
+    const dataProyecto = JSON.parse(listProyecto);
+    dataProyecto.forEach(ta => {
+        listaP += `<option value="${ta.id}" >${ta.name}</option>`
+    })
     const { value: formValues } = await Swal.fire({
         title: 'Ingrese los Valores',
         showCancelButton: true,
@@ -209,7 +214,11 @@ async function editUsuario(proyecto) {
             `<input id="swal-input1" class="swal2-input" placeholder="Nit" value="${data['nit']}">` +
             `<input id="swal-input2" class="swal2-input" placeholder="Nombre" value="${data['name']}">` +
             `<input id="swal-input3" class="swal2-input" placeholder="Apellido" value="${data['last_name']}">` +
-            `<input id="swal-input4" class="swal2-input" placeholder="Correo" value="${data['email']}">`,
+            `<input id="swal-input4" class="swal2-input" placeholder="Correo" value="${data['email']}">` +
+            `<select id="swal-input5" class="swal2-input"> `+
+                listaP +
+            `</select>`,
+
         focusConfirm: false,
         
         preConfirm: () => {
@@ -217,7 +226,8 @@ async function editUsuario(proyecto) {
                 document.getElementById('swal-input1').value,
                 document.getElementById('swal-input2').value,
                 document.getElementById('swal-input3').value,
-                document.getElementById('swal-input4').value
+                document.getElementById('swal-input4').value,
+                document.getElementById('swal-input5').value
             ]
         }
     })
@@ -232,8 +242,9 @@ async function editUsuario(proyecto) {
         } else {
 
             var url = $("#formu-user-edit").attr('action');
+            dataOp.push(data['proyectoId']);
             dataOp.push(data['nit']);
-            var dataSalida = { nuevoId: dataOp[0], nombre: dataOp[1], apellido: dataOp[2], correo: dataOp[3], nit: dataOp[4] };
+            var dataSalida = { nuevoId: dataOp[0], nombre: dataOp[1], apellido: dataOp[2], correo: dataOp[3], nuevoProyecto: dataOp[4], antProyecto: dataOp[5], nit: dataOp[6] };
             $.ajax({
 
                 headers: {

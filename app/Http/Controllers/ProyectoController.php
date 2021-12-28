@@ -58,7 +58,7 @@ class ProyectoController extends Controller
                     'message' => 'El Proyecto ya Existe!',
                 ];
             }
-        } catch (\Illuminate\Database\QueryException $e) {
+        } catch (\Exception $e) {
             return [
                 'response' => false,
                 'message' => $e->getMessage()
@@ -109,7 +109,7 @@ class ProyectoController extends Controller
                     'response' => true,
                     'message' => 'Proyecto Actualizado'
                 ];
-            } catch (\Illuminate\Database\QueryException $e) {
+            } catch (\Exception $e) {
     
                 return [
                     'response' => false,
@@ -151,7 +151,7 @@ class ProyectoController extends Controller
                 'response' => false,
                 'message' =>  "Proyecto no registrado!"
             ];
-        } catch (\Illuminate\Database\QueryException $e) {
+        } catch (\Exception $e) {
 
             return response()->json([
                 'response' => false,
