@@ -40,7 +40,7 @@
     <script src="{{asset('vendor/jquery-easing/jquery.easing.min.js')}}"></script>
 
     <!-- Custom scripts for all pages-->
-    @yield('script')
+    
     <script src="{{asset('js/sb-admin-2.min.js')}}"></script>
 
     <!-- Page level plugins -->
@@ -52,6 +52,8 @@
     <script src="{{asset('js/demo/datatables-demo.js')}}"></script>
     <script src="{{asset('js/demo/chart-area-demo.js')}}"></script>
     <script src="{{asset('js/demo/chart-pie-demo.js')}}"></script>
+
+    @yield('script')
 
    
 </body>

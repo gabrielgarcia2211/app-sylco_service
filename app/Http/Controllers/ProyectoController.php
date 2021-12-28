@@ -31,7 +31,7 @@ class ProyectoController extends Controller
 
     public function store(Request $request)
     {
-        
+
         $this->validateStore($request);
 
         try {
@@ -75,57 +75,37 @@ class ProyectoController extends Controller
         ]);
     }
 
-    public function show(Request $request)
+    public function edit()
     {
-        $this->validateShow($request);
-        $proyect = Proyecto::find($request->id);
+
+        $name = $_POST['name'];
+        $descripcion = $_POST['descripcion'];
+        $ubicacion = $_POST['ubicacion'];
+        $id = $_POST['id'];
+
+
+        $proyect = Proyecto::find($id);
 
         if (empty($proyect)) {
 
             return [
                 'response' => false,
-                'message' => 'proyect not found'
+                'message' => 'Proyecto no Existe'
             ];
         }
 
-        return [
-            'response' => true,
-            'message' => $proyect
-        ];
-    }
-
-    protected function validateShow(Request $request)
-    {
-
-        $this->validate($request, [
-            'id' => 'required',
-        ]);
-    }
-
-    public function edit(Request $request)
-    {
-        $this->validateEdit($request);
-        $proyect = Proyecto::find($request->id);
-
-        if (empty($proyect)) {
-
-            return [
-                'response' => false,
-                'message' => 'proyect not found'
-            ];
-        }
 
         try {
 
-            $proyect->name =  $request->name;
-            $proyect->descripcion =  $request->descripcion;
-            $proyect->ubicacion =  $request->ubicacion;
+            $proyect->name =  $name;
+            $proyect->descripcion =  $descripcion;
+            $proyect->ubicacion =  $ubicacion;
 
             $proyect->update();
 
             return [
                 'response' => true,
-                'message' => 'proyect update'
+                'message' => 'Proyecto Actualizado'
             ];
         } catch (\Illuminate\Database\QueryException $e) {
 
@@ -136,14 +116,6 @@ class ProyectoController extends Controller
         }
     }
 
-    protected function validateEdit(Request $request)
-    {
-        $this->validate($request, [
-            'name' => 'required',
-            'descripcion' => 'required',
-            'ubicacion' => 'required',
-        ]);
-    }
 
     public function delete()
     {

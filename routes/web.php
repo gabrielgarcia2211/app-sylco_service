@@ -90,7 +90,6 @@ Route::group(['prefix' => '/', 'middleware' => []], function () {
     Route::get('proyect/list', [ProyectoController::class, 'index'])->name('proyect.list');
     Route::get('proyect/create', [ProyectoController::class, 'indexStore'])->name('proyect.store');
     Route::post('proyect/create', [ProyectoController::class, 'store'])->name('proyect.store');
-    Route::post('proyect/show', [ProyectoController::class, 'show'])->name('proyect.show');
     Route::post('proyect/edit', [ProyectoController::class, 'edit'])->name('proyect.edit');
     Route::post('proyect/delete', [ProyectoController::class, 'delete'])->name('proyect.delete');
 });

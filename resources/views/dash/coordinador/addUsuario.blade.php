@@ -3,59 +3,78 @@
 
 @section('content')
 
-<!-- Sidenav -->
-<!-- Main content -->
-@include('dash.coordinador.nav.nav')
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    @include('dash.coordinador.nav.navi')
+
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            @include('dash.coordinador.nav.navs')
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+               
+
+            </div>
 
 
-
-    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 style="font-family: 'Staatliches', cursive;" class="h2">Agregar Usuario <i class="fas fa-address-card"></i></h1>
         </div>
-        <div>
-            <form>
-                <div class="mb-3">
-                    <label for="exampleInputNit" class="form-label">NIT</label>
-                    <input type="number" class="form-control" id="exampleInputNit" aria-describedby="emailHelp">
-                </div>
-                <div class="mb-3">
-                    <label for="exampleInputNombre" class="form-label">NOMBRE</label>
-                    <input type="text" class="form-control" id="exampleInputNombre" aria-describedby="emailHelp">
-                </div>
-                <div class="mb-3">
-                    <label for="exampleInputApeliido" class="form-label">APELLIDO</label>
-                    <input type="text" class="form-control" id="exampleInputApeliido" aria-describedby="emailHelp">
-                </div>
-                <div class="mb-3">
-                    <label for="exampleInputEmail1" class="form-label">EMAIL</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                </div>
-                <div class="mb-3">
-                    <label for="exampleInputPassword1" class="form-label">CONTRASEÑA</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1">
-                </div>
-                <div class="mb-3">
-                    <label for="exampleSelect" class="form-label">ROL</label>
-                    <select class="form-select ">
-                        <option>Seleccionar</option>
-                    </select>
-                </div>
-                <div id="boton">
-                    <button type="submit " class="btn">AGREGAR</button>
-                </div>
-            </form>
-        </div>
-        <br>
-        <footer style="background-color: #fe5f55;" class="fixed-bottom py-4 mt-auto">
-            <div class="container px-5">
-                <div class="row align-items-center justify-content-between flex-column flex-sm-row">
-                    <div class="col-auto">
-                        <div class="small m-0 text-white">Copyright &copy; Sylco SAS</div>
-                    </div>
+        <!-- /.container-fluid -->
+
+
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span style="color:black">Copyright &copy; SYLCO S.A.S 2021</span>
                 </div>
             </div>
         </footer>
-    </main>       
+        <!-- End of Footer -->
 
-@endsection
+    </div>
+
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Salir?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">¿Desea salir y cerrar la sesion?.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                    <a class="btn btn-primary" href="{{route('logout')}}">Salir</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    @endsection
+
+
+
+    @section('script')
+    <script src="{{asset('js/coordinador/index.js')}}"></script>
+    @endsection

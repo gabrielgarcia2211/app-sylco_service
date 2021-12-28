@@ -51,14 +51,14 @@
                                     @isset($dataProyecto)
                                     @for($m = 0; $m < count($dataProyecto); $m++) <tr>
                                         <td>{{$dataProyecto[$m]->name}}</td>
-                                        <td>{{$dataProyecto[$m]->descripcion}}</td>
+                                        <td><textarea style="width: 100%; height: 180px;" >{{$dataProyecto[$m]->descripcion}}</textarea></td>
                                         <td>{{$dataProyecto[$m]->ubicacion}}</td>
                                         <td>
                                             <div class="row">
                                                 <div class="col-6">
-                                                    <form action="formu-proyecto-edit" method="POST">
+                                                    <form id="formu-proyecto-edit" action="{{route('proyect.edit')}}">
                                                         @csrf
-                                                        <button class="btn btn-warning" style="width: 100%"><i class="fas fa-edit"></i></button>
+                                                        <button type="submit" class="btn btn-warning" style="width: 100%" id="btn-edit-proyecto" value="{{$dataProyecto[$m]}}" onclick="return editProyecto(value)"><i class="fas fa-edit"></i></button>
                                                     </form>
                                                 </div>
                                                 <div class="col-6">
