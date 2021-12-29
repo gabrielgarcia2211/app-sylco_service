@@ -28,7 +28,7 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Añadir Usuario</h1>
                                     </div>
-                                    <form action="{{Route('user.store')}}" class="user" id="form-user" method="POST">
+                                    <form action="{{Route('user.store')}}" class="user" id="form-user" method="POST" onsubmit="return guardarUsuario()">
                                         @csrf
                                         <div class="form-group">
                                             <input type="number" class="form-control {{ $errors->has('nit') ? ' is-invalid' : '' }} form-control-user" value="{{ old('nit') }}" id="nit" name="nit" maxlength="12" aria-describedby="emailHelp" placeholder="NIT">

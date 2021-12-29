@@ -10,13 +10,6 @@ use RealRashid\SweetAlert\Facades\Alert;
 class ProyectoController extends Controller
 {
 
-    private $driveData;
-
-    function __construct()
-    {
-        $this->driveData = new DriveController();
-    }
-
 
     public function index()
     {
@@ -34,11 +27,10 @@ class ProyectoController extends Controller
 
         $this->validateStore($request);
 
-        try {
+        $dataProyecto = Proyecto::where('name', strtoupper($request->nombre))->first();
+        if (empty($dataProyecto)) {
 
-            $carp = $this->driveData->createDirectory(strtoupper($request->nombre));
-
-            if ($carp['response']) {
+            try {
 
                 Proyecto::create([
                     'name' =>  strtoupper($request->nombre),
@@ -50,18 +42,19 @@ class ProyectoController extends Controller
                     'response' => true,
                     'message' => 'Proyecto Creado!'
                 ];
-            } else {
-
-
+            } catch (\Exception $e) {
                 return [
                     'response' => false,
-                    'message' => 'El Proyecto ya Existe!',
+                    'message' => $e->getMessage()
                 ];
             }
-        } catch (\Exception $e) {
+        } else {
+
             return [
+
                 'response' => false,
-                'message' => $e->getMessage()
+                'message' => 'El Proyecto ya Existe!'
+
             ];
         }
     }
@@ -83,80 +76,68 @@ class ProyectoController extends Controller
         $ubicacion = $_POST['ubicacion'];
         $id = $_POST['id'];
 
-
+        $dataProyecto = Proyecto::where('name', strtoupper($name))->first();
         $proyect = Proyecto::find($id);
+
+
+        if (!empty($dataProyecto) && $name != $proyect->name) {
+            return [
+                'response' => false,
+                'message' => 'El Proyecto ya Existe!'
+            ];
+        }
 
         if (empty($proyect)) {
 
             return [
                 'response' => false,
-                'message' => 'Proyecto no Existe'
-            ];
-        }
-
-        $carp = $this->driveData->editDirectory($proyect->name, '/' , $name );
-
-        if($carp['response']){
-            try {
-
-                $proyect->name =  $name;
-                $proyect->descripcion =  $descripcion;
-                $proyect->ubicacion =  $ubicacion;
-    
-                $proyect->update();
-    
-                return [
-                    'response' => true,
-                    'message' => 'Proyecto Actualizado'
-                ];
-            } catch (\Exception $e) {
-    
-                return [
-                    'response' => false,
-                    'message' => $e->getMessage()
-                ];
-            }
-        }else{
-            return [
-                'response' => false,
-                'message' => $carp['message']
+                'message' => 'Proyecto no Encontrado'
             ];
         }
 
 
-        
-    }
-
-
-    public function delete()
-    {
-
-        $nombre = $_POST['search'];
-
-
-        $carp = $this->driveData->deleteFile(strtoupper($nombre),  "/", "", 3);
 
         try {
-            if ($carp['response']) {
 
-                $proyect = Proyecto::where('name', $nombre)->first();
+            $proyect->name =  $name;
+            $proyect->descripcion =  $descripcion;
+            $proyect->ubicacion =  $ubicacion;
 
-                $proyect->delete();
-                return [
-                    'response' => true,
-                    'message' =>  'Proyecto eliminado'
-                ];
-            }
+            $proyect->update();
+
             return [
-                'response' => false,
-                'message' =>  "Proyecto no registrado!"
+                'response' => true,
+                'message' => 'Proyecto Actualizado'
             ];
         } catch (\Exception $e) {
 
-            return response()->json([
+            return [
                 'response' => false,
                 'message' => $e->getMessage()
-            ]);
+            ];
+        }
+    }
+
+    public function delete()
+    {
+        $nombre = $_POST['search'];
+
+        try {
+
+            $proyect = Proyecto::where('name', $nombre)->first();
+
+            $proyect->delete();
+
+            return [
+                'response' => true,
+                'message' =>  'Proyecto eliminado'
+            ];
+        } catch (\Exception $e) {
+
+            return [
+                'response' => false,
+                'message' => $e->getMessage()
+            ];
         }
     }
 }

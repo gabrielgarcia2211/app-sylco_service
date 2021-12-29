@@ -127,7 +127,7 @@ async function editProyecto(proyecto) {
             `<input id="swal-input2" class="swal2-input" placeholder="Descripcion" value="${data['descripcion']}">` +
             `<input id="swal-input3" class="swal2-input" placeholder="Ubicacion" value="${data['ubicacion']}">`,
         focusConfirm: false,
-        
+
         preConfirm: () => {
             return [
                 document.getElementById('swal-input1').value,
@@ -198,7 +198,74 @@ async function editProyecto(proyecto) {
 
 //-------USUARIOS
 
-//
+function guardarUsuario() {
+    event.preventDefault();
+
+    //var formu = document.getElementById("form-user");
+    //formu.submit();
+
+    var url = $("#form-user").attr('action');
+    var parametros = new FormData($("#form-user")[0]);
+
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        method: "POST",
+        url: url,
+        data: parametros,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            Swal.fire({
+                title: 'Cargando',
+                text: 'Creando proyecto...',
+                imageUrl: 'https://img.webme.com/pic/a/andwas/cargando5.gif',
+                imageWidth: 200,
+                imageHeight: 180,
+                imageAlt: 'Creando proyecto',
+                showCancelButton: false,
+                showConfirmButton: false
+            })
+        },
+        success: function (response) {
+            if (response['response']) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Hecho!',
+                    text: response['message'],
+                })
+                location.reload();
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: response['message'],
+                })
+            }
+        }, error: function (jqXhr, json, errorThrown) {// this are default for ajax errors 
+            var errors = jqXhr.responseJSON;
+            var errorsHtml = '';
+            $.each(errors['errors'], function (index, value) {
+                errorsHtml += '<ul class="list-group"><li class="list-group-item alert alert-danger">' + value + '</li></ul>';
+            });
+            //I use SweetAlert2 for this
+            Swal.fire({
+                title: "Error " + jqXhr.status + ': ' + errorThrown,// this will output "Error 422: Unprocessable Entity"
+                html: errorsHtml,
+                width: 'auto',
+                icon: 'error',
+                confirmButtonText: 'Intentar',
+                cancelButtonText: 'Cancelar',
+            });
+
+        }
+    });
+
+}
+
+
+
 async function editUsuario(proyecto, listProyecto) {
     event.preventDefault();
     var listaP = "";
@@ -215,12 +282,12 @@ async function editUsuario(proyecto, listProyecto) {
             `<input id="swal-input2" class="swal2-input" placeholder="Nombre" value="${data['name']}">` +
             `<input id="swal-input3" class="swal2-input" placeholder="Apellido" value="${data['last_name']}">` +
             `<input id="swal-input4" class="swal2-input" placeholder="Correo" value="${data['email']}">` +
-            `<select id="swal-input5" class="swal2-input"> `+
-                listaP +
+            `<select id="swal-input5" class="swal2-input"> ` +
+            listaP +
             `</select>`,
 
         focusConfirm: false,
-        
+
         preConfirm: () => {
             return [
                 document.getElementById('swal-input1').value,
@@ -291,7 +358,6 @@ async function editUsuario(proyecto, listProyecto) {
 }
 
 
-
 function eliminarUsuario(nit) {
     event.preventDefault();
     Swal.fire({
@@ -306,7 +372,7 @@ function eliminarUsuario(nit) {
         if (result.isConfirmed) {
             //alert(nombre);
             var url = $("#formu-user-delete").attr('action');
-           // var dataSalida = { search: nit: dataOp[0] };
+            // var dataSalida = { search: nit: dataOp[0] };
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

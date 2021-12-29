@@ -2,23 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Proyecto;
-use App\Models\Proyecto_User;
 use App\Models\User;
+use App\Models\Proyecto;
 use Illuminate\Http\Request;
+use App\Models\Proyecto_User;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use RealRashid\SweetAlert\Facades\Alert;
+use App\Http\Controllers\DriveController;
+use Illuminate\Support\Facades\Validator;
 
 
 class UserController extends Controller
 {
+
+    private $driveData;
+
+    function __construct()
+    {
+        $this->driveData = new DriveController();
+    }
+
+
     public function index()
     {
-        $dataProyecto = Proyecto::all(['id','name']);
-        $dataUser = User::select('users.nit', 'users.name', 'users.last_name', 'users.email' , 'proyectos.name AS proyecto', 'proyectos.id AS proyectoId')
-        ->join('proyecto_users', 'proyecto_users.user_nit', '=', 'users.nit')
-        ->join('proyectos', 'proyecto_users.proyecto_id', '=', 'proyectos.id')->get();
+        $dataProyecto = Proyecto::all(['id', 'name']);
+        $dataUser = User::select('users.nit', 'users.name', 'users.last_name', 'users.email', 'proyectos.name AS proyecto', 'proyectos.id AS proyectoId')
+            ->join('proyecto_users', 'proyecto_users.user_nit', '=', 'users.nit')
+            ->join('proyectos', 'proyecto_users.proyecto_id', '=', 'proyectos.id')->get();
         return view('dash.coordinador.listUsuario')->with(compact('dataUser', 'dataProyecto'));
     }
 
@@ -32,56 +43,125 @@ class UserController extends Controller
     public function store(Request $request)
     {
 
-        $this->validateStore($request);
+        $respError = $this->validateStore($request);
 
-        $role = Role::where('name', $request->rol)->first();
-        $proyecto = Proyecto::where('name', $request->proyecto)->first();
 
-        if (empty($role)) {
-            Alert::success('Opss', 'Error!');
-            return redirect()->back();
+        if (!$respError) {
+           
+            $role = Role::where('name', $request->rol)->first();
+            $proyecto = Proyecto::where('name', $request->proyecto)->first();
+    
+    
+            if (empty($role) || empty($proyecto)) {
+                return [
+                    'response' => false,
+                    'message' => 'Oppsxd!'
+                ];
+            }
+    
+    
+            $dataUser = $this->driveData->findDirectory(strtoupper($request->nombre));
+    
+    
+            if (!empty($dataUser)) {
+    
+                return [
+                    'response' => false,
+                    'message' => 'Nombre de Usuario ya Existe'
+                ];
+    
+            }
+    
+            $this->driveData->createDirectory(strtoupper($request->nombre));
+    
+    
+            try {
+    
+                $user = User::create([
+                    'nit' =>  $request->nit,
+                    'name' =>  strtoupper($request->nombre),
+                    'last_name' =>  strtoupper($request->apellido),
+                    'email' =>  $request->correo,
+                    'password' => Hash::make($request->contrasenia),
+                    'role' =>  $request->rol
+                ]);
+    
+                Proyecto_User::create([
+                    'user_nit' =>    $request->nit,
+                    'proyecto_id' =>  $proyecto->id
+                ]);
+    
+    
+                $user->assignRole($role);
+
+
+                return [
+                    'response' => true,
+                    'message' => 'Usuario Creado'
+                ];
+
+            } catch (\Exception $e) {
+                return [
+                    'response' => false,
+                    'message' => $e->getMessage()
+                ];
+            }
+
+
+
+        } else {
+            return $respError;
         }
 
-        try {
-            
-            $user = User::create([
-                'nit' =>  $request->nit,
-                'name' =>  strtoupper($request->nombre),
-                'last_name' =>  strtoupper($request->apellido),
-                'email' =>  $request->correo,
-                'password' => Hash::make($request->contrasenia),
-                'role' =>  $request->rol
-            ]);
-
-            Proyecto_User::create([
-                'user_nit' =>    $request->nit,
-                'proyecto_id' =>  $proyecto->id
-            ]);
 
 
-            $user->assignRole($role);
 
-            Alert::success('Usario Creado', 'Hecho!');
-            return redirect()->back();
 
-        } catch (\Exception $e) {
-            return [
-                'response' => false,
-                'message' => $e->getMessage()
-            ];
-        }
+       
     }
 
     protected function validateStore(Request $request)
     {
-        $request->validate([
-            'nit' => 'required|integer|unique:users,nit',
+        $validator = Validator::make($request->all(), [
+            'nit' => 'required|unique:users,nit',
             'apellido' => 'required',
             'correo' => 'required|unique:users,email',
             'contrasenia' => 'required',
             'nombre' => 'required',
-            'rol' => 'required'
         ]);
+
+        $error = $validator->getMessageBag()->toArray();
+
+        if (empty($error)) {
+            return false;
+        } else {
+
+            return response()->json(array(
+                'success' => false,
+                'message' => 'There are incorect values in the form!',
+                'errors' =>  $error
+            ), 422);
+        }
+
+        /*dd($validator->getMessageBag()->toArray());
+
+        if($validator){
+            return [
+                'response' => false,
+                'message' => 'Opps!'
+            ];
+        }else{
+            return [
+                'response' => false,
+                'message' => 'Opp2s!'
+            ];
+        }*/
+
+
+        /*if ($request->ajax()) {
+            
+            
+        }*/
     }
 
     public function edit()
@@ -96,7 +176,7 @@ class UserController extends Controller
 
 
         $userNuevo = User::where('nit', '=',  $nuevoId)->first();
-        if(!empty($userNuevo) && $nuevoId != $nit){
+        if (!empty($userNuevo) && $nuevoId != $nit) {
             return [
                 'response' => false,
                 'message' => 'Nit ya Existe!'
@@ -121,12 +201,12 @@ class UserController extends Controller
 
             //$findProyecto = Proyecto::find($nuevoProyecto)->fisrt();
 
-            $findUserp = Proyecto_User::where('user_nit','=' , $nit)->where('proyecto_id','=' , $antProyecto)->first();
+            $findUserp = Proyecto_User::where('user_nit', '=', $nit)->where('proyecto_id', '=', $antProyecto)->first();
 
             $findUserp->user_nit = $nuevoId;
             $findUserp->proyecto_id = $nuevoProyecto;
 
-            
+
             $user->update();
             $findUserp->update();
 
@@ -134,7 +214,6 @@ class UserController extends Controller
                 'response' => true,
                 'message' => 'Usuario Actualizado!'
             ];
-
         } catch (\Exception $e) {
 
             return response()->json([
@@ -146,7 +225,6 @@ class UserController extends Controller
 
     public function destroy()
     {
-
 
         $id = $_POST['search'];
 
