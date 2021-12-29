@@ -17,13 +17,13 @@ class CreateFileUsersTable extends Migration
             $table->id();
             $table->integer("user_nit");
             $table->bigInteger("file_id")->unsigned();
-            $table->date("date");
+            $table->dateTime("date");
             $table->foreign('user_nit')
                 ->references('nit')
-                ->on('users');
+                ->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('file_id')
                 ->references('id')
-                ->on('files');
+                ->on('files')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

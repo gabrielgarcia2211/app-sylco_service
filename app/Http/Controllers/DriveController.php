@@ -61,70 +61,8 @@ class DriveController extends Controller
     }
 
 
-    //LISTAR DIRECTORIOS (PADRE O HIJO)
-    public function listDirectory($carpetaPadre = "", $carpetaHijo = "/")
-    {
-
-        $dataPadre = $this->findDirectory($carpetaPadre);
-
-        try {
-
-            if ($dataPadre) {
-
-                if ($carpetaHijo === "/") {
-
-                    $files = collect(Storage::disk('google')
-                        ->listContents($dataPadre['path'], false))
-                        ->where('type', '=', 'dir');
-                } else {
-
-                    $dataHijo = $this->findDirectory($carpetaHijo, $dataPadre['path']);
-
-                    if ($dataHijo) {
-
-                        $files = collect(Storage::disk('google')
-                            ->listContents($dataPadre['path'] . '/' . $dataHijo['path'], false))
-                            ->where('type', '=', 'file');
-                    } else {
-
-                        return [
-                            'response' => false,
-                            'message' => 'El Directorio no Existe (HIJO)'
-                        ];
-                    }
-                }
-
-                $dataJson = array();
-
-
-
-                foreach ($files as &$file) {
-                    array_push($dataJson, [$file['name'], Storage::disk('google')->url($file['path'])]);
-                }
-
-
-                return [
-                    'response' => true,
-                    'message' =>  $dataJson
-                ];
-            } else {
-
-                return [
-                    'response' => false,
-                    'message' => 'El Directorio no Existe (PADRE)'
-                ];
-            }
-        } catch (Exception $e) {
-            return [
-                'response' => false,
-                'message' =>  $e->getMessage()
-            ];
-        }
-    }
-
-
     //GUARDAR ARCHIVOS EN DIRECTORIOS (PADRE O HIJO)
-    public function putFile($carpetaPadre = "hola", $carpetaHijo = "prueba", $file = "test.txt")
+    public function putFile($carpetaPadre = "hola", $file = "test.txt")
     {
 
         $dataPadre = $this->findDirectory($carpetaPadre);
@@ -134,34 +72,30 @@ class DriveController extends Controller
 
             if ($dataPadre) {
 
-                if ($carpetaHijo === "/") {
+                Storage::disk('google')->put($dataPadre['path'] . '/' . $name, $file);
 
-                    Storage::disk('google')->put($dataPadre['path'] . '/' . $name, $file);
-                } else {
+                $files = collect(Storage::disk('google')
+                    ->listContents($dataPadre['path'], false))
+                    ->where('filename', '=', ''.$name)
+                    ->where('type', '=', 'file');
 
-                    $dataHijo = $this->findDirectory($carpetaHijo, $dataPadre['path']);
 
-                    if ($dataHijo) {
+                $dataJson = array();
 
-                        Storage::disk('google')->put($dataPadre['path'] . '/' . $dataHijo['path'] . '/' . $name, $file);
-                    } else {
-
-                        return [
-                            'response' => false,
-                            'message' => 'El Directorio no Existe (HIJO)'
-                        ];
-                    }
+                foreach ($files as &$file) {
+                    array_push($dataJson, [$file['name'], Storage::disk('google')->url($file['path'])]);
                 }
 
                 return [
                     'response' => true,
-                    'message' => $name
+                    'message' =>  $dataJson
                 ];
+
             } else {
 
                 return [
                     'response' => false,
-                    'message' => 'El Directorio no Existe (PADRE)'
+                    'message' => 'El Directorio no Existe (USUARIO)'
                 ];
             }
         } catch (Exception $e) {
@@ -309,6 +243,45 @@ class DriveController extends Controller
                     ];
                 }
             } else {
+                return [
+                    'response' => false,
+                    'message' => 'El Directorio no Existe (PADRE)'
+                ];
+            }
+        } catch (Exception $e) {
+            return [
+                'response' => false,
+                'message' =>  $e->getMessage()
+            ];
+        }
+    }
+
+    //LISTAR DIRECTORIOS (PADRE O HIJO)
+    public function listDirectory($carpetaPadre = "")
+    {
+
+        $dataPadre = $this->findDirectory($carpetaPadre);
+        
+        try {
+
+            if ($dataPadre) {
+
+                $files = collect(Storage::disk('google')
+                    ->listContents($dataPadre['path'], false))
+                    ->where('type', '=', 'file');
+
+
+                $dataJson = array();
+                foreach ($files as &$file) {
+                    array_push($dataJson, [$file['name'], Storage::disk('google')->url($file['path'])]);
+                }
+
+                return [
+                    'response' => true,
+                    'message' =>  $dataJson
+                ];
+            } else {
+
                 return [
                     'response' => false,
                     'message' => 'El Directorio no Existe (PADRE)'

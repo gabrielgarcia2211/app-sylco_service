@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\File;
 use Illuminate\Http\Request;
 use App\Http\Controllers\DriveController;
+use App\Models\File_User;
 
 class FileController extends Controller
 {
@@ -29,26 +30,27 @@ class FileController extends Controller
 
         // $this->validateStore($request);
 
+        $nombreArchivo = "data";
+
         try {
 
-            $file = $this->driveData->putFile(strtoupper('natura'), strtoupper('arturo'), 'file.txt');
-
-           
-
+            $file = $this->driveData->putFile('DAVID', 'file.txt');
+         
             if($file['response']) {
 
                 
-                $archivo = File::create([
-                    /*'name' =>  $request->name,
-                    'descripcion' =>  $request->descripcion,
-                    'file' =>  $request->file,
-                    'aceptacion' =>  $request->aceptacion*/
-
-                    'name' =>  $file['message'],
+                $fileUp = File::create([
+                    'name' =>  $nombreArchivo,
                     'descripcion' =>  'holaaaa',
-                    'file' =>  '',
+                    'file' =>   $file['message'][0][1],
                     'aceptacion' =>  '0'
+                ]);
 
+
+                File_User::create([
+                    'user_nit' => 13,
+                    'file_id' => $fileUp->id,
+                    'date' => date('Y-m-d H:i:s')
                 ]);
                 
                 return [

@@ -74,7 +74,7 @@ Route::group(['prefix' => 'coordinador/', 'middleware' => []], function () {
     Route::post('user/delete', [UserController::class, 'destroy'])->name('user.delete');
 
     // CONTRATISTA
-
+    Route::get('contratista/file/list', [ContratistaController::class, 'index'])->name('contratista.file.list');
     Route::post('contratista/file/list', [ContratistaController::class, 'showFile'])->name('contratista.file.list');
 
 
