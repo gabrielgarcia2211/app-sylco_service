@@ -11,13 +11,32 @@ class RolController extends Controller
 
     public function index()
     {
-        $dataRol = Role::all(['name']);
-        
-        $dataUser = User::all(['nit','name']);
-
-        return view('dash.coordinador.listRol')->with(compact('dataRol', 'dataUser'));
+        return view('dash.coordinador.listRol');
     }
-    
 
-    
+    public function findRolUser()
+    {
+        $nit = 1;
+        $userRolDelete = array();
+
+
+        $userRolAdd = User::where('nit', $nit)->first();
+        $catRol = Role::count();
+        $data = $userRolAdd->getRoleNames();
+
+        for ($j = 0; $j < $catRol; $j++) {
+            echo $data[$j];
+            array_push($userRolDelete, Role::select('name')->whereNotIn('name', [$data[$j]])->first());
+        }
+
+        $JString = json_encode($data);
+        $JString2 = json_encode($userRolDelete);
+
+        $outp =  [
+            'agregar' => $JString,
+            'eliminar' => $JString2,
+        ];
+
+        dd($outp);
+    }
 }

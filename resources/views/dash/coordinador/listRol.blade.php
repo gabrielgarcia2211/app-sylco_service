@@ -28,33 +28,39 @@
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary">Vincular Rol</h6>
                     </div>
-                    <div class="card-body">
-                        <div class="form-group row">
-                            <div class="col-sm-6">
-                                <label>Usuarios</label> 
-                                <select id="user" name="user" class="form-select form-control-user card shadow mb-4" aria-label="Default select example" style="border: 1px solid gray; width: 100%;">
-                                    @isset($dataUser)
-                                    @foreach ( $dataUser as $user )
-                                    <option value="{{$user->name}}" onchange="return findRoles()">{{$user->name}}</option>
-                                    @endforeach
-                                    @endisset
-                                </select>
+                    <form action="{{route('rol.user.list')}}" class="user" id="form-user-rol" method="POST">
+                        @csrf
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <div class="col-sm-6">
+                                    <input type="number" class="form-control form-control-user" id="usuarioRol" name="usuario" maxlength="50" aria-describedby="emailHelp" placeholder="Digite Nit del Usuario">
+                                </div>
+                                <div class="col-sm-6">
+                                    <button type="submit" class="btn btn-primary btn-user btn-block">
+                                        Buscar
+                                    </button>
+                                </div>
                             </div>
-                            <div class="col-sm-6 mb-3 mb-sm-0">
-                                <label>Roles</label> 
-                                <select name="rol" class="form-select form-control-user card shadow mb-4" aria-label="Default select example" style="border: 1px solid gray; width: 100%;">
-                                    @isset($dataRol)
-                                    @foreach ( $dataRol as $rol )
-                                    <option value="{{$rol->name}}">{{$rol->name}}</option>
-                                    @endforeach
-                                    @endisset
-                                </select>
+                            <div class="form-group row">
+                                <div class="col-sm-12" style="text-align: center;  display: flex; justify-content: center;">
+                                    <table class="table" style="width:80%">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Roles Vinculados</th>
+                                                <th scope="col">Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="rolUser">
+                                            <tr>
+                                                <td>N/A</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
+
                         </div>
-                        <button type="submit" class="btn btn-primary btn-user btn-block">
-                            Vincular
-                        </button>
-                    </div>
+                    </form>
                 </div>
                 <br>
 

@@ -56,6 +56,7 @@ Route::post('routes/password/reset', [ResetPasswordController::class, 'reset'])-
 Route::group(['prefix' => '/', 'middleware' => []], function () {
 
     Route::get('rol/list', [RolController::class, 'index'])->name('rol.list');
+    Route::post('rol/list', [RolController::class, 'findRolUser'])->name('rol.user.list');
   
 });
 

@@ -471,15 +471,14 @@ function findFilesUser(nit, proyecto) {
 
                 localStorage.setItem("info", template);
                 window.location.replace("../contratista/file/list");
-            }else{
+            } else {
                 template +=
-                        `<tr >
+                    `<tr >
                         <td COLSPAN="5" style="text-align:center">NO HAY DATOS RELACIONADOS</td>` +
-                        `</tr>`;
+                    `</tr>`;
                 localStorage.setItem("info", template);
                 window.location.replace("../contratista/file/list");
             }
-
         },
         complete: function (res) {
             Swal.close();
@@ -492,4 +491,56 @@ function findFilesUser(nit, proyecto) {
 
     //event.preventDefault();
     //alert(nit  + "" + proyecto);
+}
+
+//-------ROLES
+
+function vincularUsuarioRol() {
+    event.preventDefault();
+    var user = $("#usuarioRol").val();
+    var url = $("#form-user-rol").attr("action");
+    var dataSalida = { user: user };
+    $.ajax({
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+        method: "POST",
+        url: url,
+        data: dataSalida,
+        beforeSend: function () {
+            Swal.fire({
+                title: "Cargando",
+                text: "Buscando Roles...",
+                imageUrl: "https://img.webme.com/pic/a/andwas/cargando5.gif",
+                imageWidth: 120,
+                imageHeight: 100,
+                imageAlt: "Buscando Roles",
+                showCancelButton: false,
+                showConfirmButton: false,
+            });
+        },
+        success: function (response) {
+            let tasks = JSON.parse(response);
+            let template = "";
+            let template2 = "";
+            for (let g = 0; g < tasks.length; g++) {
+                template +=
+                    `<tr>
+                        <td >${tasks[g]}</td>
+                        <td style="text-align:center" >
+                            <button class="btn btn-warning" ><i class="fas fa-edit"></i></button> 
+                            <button class="btn btn-danger" ><i class="far fa-trash-alt"></i></button>
+                        </td>` 
+                    + `</tr>`;
+            }
+
+            $('.rolUser').html(template);
+        },
+        complete: function (res) {
+            Swal.close();
+        },
+        error: function (res) {
+            Swal.close();
+        },
+    });
 }
