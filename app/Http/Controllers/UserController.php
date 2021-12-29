@@ -30,6 +30,8 @@ class UserController extends Controller
         $dataUser = User::select('users.nit', 'users.name', 'users.last_name', 'users.email', 'proyectos.name AS proyecto', 'proyectos.id AS proyectoId')
             ->join('proyecto_users', 'proyecto_users.user_nit', '=', 'users.nit')
             ->join('proyectos', 'proyecto_users.proyecto_id', '=', 'proyectos.id')->get();
+
+           // dd($dataUser->getRoleNames());
         return view('dash.coordinador.listUsuario')->with(compact('dataUser', 'dataProyecto'));
     }
 
@@ -265,7 +267,7 @@ class UserController extends Controller
             }
         } else {
             try {
-                
+
                 $user->delete();
 
                 return [
