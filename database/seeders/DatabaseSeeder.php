@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        /*Role::create([
+        Role::create([
             'name' => 'Coordinador',
             'guard_name' => 'web'
         ]);
@@ -27,8 +27,8 @@ class DatabaseSeeder extends Seeder
         Role::create([
             'name' => 'Contratista',
             'guard_name' => 'web'
-        ]);*/
-        User::factory(10)->create();
+        ]);
+        //User::factory(10)->create();
 
 
         

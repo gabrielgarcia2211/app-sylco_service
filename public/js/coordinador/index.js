@@ -265,7 +265,6 @@ function guardarUsuario() {
 }
 
 
-
 async function editUsuario(proyecto, listProyecto) {
     event.preventDefault();
     var listaP = "";
@@ -323,11 +322,11 @@ async function editUsuario(proyecto, listProyecto) {
                 beforeSend: function () {
                     Swal.fire({
                         title: 'Cargando',
-                        text: 'Editando proyecto...',
+                        text: 'Editando Usuario...',
                         imageUrl: 'https://img.webme.com/pic/a/andwas/cargando5.gif',
                         imageWidth: 200,
                         imageHeight: 180,
-                        imageAlt: 'Editando proyecto',
+                        imageAlt: 'Editando usuario',
                         showCancelButton: false,
                         showConfirmButton: false
                     })
@@ -370,9 +369,8 @@ function eliminarUsuario(nit) {
         confirmButtonText: "Si, Eliminar!",
     }).then((result) => {
         if (result.isConfirmed) {
-            //alert(nombre);
             var url = $("#formu-user-delete").attr('action');
-            // var dataSalida = { search: nit: dataOp[0] };
+            var dataSalida = { nit: nit };
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

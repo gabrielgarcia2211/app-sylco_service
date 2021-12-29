@@ -174,12 +174,11 @@ class DriveController extends Controller
 
 
     //ELIMINAR DIRECTORIO(PADRE)
-    public function deleteFile($carpetaPadre = "hola", $carpetaHijo = "prueba", $filename = "ss.txt", $tipo = 4)
+    public function deleteFile($carpetaPadre = "hola", $tipo = 4)
     {
         /** 
          *  1 -> Archivo
-         *  2 -> subCarpeta
-         *  3 -> Carpeta(proyecto)
+         *  2 -> Carpeta(usuario)
          */
         switch ($tipo) {
             case 1:
@@ -192,16 +191,7 @@ class DriveController extends Controller
                     ];
                 }
 
-                $dataHijo = $this->findDirectory($carpetaHijo, $dataPadre['path']);
-
-                if (!$dataHijo) {
-                    return [
-                        'response' => false,
-                        'message' => 'El Directorio no Existe (HIJO)'
-                    ];
-                }
-
-                $contents = collect(Storage::disk('google')->listContents($dataPadre['path'] . '/' . $dataHijo['path'], false));
+                $contents = collect(Storage::disk('google')->listContents($dataPadre['path'], false));
 
                 $file = $contents
                     ->where('type', '=', 'file')
@@ -224,32 +214,6 @@ class DriveController extends Controller
 
                 break;
             case 2:
-
-                $dataPadre = $this->findDirectory($carpetaPadre);
-
-                if (!$dataPadre) {
-                    return response()->json([
-                        'response' => false,
-                        'message' => 'El Directorio no Existe (PADRE)'
-                    ]);
-                }
-
-                $dataHijo = $this->findDirectory($carpetaHijo, $dataPadre['path']);
-
-                if ($dataHijo) {
-                    Storage::disk('google')->deleteDirectory($dataPadre['path'] . '/' . $dataHijo['path']);
-                    return [
-                        'response' => false,
-                        'message' => 'El Directorio Eliminado (HIJO)'
-                    ];
-                } else {
-                    return [
-                        'response' => false,
-                        'message' => 'El Directorio no Existe (HIJO)'
-                    ];
-                }
-                break;
-            case 3:
                 $dataPadre = $this->findDirectory($carpetaPadre);
 
                 if ($dataPadre) {
@@ -275,7 +239,7 @@ class DriveController extends Controller
 
 
     //EDITAR DIRECTORIO (PADRE O HIJO)
-    public function editDirectory($carpetaPadre = "/", $carpetaHijo = "/", $name = "")
+    public function editDirectory($carpetaPadre = "/", $name = "")
     {
 
         $dataPadre = $this->findDirectory($carpetaPadre);
@@ -284,36 +248,13 @@ class DriveController extends Controller
 
             if ($dataPadre) {
 
-                if ($carpetaHijo === "/") {
+                //dd($dataPadre['path']);
+                Storage::disk('google')->move($dataPadre['path'], $name);
 
-                    //dd($dataPadre['path']);
-                    Storage::disk('google')->move($dataPadre['path'], $name);
-
-                    return [
-                        'response' => true,
-                        'message' => 'Directorio Actualizado (PADRE)'
-                    ];
-                } else {
-
-                    $dataHijo = $this->findDirectory($carpetaHijo, $dataPadre['path']);
-
-                    if ($dataHijo) {
-                        $porciones = explode("/", $dataHijo['path']);
-
-                        Storage::disk('google')->move($porciones[1], $name);
-
-                        return [
-                            'response' => true,
-                            'message' => 'Directorio Actualizado (HIJO)'
-                        ];
-                    } else {
-
-                        return [
-                            'response' => false,
-                            'message' => 'El Directorio no Existe (HIJO)'
-                        ];
-                    }
-                }
+                return [
+                    'response' => true,
+                    'message' => 'Directorio Actualizado (PADRE)'
+                ];
             } else {
 
                 return [

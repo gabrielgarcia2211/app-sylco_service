@@ -47,36 +47,37 @@ class UserController extends Controller
 
 
         if (!$respError) {
-           
+
             $role = Role::where('name', $request->rol)->first();
             $proyecto = Proyecto::where('name', $request->proyecto)->first();
-    
-    
+
+
             if (empty($role) || empty($proyecto)) {
                 return [
                     'response' => false,
                     'message' => 'Oppsxd!'
                 ];
             }
-    
-    
+
+
             $dataUser = $this->driveData->findDirectory(strtoupper($request->nombre));
-    
-    
+
+
             if (!empty($dataUser)) {
-    
+
                 return [
                     'response' => false,
                     'message' => 'Nombre de Usuario ya Existe'
                 ];
-    
             }
-    
-            $this->driveData->createDirectory(strtoupper($request->nombre));
-    
-    
+
+            if ($request->rol == 'Contratista') {
+                $this->driveData->createDirectory(strtoupper($request->nombre));
+            }
+
+
             try {
-    
+
                 $user = User::create([
                     'nit' =>  $request->nit,
                     'name' =>  strtoupper($request->nombre),
@@ -85,13 +86,13 @@ class UserController extends Controller
                     'password' => Hash::make($request->contrasenia),
                     'role' =>  $request->rol
                 ]);
-    
+
                 Proyecto_User::create([
                     'user_nit' =>    $request->nit,
                     'proyecto_id' =>  $proyecto->id
                 ]);
-    
-    
+
+
                 $user->assignRole($role);
 
 
@@ -99,25 +100,15 @@ class UserController extends Controller
                     'response' => true,
                     'message' => 'Usuario Creado'
                 ];
-
             } catch (\Exception $e) {
                 return [
                     'response' => false,
                     'message' => $e->getMessage()
                 ];
             }
-
-
-
         } else {
             return $respError;
         }
-
-
-
-
-
-       
     }
 
     protected function validateStore(Request $request)
@@ -142,26 +133,6 @@ class UserController extends Controller
                 'errors' =>  $error
             ), 422);
         }
-
-        /*dd($validator->getMessageBag()->toArray());
-
-        if($validator){
-            return [
-                'response' => false,
-                'message' => 'Opps!'
-            ];
-        }else{
-            return [
-                'response' => false,
-                'message' => 'Opp2s!'
-            ];
-        }*/
-
-
-        /*if ($request->ajax()) {
-            
-            
-        }*/
     }
 
     public function edit()
@@ -175,14 +146,10 @@ class UserController extends Controller
         $antProyecto = $_POST['antProyecto'];
 
 
-        $userNuevo = User::where('nit', '=',  $nuevoId)->first();
-        if (!empty($userNuevo) && $nuevoId != $nit) {
-            return [
-                'response' => false,
-                'message' => 'Nit ya Existe!'
-            ];
-        }
+
         $user = User::where('nit', '=',  $nit)->first();
+
+
         if (empty($user)) {
 
             return [
@@ -191,21 +158,53 @@ class UserController extends Controller
             ];
         }
 
+
+
+        $userNuevo = User::where('nit', '=',  $nuevoId)->first();
+
+        if (!empty($userNuevo) && $nuevoId != $nit) {
+            return [
+                'response' => false,
+                'message' => 'Nit ya Existe!'
+            ];
+        }
+
+
+        $userEmail = User::where('email', '=',  $correo)->first();
+
+
+        if (!empty($userEmail) && $correo != $user->email) {
+            return [
+                'response' => false,
+                'message' => 'Correo ya Existe!'
+            ];
+        }
+
+
+        $dataUser = $this->driveData->findDirectory(strtoupper($nombre));
+
+        if (!empty($dataUser) && $nombre != $user->name) {
+
+            return [
+                'response' => false,
+                'message' => 'Nombre de Usuario ya Existe'
+            ];
+        }
+
+
         try {
+
+            $findUserp = Proyecto_User::where('user_nit', '=', $nit)->where('proyecto_id', '=', $antProyecto)->first();
+            $this->driveData->editDirectory($user->name, strtoupper($nombre));
+
 
             $user->nit = $nuevoId;
             $user->last_name = strtoupper($apellido);
             $user->email = $correo;
             $user->name = strtoupper($nombre);
 
-
-            //$findProyecto = Proyecto::find($nuevoProyecto)->fisrt();
-
-            $findUserp = Proyecto_User::where('user_nit', '=', $nit)->where('proyecto_id', '=', $antProyecto)->first();
-
             $findUserp->user_nit = $nuevoId;
             $findUserp->proyecto_id = $nuevoProyecto;
-
 
             $user->update();
             $findUserp->update();
@@ -226,62 +225,62 @@ class UserController extends Controller
     public function destroy()
     {
 
-        $id = $_POST['search'];
+        $nit = $_POST['nit'];
 
 
-        return [
-            'response' => true,
-            'message' =>   $id
-        ];
-
-
-        /*$carp = $this->driveData->deleteFile(strtoupper($nombre),  "/", "", 2);
-
-        try {
-            if ($carp['response']) {
-
-                $user = User::where('nit', '=',  $nombre)->first();
-
-                $proyect->delete();
-                return [
-                    'response' => true,
-                    'message' =>  'Proyecto eliminado'
-                ];
-            }
-            return [
-                'response' => false,
-                'message' =>  "Proyecto no registrado!"
-            ];
-        } catch (\Illuminate\Database\QueryException $e) {
-
-            return response()->json([
-                'response' => false,
-                'message' => $e->getMessage()
-            ]);
-        }
-    }
+        $user = User::where('nit', '=',  $nit)->first();
 
         if (empty($user)) {
-            return response()->json([
+
+            return [
                 'response' => false,
-                'message' =>  "user no register!"
-            ]);
+                'message' => 'Usuario no Encontrado'
+            ];
         }
 
-        try {
+        if ($user->hasRole('Contratista')) {
+            $carp = $this->driveData->deleteFile(strtoupper($user->name), 2);
 
-            $user->delete();
-            return response()->json([
-                'response' => true,
-                'message' =>  'user delete'
-            ]);
-        } catch (\Illuminate\Database\QueryException $e) {
+            try {
+                if ($carp['response']) {
 
-            return response()->json([
-                'response' => false,
-                'message' => $e->getMessage()
-            ]);
-        }*/
+
+                    $user->delete();
+
+                    return [
+                        'response' => true,
+                        'message' =>  'Usuario eliminado'
+                    ];
+                }
+                return [
+                    'response' => false,
+                    'message' =>  "Usuario no registrado!"
+                ];
+            } catch (\Illuminate\Database\QueryException $e) {
+
+                return response()->json([
+                    'response' => false,
+                    'message' => $e->getMessage()
+                ]);
+            }
+        } else {
+            try {
+                
+                $user->delete();
+
+                return [
+                    'response' => true,
+                    'message' =>  'Usuario eliminado'
+                ];
+
+            } catch (\Illuminate\Database\QueryException $e) {
+
+                return response()->json([
+                    'response' => false,
+                    'message' => $e->getMessage()
+                ]);
+            }
+        }
     }
 
 
