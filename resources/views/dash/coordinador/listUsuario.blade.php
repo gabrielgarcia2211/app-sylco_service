@@ -61,18 +61,26 @@
                                         <td>{{$dataUser[$m]->proyecto}}</td>
                                         <td>
                                             <div class="row">
-                                                <div class="col-6">
+                                                <div class="col-4">
                                                     <form id="formu-user-edit" action="{{route('user.edit')}}">
                                                         @csrf
                                                         <button type="submit" class="btn btn-warning" style="width: 100%" id="btn-edit-proyecto" value="{{$dataUser[$m]}}" onclick="return editUsuario(value, '{{$dataProyecto}}') "><i class="fas fa-edit"></i></button>
                                                     </form>
                                                 </div>
-                                                <div class="col-6">
+                                                <div class="col-4">
                                                     <form id="formu-user-delete" action="{{route('user.delete')}}">
                                                         @csrf
                                                         <button type="submit" class="btn btn-danger" style="width: 100%" id="btn-delete-proyecto" value="{{$dataUser[$m]->nit}}" onclick="return eliminarUsuario(value)"><i class="far fa-trash-alt"></i></button>
                                                     </form>
                                                 </div>
+                                                @if($dataUser[$m]->hasRole('Contratista'))
+                                                <div class="col-4">
+                                                    <form id="formu-user-show" action="{{route('contratista.file.list')}}" method="POST">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-primary" style="width: 100%" id="btn-show-proyecto"  onclick="return findFilesUser('{{$dataUser[$m]->nit}}', '{{$dataUser[$m]->proyecto}}')"><i class="far fa-eye"></i></button>
+                                                    </form>
+                                                </div>
+                                                @endif
                                             </div>
                                         </td>
                                         </tr>
