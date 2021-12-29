@@ -56,10 +56,7 @@ Route::post('routes/password/reset', [ResetPasswordController::class, 'reset'])-
 Route::group(['prefix' => '/', 'middleware' => []], function () {
 
     Route::get('rol/list', [RolController::class, 'index'])->name('rol.list');
-    Route::post('rol/create', [RolController::class, 'store'])->name('rol.store');
-    Route::post('rol/show', [RolController::class, 'show'])->name('rol.show');
-    Route::post('rol/edit', [RolController::class, 'edit'])->name('rol.edit');
-    Route::post('rol/delete', [RolController::class, 'destroy'])->name('rol.delete');
+  
 });
 
 /** ----------------------------------------------------------------------------------------------------------------
@@ -77,18 +74,12 @@ Route::group(['prefix' => 'coordinador/', 'middleware' => []], function () {
     Route::get('contratista/file/list', [ContratistaController::class, 'index'])->name('contratista.file.list');
     Route::post('contratista/file/list', [ContratistaController::class, 'showFile'])->name('contratista.file.list');
 
-
-    Route::get('contratista/list', [ContratistaController::class, 'index'])->name('coordinador.contratista.list');
-    Route::get('contratista/files', [ContratistaController::class, 'file'])->name('coordinador.contratista.file');
-    Route::post('contratista/files', [ContratistaController::class, 'fileShow'])->name('coordinador.contratista.file');
-    Route::post('user/rol/add', [UserController::class, 'aggRole'])->name('user.rol.add');
-    Route::post('user/rol/destroy', [UserController::class, 'deleteRole'])->name('user.rol.destroy');
-});
+});//LISTO
 
 /** ----------------------------------------------------------------------------------------------------------------
  * CONTROL DE PROYECTOS */
 
-Route::group(['prefix' => '/', 'middleware' => []], function () {
+Route::group(['prefix' => 'coordinador/', 'middleware' => []], function () {
 
     Route::get('proyect/list', [ProyectoController::class, 'index'])->name('proyect.list');
     Route::get('proyect/create', [ProyectoController::class, 'indexStore'])->name('proyect.store');
@@ -96,6 +87,8 @@ Route::group(['prefix' => '/', 'middleware' => []], function () {
     Route::post('proyect/edit', [ProyectoController::class, 'edit'])->name('proyect.edit');
     Route::post('proyect/delete', [ProyectoController::class, 'delete'])->name('proyect.delete');
 });//LISTO
+
+
 
 /** ----------------------------------------------------------------------------------------------------------------
  * CONTROL DE FILES */
