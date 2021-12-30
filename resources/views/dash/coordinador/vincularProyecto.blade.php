@@ -21,14 +21,13 @@
 
                 <!-- Page Heading -->
                 <h1 class="h3 mb-2 text-gray-800">Vincular</h1>
-                <p class="mb-4">Gestion de Roles.</p>
+                <p class="mb-4">Gestion de Proyectos.</p>
 
-                <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Vincular Rol</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Bucar</h6>
                     </div>
-                    <form action="{{route('rol.user.list')}}" class="user" id="form-user-rol" method="POST">
+                    <form action="{{route('proyect.vincular')}}" class="user" id="form-user-rol" method="POST" onsubmit="return vincularUsuarioPro()">
                         @csrf
                         <div class="card-body">
                             <div class="form-group row">
@@ -41,24 +40,6 @@
                                     </button>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <div class="col-sm-12" style="text-align: center;  display: flex; justify-content: center;">
-                                    <table class="table" style="width:80%">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Roles Vinculados</th>
-                                                <th scope="col">Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="rolUser">
-                                            <tr>
-                                                <td>N/A</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
                         </div>
                     </form>
                 </div>
@@ -67,10 +48,54 @@
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Desvincular Rol</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Vincular Proyecto</h6>
                     </div>
                     <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-sm-12" style="text-align: center;  display: flex; justify-content: center;">
+                                <table class="table" style="width:80%">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Proyectos</th>
+                                            <th scope="col">Vincular</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="add-proyecto">
+                                        <tr>
+                                            <td>N/A</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
 
+                </div>
+                <br>
+
+                <!-- DataTales Example -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Desvincular Proyecto</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-sm-12" style="text-align: center;  display: flex; justify-content: center;">
+                                <table class="table" style="width:80%">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Proyectos</th>
+                                            <th scope="col">Desvincular</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="delete-proyecto">
+                                        <tr>
+                                            <td>N/A</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

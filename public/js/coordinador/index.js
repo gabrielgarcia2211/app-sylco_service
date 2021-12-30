@@ -495,8 +495,10 @@ function findFilesUser(nit, proyecto) {
 
 //-------ROLES
 
-function vincularUsuarioRol() {
+function vincularUsuarioPro() {
     event.preventDefault();
+    let template = "";
+    let template2 = "";
     var user = $("#usuarioRol").val();
     var url = $("#form-user-rol").attr("action");
     var dataSalida = { user: user };
@@ -519,25 +521,41 @@ function vincularUsuarioRol() {
                 showConfirmButton: false,
             });
         },
-        success: function (response) {
-            let tasks = JSON.parse(response);
-            let template = "";
-            let template2 = "";
-            for (let g = 0; g < tasks.length; g++) {
-                template +=
-                    `<tr>
-                        <td >${tasks[g]}</td>
-                        <td style="text-align:center" >
-                            <button class="btn btn-warning" ><i class="fas fa-edit"></i></button> 
-                            <button class="btn btn-danger" ><i class="far fa-trash-alt"></i></button>
-                        </td>` 
-                    + `</tr>`;
+        success: function (resp) {
+            let dataTaks = JSON.parse(resp);
+            if (dataTaks['response']) {
+                for (let g = 0; g < dataTaks['message']['agregar'].length; g++) {
+                    template +=
+                        `<tr>
+                            <td >${dataTaks['message']['agregar'][g]['name']}</td>
+                            <td style="text-align:center" >
+                                <button class="btn btn-warning" ><i class="fas fa-plus"></i></button>   
+                            </td>`
+                        + `</tr>`;
+                }
+                for (let k = 0; k < dataTaks['message']['eliminar'].length; k++) {
+                    template2 +=
+                        `<tr>
+                            <td >${dataTaks['message']['eliminar'][k]['name']}</td>
+                            <td style="text-align:center" >
+                                <button class="btn btn-danger" ><i class="far fa-trash-alt"></i></button> 
+                            </td>`
+                        + `</tr>`;
+                }
+                Swal.close();
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: dataTaks['message'],
+                })
             }
 
-            $('.rolUser').html(template);
-        },
-        complete: function (res) {
-            Swal.close();
+            $('.add-proyecto').html(template);
+            $('.delete-proyecto').html(template2);
+
+
+
         },
         error: function (res) {
             Swal.close();

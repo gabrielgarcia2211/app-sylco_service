@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Proyecto;
 use Illuminate\Http\Request;
-use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\DB;
+
 
 
 class ProyectoController extends Controller
@@ -138,6 +140,67 @@ class ProyectoController extends Controller
                 'response' => false,
                 'message' => $e->getMessage()
             ];
+        }
+    }
+
+    public function indexFindProyecto()
+    {
+        return view('dash.coordinador.vincularProyecto');
+    }
+
+
+    public function FindProyecto()
+    {
+        $JString = array();
+        if (!empty($_POST['user'])) {
+
+            $id = $_POST['user'];
+
+            $user = User::where('nit', $id)->first();
+
+            if (empty($user)) {
+
+                $JString = [
+                    'response' => false,
+                    'message' => 'Usuario no Registrado'
+                ];
+
+                return json_encode($JString);
+            }
+
+
+            $userAdd = Proyecto::select('proyectos.name')
+                ->join('proyecto_users', 'proyecto_users.proyecto_id', '=', 'proyectos.id')
+                ->join('users', 'users.nit', '=', 'proyecto_users.user_nit')
+                ->where('users.nit', '=',  $id)->get();
+
+
+            $userDelete = DB::select("SELECT  DISTINCTROW(proyectos.name) FROM proyectos 
+            LEFT JOIN proyecto_users ON proyecto_users.proyecto_id = proyectos.id
+            LEFT JOIN users ON users.nit = proyecto_users.user_nit
+            WHERE  proyectos.name  NOT IN
+            ( SELECT  proyectos.name FROM proyectos
+                INNER JOIN proyecto_users ON proyecto_users.proyecto_id = proyectos.id
+                INNER JOIN users ON users.nit = proyecto_users.user_nit 
+                WHERE users.nit = $id)");
+
+
+
+
+            $JString = [
+                'response' => true,
+                'message' => ['agregar' => $userDelete,  'eliminar' => $userAdd]
+            ];
+
+
+            return json_encode($JString);
+        } else {
+            $JString = [
+                'response' => false,
+                'message' => 'Pro favor, Ingrese Nit'
+            ];
+
+            return json_encode($JString);
         }
     }
 }
