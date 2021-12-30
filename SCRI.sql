@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `file_users` (
   CONSTRAINT `file_users_user_nit_foreign` FOREIGN KEY (`user_nit`) REFERENCES `users` (`nit`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla contratista.file_users: ~5 rows (aproximadamente)
+-- Volcando datos para la tabla contratista.file_users: ~6 rows (aproximadamente)
 /*!40000 ALTER TABLE `file_users` DISABLE KEYS */;
 INSERT INTO `file_users` (`id`, `user_nit`, `file_id`, `date`) VALUES
 	(3, 1, 9, '2021-12-29 21:11:22'),
@@ -131,7 +131,6 @@ CREATE TABLE IF NOT EXISTS `model_has_roles` (
 /*!40000 ALTER TABLE `model_has_roles` DISABLE KEYS */;
 INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
 	(1, 'App\\Models\\User', 1),
-	(3, 'App\\Models\\User', 1),
 	(3, 'App\\Models\\User', 2),
 	(3, 'App\\Models\\User', 3),
 	(2, 'App\\Models\\User', 4);
@@ -174,7 +173,7 @@ CREATE TABLE IF NOT EXISTS `proyectos` (
   UNIQUE KEY `proyectos_name_unique` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla contratista.proyectos: ~2 rows (aproximadamente)
+-- Volcando datos para la tabla contratista.proyectos: ~3 rows (aproximadamente)
 /*!40000 ALTER TABLE `proyectos` DISABLE KEYS */;
 INSERT INTO `proyectos` (`id`, `name`, `descripcion`, `ubicacion`) VALUES
 	(1, 'NATURA', 'proyecto 1', 'calle'),
@@ -192,14 +191,16 @@ CREATE TABLE IF NOT EXISTS `proyecto_users` (
   KEY `proyecto_users_proyecto_id_foreign` (`proyecto_id`),
   CONSTRAINT `proyecto_users_proyecto_id_foreign` FOREIGN KEY (`proyecto_id`) REFERENCES `proyectos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `proyecto_users_user_nit_foreign` FOREIGN KEY (`user_nit`) REFERENCES `users` (`nit`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla contratista.proyecto_users: ~2 rows (aproximadamente)
+-- Volcando datos para la tabla contratista.proyecto_users: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `proyecto_users` DISABLE KEYS */;
 INSERT INTO `proyecto_users` (`id`, `user_nit`, `proyecto_id`) VALUES
-	(1, 1, 1),
-	(2, 1151654, 1),
-	(3, 13, 2);
+	(3, 13, 2),
+	(5, 1, 2),
+	(7, 1151654, 2),
+	(9, 1151654, 1),
+	(10, 1151654, 3);
 /*!40000 ALTER TABLE `proyecto_users` ENABLE KEYS */;
 
 -- Volcando estructura para tabla contratista.roles
@@ -213,7 +214,7 @@ CREATE TABLE IF NOT EXISTS `roles` (
   UNIQUE KEY `roles_name_guard_name_unique` (`name`,`guard_name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla contratista.roles: ~2 rows (aproximadamente)
+-- Volcando datos para la tabla contratista.roles: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `roles` DISABLE KEYS */;
 INSERT INTO `roles` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
 	(1, 'Coordinador', 'web', '2021-12-29 18:56:39', '2021-12-29 18:56:39'),
@@ -252,13 +253,13 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `users_email_unique` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla contratista.users: ~3 rows (aproximadamente)
+-- Volcando datos para la tabla contratista.users: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`id`, `nit`, `name`, `last_name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-	(1, 1004804515, 'GABRIEL', 'GARCIA', 'GABRIELARTUROGQ@UFPS.EDU.CO', '2021-12-29 13:55:53', '12345', NULL, '2021-12-29 13:55:55', '2021-12-29 13:55:55'),
-	(2, 1, 'ARTUR', 'QUINTERO', 'arturo@gmaila.com', NULL, '$2y$10$Z2bK.NZzx/iyo.UEAewpneKhrLM7rAg.59giFZkQP4YwK1vj4HwD.', NULL, '2021-12-29 19:00:11', '2021-12-29 19:01:06'),
-	(3, 1151654, 'LUIS', 'PEDRAZA', 'l@g.com', NULL, '$2y$10$lPr1p345f5VmePze8I6XzelUCMSr1Qc5s1YK3QGL1OzDfCHIPURzi', NULL, '2021-12-29 19:25:24', '2021-12-29 19:25:24'),
-	(4, 13, 'DAVID', 'VALENCIA', 'g@mm.com', NULL, '$2y$10$yaAQ2ELS/ZRTRd7tZeT2s.iWvaO4nMuoSvuMPWg0XiUTaeFe9yADq', NULL, '2021-12-29 22:16:30', '2021-12-29 22:16:30');
+	(1, 1004804515, 'GABRIEL', 'GARCIA', 'GABRIELARTUROGQ@UFPS.EDU.CO', '2021-12-29 13:55:53', '$2y$10$gwJyiolLGrD/NQScrtO45OfjOtAIGG6ZdF5YJADQ29bpUv20EO/Em', 'DNj1rqMSBuOanVsWjF1TLyJLunjodCH7uPq2Ek1NpfSMQpN5Z6qdTGG87bkH', '2021-12-29 13:55:55', '2021-12-30 20:51:41'),
+	(2, 1, 'ARTUR', 'QUINTERO', 'arturo@gmaila.com', '2021-12-30 08:05:30', '$2y$10$Z2bK.NZzx/iyo.UEAewpneKhrLM7rAg.59giFZkQP4YwK1vj4HwD.', NULL, '2021-12-29 19:00:11', '2021-12-29 19:01:06'),
+	(3, 1151654, 'LUIS', 'PEDRAZA', 'l@g.com', '2021-12-30 08:05:31', '$2y$10$lPr1p345f5VmePze8I6XzelUCMSr1Qc5s1YK3QGL1OzDfCHIPURzi', NULL, '2021-12-29 19:25:24', '2021-12-29 19:25:24'),
+	(4, 13, 'DAVID', 'VALENCIA', 'g@mm.com', '2021-12-30 08:05:32', '$2y$10$yaAQ2ELS/ZRTRd7tZeT2s.iWvaO4nMuoSvuMPWg0XiUTaeFe9yADq', NULL, '2021-12-29 22:16:30', '2021-12-29 22:16:30');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
