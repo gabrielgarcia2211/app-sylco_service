@@ -89,11 +89,11 @@ Route::group(['prefix' => 'coordinador/', 'middleware' => []], function () {
     Route::post('proyect/delete', [ProyectoController::class, 'delete'])->name('proyect.delete');
 
     Route::get('proyect/vincular', [ProyectoController::class, 'indexFindProyecto'])->name('proyect.vincular');
-    //Route::post('proyect/vincular', [ProyectoController::class, 'FindProyecto'])->name('proyect.vincular');
+    Route::post('proyect/vincular', [ProyectoController::class, 'FindProyecto'])->name('proyect.vincular');
 
 
     Route::post('proyect/add/user', [ProyectoController::class, 'vincularProyecto'])->name('proyect.user.vincular');
-
+    Route::post('proyect/del/user', [ProyectoController::class, 'desvincularProyecto'])->name('proyect.user.desvincular');
 
 });//LISTO
 

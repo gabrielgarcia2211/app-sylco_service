@@ -27,7 +27,7 @@
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary">Bucar</h6>
                     </div>
-                    <form action="{{route('proyect.user.vincular')}}" class="user" id="form-user-rol" method="POST" onsubmit="return vincularUsuarioPro2()">
+                    <form action="{{route('proyect.vincular')}}" class="user" id="form-user-rol" method="POST" onsubmit="return findUser()">
                         @csrf
                         <div class="card-body">
                             <div class="form-group row">
@@ -60,11 +60,30 @@
                                             <th scope="col">Vincular</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="add-proyecto">
+                                    @if(!empty($JString))
+                                    <tbody>
+                                        @for($m = 0; $m < count($JString['agregar']); $m++) <tr>
+                                            <td>{{$JString['agregar'][$m]->name}}</td>
+                                            <td>
+                                                <div class="row" style="display: flex;justify-content: center;">
+                                                    <div class="col-4">
+                                                        <form id="form-user-vinc" action="{{route('proyect.user.vincular')}}" method="POST">
+                                                            @csrf
+                                                            <button type="submit" class="btn btn-warning" style="width: 70%" id="btn-edit-proyecto" onclick="return vincularProyectoUser('{{$JString['agregar'][$m]->name}}')"><i class="fas fa-plus"></i></button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            </tr>
+                                            @endfor
+                                    </tbody>
+                                    @else
+                                    <tbody>
                                         <tr>
                                             <td>N/A</td>
                                         </tr>
                                     </tbody>
+                                    @endif
                                 </table>
                             </div>
                         </div>
@@ -88,11 +107,30 @@
                                             <th scope="col">Desvincular</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="delete-proyecto">
+                                    @if(!empty($JString))
+                                    <tbody>
+                                        @for($m = 0; $m < count($JString['eliminar']); $m++) <tr>
+                                            <td>{{$JString['eliminar'][$m]->name}}</td>
+                                            <td>
+                                                <div class="row" style="display: flex;justify-content: center;">
+                                                    <div class="col-4">
+                                                    <form id="form-user-desv" action="{{route('proyect.user.desvincular')}}" method="POST">
+                                                            @csrf
+                                                            <button type="submit" class="btn btn-danger" style="width: 70%" id="btn-edit-proyecto" onclick="return desVincularProyectoUser('{{$JString['eliminar'][$m]->name}}')"><i class="far fa-trash-alt"></i></button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            </tr>
+                                            @endfor
+                                    </tbody>
+                                    @else
+                                    <tbody>
                                         <tr>
                                             <td>N/A</td>
                                         </tr>
                                     </tbody>
+                                    @endif
                                 </table>
                             </div>
                         </div>
@@ -145,14 +183,6 @@
             </div>
         </div>
     </div>
-
-    <script>
-        window.onload = function() {
-            var template = localStorage.getItem('info');
-            $(".artur").html(template)
-        }
-    </script>
-
 
 
 

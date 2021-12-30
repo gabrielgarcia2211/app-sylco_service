@@ -488,96 +488,107 @@ function findFilesUser(nit, proyecto) {
         },
     });
     return false;
-
-    //event.preventDefault();
-    //alert(nit  + "" + proyecto);
 }
 
 //-------PROYECTOS
 
+function findUser() {
+    localStorage.setItem("nitUser", $("#usuarioRol").val());
+   // var url = $("#form-user-rol").attr("action");
+   // $.post(url, $("#form-user-rol").serialize());
+}
 
-/*function vincularUsuarioPro() {
+function vincularProyectoUser(proyecto) {
     event.preventDefault();
-    let template = "";
-    let template2 = "";
-    var user = $("#usuarioRol").val();
-    var url = $("#form-user-rol").attr("action");
-    var dataSalida = { user: user };
+    var nit = localStorage.getItem("nitUser");
+    var url = $("#form-user-vinc").attr("action");
+    var parametros = { proyecto: proyecto, nit: nit };
+
     $.ajax({
         headers: {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
         },
         method: "POST",
         url: url,
-        data: dataSalida,
+        data: parametros,
         beforeSend: function () {
             Swal.fire({
                 title: "Cargando",
-                text: "Buscando Proyectos...",
+                text: "Buscando proyectos...",
                 imageUrl: "https://img.webme.com/pic/a/andwas/cargando5.gif",
-                imageWidth: 120,
-                imageHeight: 100,
-                imageAlt: "Buscando Proyectos",
+                imageWidth: 200,
+                imageHeight: 180,
+                imageAlt: "Buscando proyectos",
                 showCancelButton: false,
                 showConfirmButton: false,
             });
         },
-        success: function (resp) {
-            let dataTaks = JSON.parse(resp);
-            if (dataTaks['response']) {
-                for (let g = 0; g < dataTaks['message']['agregar'].length; g++) {
-                    template +=
-                        `<tr>
-                            <td >${dataTaks['message']['agregar'][g]['name']}</td>
-                            <td style="text-align:center" >
-                                <button class="btn btn-warning" onclick="return vincularProyecto(${user}, ${dataTaks['message']['agregar'][g]['name']})"><i class="fas fa-plus"></i></button>   
-                            </td>`
-                        + `</tr>`;
-                }
-
-                for (let k = 0; k < dataTaks['message']['eliminar'].length; k++) {
-                    template2 +=
-                        `<tr>
-                            <td >${dataTaks['message']['eliminar'][k]['name']}</td>
-                            <td style="text-align:center" >
-                                <button class="btn btn-danger" onclick=" return desvincularProyecto(${user})" ><i class="far fa-trash-alt"></i></button> 
-                            </td>`
-                        + `</tr>`;
-                }
-                Swal.close();
+        success: function (response) {
+            if (response["response"]) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Hecho!",
+                    text: response["message"],
+                });
+                location.reload();
             } else {
                 Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: dataTaks['message'],
-                })
+                    icon: "error",
+                    title: "Oops...",
+                    text: response["message"],
+                });
             }
-
-            $('.add-proyecto').html(template);
-            $('.delete-proyecto').html(template2);
-
         },
-        error: function (res) {
+        error: function (response) {
             Swal.close();
         },
     });
-}*/
-
-
-/*function vincularProyecto(nit, name) {
-    alert(name);
-    return;
-    window.location.href = "../proyect/add/user/" + nit + "/" + name;
 }
 
-function desvincularProyecto(nit) {
-    alert(nit);
-}*/
+function desVincularProyectoUser(proyecto) {
+    event.preventDefault();
+    
+    var nit = localStorage.getItem("nitUser");
+    var url = $("#form-user-desv").attr("action");
+    var parametros = { proyecto: proyecto, nit: nit };
 
-function vincularUsuarioPro2(){
-    var user = 2;
-    var url = $("#form-user-rol").attr("action");
-    $.post( url, $( "#form-user-rol" ).serialize() );
-    //window.location.href = "../proyect/add/user/" + user;
+    $.ajax({
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+        method: "POST",
+        url: url,
+        data: parametros,
+        beforeSend: function () {
+            Swal.fire({
+                title: "Cargando",
+                text: "Buscando proyectos...",
+                imageUrl: "https://img.webme.com/pic/a/andwas/cargando5.gif",
+                imageWidth: 200,
+                imageHeight: 180,
+                imageAlt: "Buscando proyectos",
+                showCancelButton: false,
+                showConfirmButton: false,
+            });
+        },
+        success: function (response) {
+            if (response["response"]) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Hecho!",
+                    text: response["message"],
+                });
+                location.reload();
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: response["message"],
+                });
+            }
+        },
+        error: function (response) {
+            Swal.close();
+        },
+    });
 }
-

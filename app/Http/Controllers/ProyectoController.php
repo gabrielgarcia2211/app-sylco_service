@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+Use Alert;
 use App\Models\User;
 use App\Models\Proyecto;
-use Illuminate\Http\Request;
 use App\Models\Proyecto_User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use RealRashid\SweetAlert\Facades\Alert;
+
 
 
 
@@ -24,7 +25,8 @@ class ProyectoController extends Controller
 
     public function indexStore()
     {
-        return view('dash.coordinador.addProyecto');
+        $JString = "";
+        return view('dash.coordinador.addProyecto')->with(compact('JString'));
     }
 
     public function store(Request $request)
@@ -153,21 +155,19 @@ class ProyectoController extends Controller
 
     public function FindProyecto()
     {
-        $JString = array();
-        if (!empty($_POST['user'])) {
+        //$JString = array();
 
-            $id = $_POST['user'];
+        if (!empty($_POST['usuario'])) {
+
+            $id = $_POST['usuario'];
 
             $user = User::where('nit', $id)->first();
 
             if (empty($user)) {
+                
+                Alert::error('Opps!', 'Usuario no Registrado');
+                return back();
 
-                $JString = [
-                    'response' => false,
-                    'message' => 'Usuario no Registrado'
-                ];
-
-                return json_encode($JString);
             }
 
 
@@ -186,44 +186,77 @@ class ProyectoController extends Controller
                 INNER JOIN users ON users.nit = proyecto_users.user_nit 
                 WHERE users.nit = $id)");
 
-
+            $JString = array();
 
 
             $JString = [
-                'response' => true,
-                'message' => ['agregar' => $userDelete,  'eliminar' => $userAdd]
+                'agregar' => $userDelete,
+                'eliminar' => $userAdd
             ];
 
-
-            return json_encode($JString);
+            return view('dash.coordinador.vincularProyecto')->with(compact('JString'));
+            
         } else {
-            $JString = [
-                'response' => false,
-                'message' => 'Pro favor, Ingrese Nit'
-            ];
-
-            return json_encode($JString);
+           
+            Alert::warning('Opps!', 'Pro favor, Ingrese Nit');
+            return back();
         }
     }
 
 
-    public function vincularProyecto(Request $request)
+    public function vincularProyecto()
     {
 
-        dd($_POST['usuario']);
+        $proyecto =  $_POST['proyecto'];
+        $nit = $_POST['nit'];
+
+        try {
+
+            $user = User::where('nit', $nit)->first();
+            $proyecto = Proyecto::where('name', $proyecto)->first();
+
+            Proyecto_User::create([
+                'user_nit' =>    $user->nit,
+                'proyecto_id' =>  $proyecto->id
+            ]);
+
+            return [
+                'response' => true,
+                'message' =>  'Proyecto vinculado'
+            ];
+        } catch (\Exception $e) {
+
+            return [
+                'response' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+    }
 
 
-       /* $user = User::where('nit', $nit)->first();
-        $proyecto = Proyecto::where('name', $name)->first();
+    public function desvincularProyecto()
+    {
+        $proyecto =  $_POST['proyecto'];
+        $nit = $_POST['nit'];
 
-        Proyecto_User::create([
-            'user_nit' =>    $user->nit,
-            'proyecto_id' =>  $proyecto->id
-        ]);
+        try {
 
-        Alert::success('Usuario Vinculado', 'Hecho!');
-        return redirect()->back();*/
+            $user = User::where('nit', $nit)->first();
+            $proyecto = Proyecto::where('name', $proyecto)->first();
 
-      
+            Proyecto_User::where('user_nit', $user->nit)->where('proyecto_id', $proyecto->id)->delete();
+
+
+            return [
+                'response' => true,
+                'message' =>  'Proyecto desnviculado'
+            ];
+        } catch (\Exception $e) {
+
+            return [
+                'response' => false,
+                'message' => $e->getMessage()
+            ];
+        }
     }
 }
