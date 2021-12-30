@@ -493,7 +493,8 @@ function findFilesUser(nit, proyecto) {
     //alert(nit  + "" + proyecto);
 }
 
-//-------ROLES
+//-------PROYECTOS
+
 
 function vincularUsuarioPro() {
     event.preventDefault();
@@ -512,36 +513,42 @@ function vincularUsuarioPro() {
         beforeSend: function () {
             Swal.fire({
                 title: "Cargando",
-                text: "Buscando Roles...",
+                text: "Buscando Proyectos...",
                 imageUrl: "https://img.webme.com/pic/a/andwas/cargando5.gif",
                 imageWidth: 120,
                 imageHeight: 100,
-                imageAlt: "Buscando Roles",
+                imageAlt: "Buscando Proyectos",
                 showCancelButton: false,
                 showConfirmButton: false,
             });
         },
         success: function (resp) {
             let dataTaks = JSON.parse(resp);
+            var arryaPro = Array();
             if (dataTaks['response']) {
                 for (let g = 0; g < dataTaks['message']['agregar'].length; g++) {
+                    arryaPro.push(dataTaks['message']['agregar'][g]['name'])
+                };
+                arryaPro.forEach(element => {
                     template +=
                         `<tr>
-                            <td >${dataTaks['message']['agregar'][g]['name']}</td>
+                            <td >${element}</td>
                             <td style="text-align:center" >
-                                <button class="btn btn-warning" ><i class="fas fa-plus"></i></button>   
+                                <a class="btn btn-warning" onclick="return vincularProyecto(${user}, ${element})"><i class="fas fa-plus"></i></a>   
                             </td>`
                         + `</tr>`;
-                }
-                for (let k = 0; k < dataTaks['message']['eliminar'].length; k++) {
+                });
+                
+
+                /*for (let k = 0; k < dataTaks['message']['eliminar'].length; k++) {
                     template2 +=
                         `<tr>
                             <td >${dataTaks['message']['eliminar'][k]['name']}</td>
                             <td style="text-align:center" >
-                                <button class="btn btn-danger" ><i class="far fa-trash-alt"></i></button> 
+                                <button class="btn btn-danger" onclick=" return desvincularProyecto(${user})" ><i class="far fa-trash-alt"></i></button> 
                             </td>`
                         + `</tr>`;
-                }
+                }*/
                 Swal.close();
             } else {
                 Swal.fire({
@@ -554,11 +561,22 @@ function vincularUsuarioPro() {
             $('.add-proyecto').html(template);
             $('.delete-proyecto').html(template2);
 
-
-
         },
         error: function (res) {
             Swal.close();
         },
     });
 }
+
+
+
+function vincularProyecto(nit, name) {
+    alert(name);
+    return;
+    window.location.href = "../proyect/add/user/" + nit + "/" + name;
+}
+
+function desvincularProyecto(nit) {
+    alert(nit);
+}
+

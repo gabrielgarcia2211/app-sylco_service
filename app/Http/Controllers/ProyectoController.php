@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Proyecto;
 use Illuminate\Http\Request;
+use App\Models\Proyecto_User;
 use Illuminate\Support\Facades\DB;
+use RealRashid\SweetAlert\Facades\Alert;
+
 
 
 
@@ -148,7 +151,6 @@ class ProyectoController extends Controller
         return view('dash.coordinador.vincularProyecto');
     }
 
-
     public function FindProyecto()
     {
         $JString = array();
@@ -202,5 +204,24 @@ class ProyectoController extends Controller
 
             return json_encode($JString);
         }
+    }
+
+
+    public function vincularProyecto($nit, $name)
+    {
+
+
+        $user = User::where('nit', $nit)->first();
+        $proyecto = Proyecto::where('name', $name)->first();
+
+        Proyecto_User::create([
+            'user_nit' =>    $user->nit,
+            'proyecto_id' =>  $proyecto->id
+        ]);
+
+        Alert::success('Usuario Vinculado', 'Hecho!');
+        return redirect()->back();
+
+      
     }
 }

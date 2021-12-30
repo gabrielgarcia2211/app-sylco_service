@@ -92,6 +92,9 @@ Route::group(['prefix' => 'coordinador/', 'middleware' => []], function () {
     Route::post('proyect/vincular', [ProyectoController::class, 'FindProyecto'])->name('proyect.vincular');
 
 
+    Route::get('proyect/add/user/{nit}/{name}', [ProyectoController::class, 'vincularProyecto'])->name('proyect.user.vincular');
+
+
 });//LISTO
 
 
