@@ -207,11 +207,13 @@ class ProyectoController extends Controller
     }
 
 
-    public function vincularProyecto($nit, $name)
+    public function vincularProyecto(Request $request)
     {
 
+        dd($_POST['usuario']);
 
-        $user = User::where('nit', $nit)->first();
+
+       /* $user = User::where('nit', $nit)->first();
         $proyecto = Proyecto::where('name', $name)->first();
 
         Proyecto_User::create([
@@ -220,7 +222,7 @@ class ProyectoController extends Controller
         ]);
 
         Alert::success('Usuario Vinculado', 'Hecho!');
-        return redirect()->back();
+        return redirect()->back();*/
 
       
     }

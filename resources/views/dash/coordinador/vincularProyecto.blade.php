@@ -27,7 +27,7 @@
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary">Bucar</h6>
                     </div>
-                    <form action="{{route('proyect.vincular')}}" class="user" id="form-user-rol" method="POST" onsubmit="return vincularUsuarioPro()">
+                    <form action="{{route('proyect.user.vincular')}}" class="user" id="form-user-rol" method="POST" onsubmit="return vincularUsuarioPro2()">
                         @csrf
                         <div class="card-body">
                             <div class="form-group row">

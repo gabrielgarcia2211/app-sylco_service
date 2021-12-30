@@ -496,7 +496,7 @@ function findFilesUser(nit, proyecto) {
 //-------PROYECTOS
 
 
-function vincularUsuarioPro() {
+/*function vincularUsuarioPro() {
     event.preventDefault();
     let template = "";
     let template2 = "";
@@ -524,23 +524,18 @@ function vincularUsuarioPro() {
         },
         success: function (resp) {
             let dataTaks = JSON.parse(resp);
-            var arryaPro = Array();
             if (dataTaks['response']) {
                 for (let g = 0; g < dataTaks['message']['agregar'].length; g++) {
-                    arryaPro.push(dataTaks['message']['agregar'][g]['name'])
-                };
-                arryaPro.forEach(element => {
                     template +=
                         `<tr>
-                            <td >${element}</td>
+                            <td >${dataTaks['message']['agregar'][g]['name']}</td>
                             <td style="text-align:center" >
-                                <a class="btn btn-warning" onclick="return vincularProyecto(${user}, ${element})"><i class="fas fa-plus"></i></a>   
+                                <button class="btn btn-warning" onclick="return vincularProyecto(${user}, ${dataTaks['message']['agregar'][g]['name']})"><i class="fas fa-plus"></i></button>   
                             </td>`
                         + `</tr>`;
-                });
-                
+                }
 
-                /*for (let k = 0; k < dataTaks['message']['eliminar'].length; k++) {
+                for (let k = 0; k < dataTaks['message']['eliminar'].length; k++) {
                     template2 +=
                         `<tr>
                             <td >${dataTaks['message']['eliminar'][k]['name']}</td>
@@ -548,7 +543,7 @@ function vincularUsuarioPro() {
                                 <button class="btn btn-danger" onclick=" return desvincularProyecto(${user})" ><i class="far fa-trash-alt"></i></button> 
                             </td>`
                         + `</tr>`;
-                }*/
+                }
                 Swal.close();
             } else {
                 Swal.fire({
@@ -566,11 +561,10 @@ function vincularUsuarioPro() {
             Swal.close();
         },
     });
-}
+}*/
 
 
-
-function vincularProyecto(nit, name) {
+/*function vincularProyecto(nit, name) {
     alert(name);
     return;
     window.location.href = "../proyect/add/user/" + nit + "/" + name;
@@ -578,5 +572,12 @@ function vincularProyecto(nit, name) {
 
 function desvincularProyecto(nit) {
     alert(nit);
+}*/
+
+function vincularUsuarioPro2(){
+    var user = 2;
+    var url = $("#form-user-rol").attr("action");
+    $.post( url, $( "#form-user-rol" ).serialize() );
+    //window.location.href = "../proyect/add/user/" + user;
 }
 
