@@ -177,7 +177,7 @@ class ProyectoController extends Controller
                 ->where('users.nit', '=',  $id)->get();
 
 
-            $userDelete = DB::select("SELECT  DISTINCTROW(proyectos.name) FROM proyectos 
+            $userDelete = DB::select("SELECT  DISTINCT proyectos.name FROM proyectos 
             LEFT JOIN proyecto_users ON proyecto_users.proyecto_id = proyectos.id
             LEFT JOIN users ON users.nit = proyecto_users.user_nit
             WHERE  proyectos.name  NOT IN
