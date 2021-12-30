@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 
 class RolController extends Controller
@@ -16,17 +17,23 @@ class RolController extends Controller
 
     public function findRolUser()
     {
-        $nit = 1;
-        $userRolDelete = array();
+        $id = 1;
 
 
-        $userRolAdd = User::where('nit', $nit)->first();
+        $userRolAdd = User::find($id);
         $data = $userRolAdd->getRoleNames();
 
-        for ($j = 0; $j < count($data); $j++) {
-            echo $data[$j];
-            array_push($userRolDelete, Role::select('name')->whereNotIn('name', [$data[$j]])->get());
-        }
+
+        $userRolDelete = DB::select("SELECT  DISTINCTROW(roles.name) FROM roles 
+        LEFT JOIN model_has_roles ON model_has_roles.role_id = roles.id
+        LEFT JOIN users ON users.id = model_has_roles.model_id 
+        WHERE roles.name NOT IN
+            (SELECT  roles.name
+            FROM roles 
+            LEFT JOIN model_has_roles ON model_has_roles.role_id = roles.id
+            LEFT JOIN users ON users.id = model_has_roles.model_id 
+            WHERE users.id = 1)
+        ");
 
         $JString = json_encode($data);
         $JString2 = json_encode($userRolDelete);

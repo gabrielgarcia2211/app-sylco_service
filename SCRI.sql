@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `files` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla contratista.files: ~1 rows (aproximadamente)
+-- Volcando datos para la tabla contratista.files: ~6 rows (aproximadamente)
 /*!40000 ALTER TABLE `files` DISABLE KEYS */;
 INSERT INTO `files` (`id`, `name`, `descripcion`, `file`, `aceptacion`, `created_at`, `updated_at`) VALUES
 	(9, 'data', 'holaaaa', 'https://drive.google.com/uc?id=1eoekee9psvDnoGwcyfDvrUGg0Gvtszpe&export=media', '0', '2021-12-29 21:11:22', '2021-12-29 21:11:22'),
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `file_users` (
   CONSTRAINT `file_users_user_nit_foreign` FOREIGN KEY (`user_nit`) REFERENCES `users` (`nit`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla contratista.file_users: ~0 rows (aproximadamente)
+-- Volcando datos para la tabla contratista.file_users: ~5 rows (aproximadamente)
 /*!40000 ALTER TABLE `file_users` DISABLE KEYS */;
 INSERT INTO `file_users` (`id`, `user_nit`, `file_id`, `date`) VALUES
 	(3, 1, 9, '2021-12-29 21:11:22'),
@@ -127,13 +127,14 @@ CREATE TABLE IF NOT EXISTS `model_has_roles` (
   CONSTRAINT `model_has_roles_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla contratista.model_has_roles: ~3 rows (aproximadamente)
+-- Volcando datos para la tabla contratista.model_has_roles: ~4 rows (aproximadamente)
 /*!40000 ALTER TABLE `model_has_roles` DISABLE KEYS */;
 INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
 	(1, 'App\\Models\\User', 1),
+	(3, 'App\\Models\\User', 1),
 	(3, 'App\\Models\\User', 2),
-	(2, 'App\\Models\\User', 3),
-	(3, 'App\\Models\\User', 4);
+	(3, 'App\\Models\\User', 3),
+	(2, 'App\\Models\\User', 4);
 /*!40000 ALTER TABLE `model_has_roles` ENABLE KEYS */;
 
 -- Volcando estructura para tabla contratista.password_resets
@@ -173,7 +174,7 @@ CREATE TABLE IF NOT EXISTS `proyectos` (
   UNIQUE KEY `proyectos_name_unique` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla contratista.proyectos: ~3 rows (aproximadamente)
+-- Volcando datos para la tabla contratista.proyectos: ~2 rows (aproximadamente)
 /*!40000 ALTER TABLE `proyectos` DISABLE KEYS */;
 INSERT INTO `proyectos` (`id`, `name`, `descripcion`, `ubicacion`) VALUES
 	(1, 'NATURA', 'proyecto 1', 'calle'),
@@ -212,7 +213,7 @@ CREATE TABLE IF NOT EXISTS `roles` (
   UNIQUE KEY `roles_name_guard_name_unique` (`name`,`guard_name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla contratista.roles: ~3 rows (aproximadamente)
+-- Volcando datos para la tabla contratista.roles: ~2 rows (aproximadamente)
 /*!40000 ALTER TABLE `roles` DISABLE KEYS */;
 INSERT INTO `roles` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
 	(1, 'Coordinador', 'web', '2021-12-29 18:56:39', '2021-12-29 18:56:39'),
