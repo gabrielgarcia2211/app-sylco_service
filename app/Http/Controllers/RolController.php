@@ -21,12 +21,11 @@ class RolController extends Controller
 
 
         $userRolAdd = User::where('nit', $nit)->first();
-        $catRol = Role::count();
         $data = $userRolAdd->getRoleNames();
 
-        for ($j = 0; $j < $catRol; $j++) {
+        for ($j = 0; $j < count($data); $j++) {
             echo $data[$j];
-            array_push($userRolDelete, Role::select('name')->whereNotIn('name', [$data[$j]])->first());
+            array_push($userRolDelete, Role::select('name')->whereNotIn('name', [$data[$j]])->get());
         }
 
         $JString = json_encode($data);
