@@ -17,48 +17,45 @@ class FileController extends Controller
         $this->driveData = new DriveController();
     }
 
-    public function index()
-    {
-        $file = $this->driveData->listDirectory(strtoupper('natura'), strtoupper('arturo'));
-
-        dd($file);
-        //return csrf_token(); 
-    }
-
     public function store(Request $request)
     {
 
-        // $this->validateStore($request);
+        $files = $request->file('archivo');
+
+        $nombreContratista = auth()->user()->name;
+        $nitContratista = auth()->user()->nit;
+
+        echo ($files);
+        return;
 
         $nombreArchivo = "data";
+        $descripcionArchivo = "adat2";
 
         try {
 
-            $file = $this->driveData->putFile('DAVID', 'file.txt');
-         
-            if($file['response']) {
+            $file = $this->driveData->putFile($nombreContratista, $files->get());
 
-                
+            if ($file['response']) {
+
+
                 $fileUp = File::create([
                     'name' =>  $nombreArchivo,
-                    'descripcion' =>  'holaaaa',
+                    'descripcion' =>  $descripcionArchivo,
                     'file' =>   $file['message'][0][1],
                     'aceptacion' =>  '0'
                 ]);
 
 
                 File_User::create([
-                    'user_nit' => 13,
+                    'user_nit' => $nitContratista,
                     'file_id' => $fileUp->id,
                     'date' => date('Y-m-d H:i:s')
                 ]);
-                
+
                 return [
                     'response' => true,
                     'message' => 'file upload'
                 ];
-
-                
             } else {
                 return $file['message'];
             }
@@ -70,10 +67,4 @@ class FileController extends Controller
         }
     }
 
-    protected function validateStore(Request $request)
-    {
-        $request->validate([
-            'name' => 'required',
-        ]);
-    }
 }

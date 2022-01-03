@@ -63,7 +63,7 @@ Route::group(['prefix' => '/', 'middleware' => []], function () {
 /** ----------------------------------------------------------------------------------------------------------------
  * CONTROL DE USUARIOS */
 
-Route::group(['prefix' => 'coordinador/', 'middleware' => []], function () {
+Route::group(['prefix' => 'coordinador/', 'middleware' => ['role:Coordinador', 'auth']], function () {
 
     Route::get('user/list', [UserController::class, 'index'])->name('user.list');
     Route::get('user/create', [UserController::class, 'indexStore'])->name('user.store');
@@ -80,7 +80,7 @@ Route::group(['prefix' => 'coordinador/', 'middleware' => []], function () {
 /** ----------------------------------------------------------------------------------------------------------------
  * CONTROL DE PROYECTOS */
 
-Route::group(['prefix' => 'coordinador/', 'middleware' => []], function () {
+Route::group(['prefix' => 'coordinador/', 'middleware' => ['role:Coordinador', 'auth']], function () {
 
     Route::get('proyect/list', [ProyectoController::class, 'index'])->name('proyect.list');
     Route::get('proyect/create', [ProyectoController::class, 'indexStore'])->name('proyect.store');
@@ -102,10 +102,12 @@ Route::group(['prefix' => 'coordinador/', 'middleware' => []], function () {
 /** ----------------------------------------------------------------------------------------------------------------
  * CONTROL DE FILES */
 
-Route::group(['prefix' => '/', 'middleware' => []], function () {
+Route::group(['prefix' => '/', 'middleware' => ['role:Contratista', 'auth']], function () {
 
-    Route::get('files/list', [FileController::class, 'index'])->name('file.list');
-    Route::get('files/create', [FileController::class, 'store'])->name('file.store');
+
+    Route::post('files/create', [FileController::class, 'store'])->name('file.store');
+
+    
     Route::post('files/show', [FileController::class, 'show'])->name('file.show');
     Route::post('files/edit', [FileController::class, 'edit'])->name('file.edit');
     Route::post('files/delete', [FileController::class, 'destroy'])->name('file.delete');

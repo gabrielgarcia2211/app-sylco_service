@@ -8,14 +8,6 @@ use Illuminate\Support\Facades\DB;
 
 class ContratistaController extends Controller
 {
-    private $driveData;
-    private $dataContratista;
-
-    function __construct()
-    {
-        $this->driveData = new DriveController();
-       // $this->dataContratista = $this->cargaContratista();
-    }
 
     public function index(){
         return view('dash.coordinador.listFiles');

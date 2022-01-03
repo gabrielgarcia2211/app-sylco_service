@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\File;
 use App\Models\Proyecto;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -25,7 +27,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-       
+
         if (auth()->user()->hasRole('Coordinador')) {
 
             $dataContratista = DB::select("SELECT count('role_id') as contratista FROM model_has_roles WHERE role_id = 3 ");
@@ -38,7 +40,15 @@ class HomeController extends Controller
             }
 
             return view('dash.coordinador.index')->with(compact('dataContratista', 'dataProyecto'));
-        }else{
+        } else if (auth()->user()->hasRole('Contratista')) {
+
+            $dataFiles = File::join('file_users', 'file_users.id', '=', 'files.id')
+                ->join('users', 'users.nit', '=', 'file_users.user_nit')
+                ->where('users.nit', auth()->user()->nit)
+                ->get();
+
+            return view('dash.contratista.index')->with(compact($dataFiles));
+        } else {
             dd("nada");
         }
     }

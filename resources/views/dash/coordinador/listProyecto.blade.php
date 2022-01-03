@@ -51,7 +51,7 @@
                                     @isset($dataProyecto)
                                     @for($m = 0; $m < count($dataProyecto); $m++) <tr>
                                         <td>{{$dataProyecto[$m]->name}}</td>
-                                        <td><textarea style="width: 100%; height: 180px;" >{{$dataProyecto[$m]->descripcion}}</textarea></td>
+                                        <td><textarea disabled style="width: 100%; height: 180px;" >{{$dataProyecto[$m]->descripcion}}</textarea></td>
                                         <td>{{$dataProyecto[$m]->ubicacion}}</td>
                                         <td>
                                             <div class="row">
