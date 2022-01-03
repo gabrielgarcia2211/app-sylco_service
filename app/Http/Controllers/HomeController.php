@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\File;
 use App\Models\Proyecto;
-use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
@@ -42,20 +39,13 @@ class HomeController extends Controller
             return view('dash.coordinador.index')->with(compact('dataContratista', 'dataProyecto'));
         } else if (auth()->user()->hasRole('Contratista')) {
 
-            $dataFiles = File::select('files.*')
-            ->join('file_users', 'file_users.file_id', '=', 'files.id')
-            ->join('users', 'users.nit', '=', 'file_users.user_nit')
-            ->where('users.nit', auth()->user()->nit)
-            ->get();
+                $data =null;
 
-        
-
-            return view('dash.contratista.index')->with(compact('dataFiles'));
-
-        }else{
+                return view('dash.contratista.index')->with(compact('data'));
+                
+        } else {
 
             dd("nada");
-
         }
     }
 

@@ -6,6 +6,7 @@ use App\Models\File;
 use Illuminate\Http\Request;
 use App\Http\Controllers\DriveController;
 use App\Models\File_User;
+use App\Models\Proyecto;
 
 class FileController extends Controller
 {
@@ -28,6 +29,7 @@ class FileController extends Controller
 
         $nombreArchivo = $request->input('nombre');
         $descripcionArchivo =  $request->input('descripcion');
+        $nombreProyecto =  $request->input('proyecto');
 
         try {
 
@@ -36,11 +38,15 @@ class FileController extends Controller
             if ($file['response']) {
 
 
+                $proyecto = Proyecto::where('name', $nombreProyecto)->first();
+
+
                 $fileUp = File::create([
                     'name' =>  $nombreArchivo,
                     'name_drive' => $name,
                     'descripcion' =>  $descripcionArchivo,
                     'file' =>   $file['message'][0][1],
+                    'proyecto_id' => $proyecto->id,
                     'aceptacion' =>  '0'
                 ]);
 
@@ -56,13 +62,17 @@ class FileController extends Controller
                     'message' => 'file upload'
                 ];
             } else {
-                return $file['message'];
+
+                return [
+                    'response' => false,
+                    'message' =>  $file['message']
+                ];
             }
-        } catch (\Illuminate\Database\QueryException $e) {
-            return response()->json([
+        } catch (\Exception $e) {
+            return [
                 'response' => false,
                 'message' => $e->getMessage()
-            ]);
+            ];
         }
     }
 

@@ -20,6 +20,10 @@ class CreateFilesTable extends Migration
             $table->string("descripcion");
             $table->string("file");
             $table->string("aceptacion");
+            $table->bigInteger("proyecto_id")->unsigned();
+            $table->foreign('proyecto_id')
+                ->references('id')
+                ->on('proyectos')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

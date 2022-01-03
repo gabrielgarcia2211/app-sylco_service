@@ -27,6 +27,7 @@
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary">Listado de Archivos</h6>
+                        <a href="{{route('user.list')}}" class="btn btn-warning">Volver</a>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">

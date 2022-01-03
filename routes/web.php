@@ -102,13 +102,14 @@ Route::group(['prefix' => 'coordinador/', 'middleware' => ['role:Coordinador', '
 /** ----------------------------------------------------------------------------------------------------------------
  * CONTROL DE FILES */
 
-Route::group(['prefix' => '/', 'middleware' => ['role:Contratista', 'auth']], function () {
+Route::group(['prefix' => 'contratista/', 'middleware' => ['role:Contratista', 'auth']], function () {
 
 
     Route::post('files/create', [FileController::class, 'store'])->name('file.store');
     Route::post('files/delete', [FileController::class, 'destroy'])->name('file.delete');
+    Route::get('files/showProyecto/{name}', [ContratistaController::class, 'showProyecto'])->name('file.showProyecto');
 
-    
+
 });
 
 

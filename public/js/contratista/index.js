@@ -31,17 +31,26 @@ function addFile() {
                 showConfirmButton: false,
             });
         },
-        success: function (data) {
-            swal.close();
-            location.reload();
+        success: function (response) {
+            if (response["response"]) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Hecho!",
+                    text: response["message"],
+                });
+                location.reload();
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: response["message"],
+                });
+            }
         },
         error: function (r) {
             alert(r);
             swal.close();
-        },
-        complete: function () {
-            swal.close();
-        },
+        }
     });
 }
 
