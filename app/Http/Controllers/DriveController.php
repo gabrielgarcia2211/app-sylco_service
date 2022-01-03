@@ -62,11 +62,10 @@ class DriveController extends Controller
 
 
     //GUARDAR ARCHIVOS EN DIRECTORIOS (PADRE O HIJO)
-    public function putFile($carpetaPadre = "hola", $file = "test.txt")
+    public function putFile($carpetaPadre = "hola", $file = "test.txt", $name)
     {
 
         $dataPadre = $this->findDirectory($carpetaPadre);
-        $name = time() . random_int(0, 100);
 
         try {
 
@@ -76,7 +75,7 @@ class DriveController extends Controller
 
                 $files = collect(Storage::disk('google')
                     ->listContents($dataPadre['path'], false))
-                    ->where('filename', '=', ''.$name)
+                    ->where('filename', '=', '' . $name)
                     ->where('type', '=', 'file');
 
 
@@ -90,7 +89,6 @@ class DriveController extends Controller
                     'response' => true,
                     'message' =>  $dataJson
                 ];
-
             } else {
 
                 return [
@@ -108,7 +106,7 @@ class DriveController extends Controller
 
 
     //ELIMINAR DIRECTORIO(PADRE)
-    public function deleteFile($carpetaPadre = "hola", $tipo = 4)
+    public function deleteFile($carpetaPadre = "hola", $filename,  $tipo = 4)
     {
         /** 
          *  1 -> Archivo
@@ -261,7 +259,7 @@ class DriveController extends Controller
     {
 
         $dataPadre = $this->findDirectory($carpetaPadre);
-        
+
         try {
 
             if ($dataPadre) {

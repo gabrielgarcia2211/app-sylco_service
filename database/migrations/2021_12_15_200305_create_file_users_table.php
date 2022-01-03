@@ -20,7 +20,7 @@ class CreateFileUsersTable extends Migration
             $table->dateTime("date");
             $table->foreign('user_nit')
                 ->references('nit')
-                ->on('users')->onDelete('cascade')->onUpdate('cascade');
+                ->on('users');
             $table->foreign('file_id')
                 ->references('id')
                 ->on('files')->onDelete('cascade')->onUpdate('cascade');

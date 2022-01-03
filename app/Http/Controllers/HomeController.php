@@ -42,14 +42,20 @@ class HomeController extends Controller
             return view('dash.coordinador.index')->with(compact('dataContratista', 'dataProyecto'));
         } else if (auth()->user()->hasRole('Contratista')) {
 
-            $dataFiles = File::join('file_users', 'file_users.id', '=', 'files.id')
-                ->join('users', 'users.nit', '=', 'file_users.user_nit')
-                ->where('users.nit', auth()->user()->nit)
-                ->get();
+            $dataFiles = File::select('files.*')
+            ->join('file_users', 'file_users.file_id', '=', 'files.id')
+            ->join('users', 'users.nit', '=', 'file_users.user_nit')
+            ->where('users.nit', auth()->user()->nit)
+            ->get();
 
-            return view('dash.contratista.index')->with(compact($dataFiles));
-        } else {
+        
+
+            return view('dash.contratista.index')->with(compact('dataFiles'));
+
+        }else{
+
             dd("nada");
+
         }
     }
 

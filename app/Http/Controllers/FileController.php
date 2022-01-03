@@ -21,25 +21,24 @@ class FileController extends Controller
     {
 
         $files = $request->file('archivo');
+        $name = time() . random_int(0, 100);
 
         $nombreContratista = auth()->user()->name;
         $nitContratista = auth()->user()->nit;
 
-        echo ($files);
-        return;
-
-        $nombreArchivo = "data";
-        $descripcionArchivo = "adat2";
+        $nombreArchivo = $request->input('nombre');
+        $descripcionArchivo =  $request->input('descripcion');
 
         try {
 
-            $file = $this->driveData->putFile($nombreContratista, $files->get());
+            $file = $this->driveData->putFile($nombreContratista, $files->get(), $name);
 
             if ($file['response']) {
 
 
                 $fileUp = File::create([
                     'name' =>  $nombreArchivo,
+                    'name_drive' => $name,
                     'descripcion' =>  $descripcionArchivo,
                     'file' =>   $file['message'][0][1],
                     'aceptacion' =>  '0'
@@ -67,4 +66,33 @@ class FileController extends Controller
         }
     }
 
+    public function destroy()
+    {
+        $id = $_POST['id'];
+        $file = File::Find($id);
+
+        try {
+
+            $data = $this->driveData->deleteFile(auth()->user()->name,  $file->name_drive, 1);
+
+            if ($data['response']) {
+                $file->delete();
+                return [
+                    'response' => true,
+                    'message' =>  'Archivo eliminado'
+                ];
+            }
+
+            return [
+                'response' => false,
+                'message' =>  'Archivo no encontrado'
+            ];
+        } catch (\Exception $e) {
+
+            return [
+                'response' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+    }
 }

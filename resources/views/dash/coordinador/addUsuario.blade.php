@@ -76,7 +76,7 @@
                                         </div>
                                         <div class="form-group row">
                                             <div class="col-sm-6 mb-3 mb-sm-0">
-                                                <select name="rol" class="form-select form-control-user card shadow mb-4" aria-label="Default select example" style="border: 1px solid gray; width: 100%;">
+                                                <select name="role" class="form-select form-control-user card shadow mb-4" aria-label="Default select example" style="border: 1px solid gray; width: 100%;">
                                                     @isset($dataRol)
                                                     @foreach ( $dataRol as $rol )
                                                     <option value="{{$rol->name}}">{{$rol->name}}</option>

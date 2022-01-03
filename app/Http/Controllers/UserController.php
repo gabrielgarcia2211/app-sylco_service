@@ -50,7 +50,7 @@ class UserController extends Controller
 
         if (!$respError) {
 
-            $role = Role::where('name', $request->rol)->first();
+            $role = Role::where('name', $request->role)->first();
             $proyecto = Proyecto::where('name', $request->proyecto)->first();
 
 
@@ -73,7 +73,7 @@ class UserController extends Controller
                 ];
             }
 
-            if ($request->rol == 'Contratista') {
+            if ($request->role == 'Contratista') {
                 $this->driveData->createDirectory(strtoupper($request->nombre));
             }
 
@@ -121,6 +121,8 @@ class UserController extends Controller
             'correo' => 'required|unique:users,email',
             'contrasenia' => 'required',
             'nombre' => 'required',
+            'role' => 'required',
+            'proyecto' => 'required',
         ]);
 
         $error = $validator->getMessageBag()->toArray();

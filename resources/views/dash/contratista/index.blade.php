@@ -18,46 +18,48 @@
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
-                <div class="shadow mb-4" style="display: flex; justify-content: center; border-radius: 5px;">
-                    <form id="form-file-contratista" action="{{route('file.store')}}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <div class="row">
-                            <div class="col">
-                                <div style="margin-top:14%">
-                                    <input type="text" class="form-control {{ $errors->has('nombre') ? ' is-invalid' : '' }} form-control-user" value="{{ old('nombre') }}" id="nombre" name="nombre" maxlength="50" aria-describedby="emailHelp" placeholder="Nombre">
-                                    @if ($errors->has('nombre'))
-                                    <span style="margin-bottom:18px" class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('nombre') }}</strong>
-                                    </span>
-                                    @endif
+                <div class="shadow mb-4" style="border-radius: 5px;">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Subir Archivo</h6>
+                    </div>
+                    <div class="card-body">
+                        <form id="form-file-contratista" action="{{route('file.store')}}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group" style="padding: 10px; text-align: center;">
+                                        <input type="text" class="form-control form-control-user" id="nombre" name="nombre" maxlength="50" aria-describedby="emailHelp" placeholder="Nombre">
+                                    </div>
+
+                                    <div class="form-group" style="padding: 10px; text-align: center;">
+                                        <textarea class="form-control" id="descripcion" name="descripcion" maxlength="200" aria-describedby="emailHelp"></textarea>
+                                    </div>
+
+                                    <div class="form-group" style="padding: 10px; text-align: center;">
+                                        <input type="file" name="archivo" id="archivo" class="form-control-file" id="exampleFormControlFile1">
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div style="text-align: center; padding-bottom: 10px;">
+                                        <button type="submit" class="btn btn-primary" style="width: 200px;" onclick="return addFile();">Cargar</button>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col">
-                                <div class="form-group" style="padding: 10px; text-align: center;">
-                                    <label for="exampleFormControlFile1">Seleccionar archivo</label>
-                                    <input type="file" name="archivo" class="form-control-file" id="exampleFormControlFile1">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <div style="text-align: center; padding-bottom: 10px;">
-                                    <button type="submit" class="btn btn-primary" style="width: 200px;" onclick="return addFile();">Cargar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
                 <br>
                 <!-- Page Heading -->
-                <h1 class="h3 mb-2 text-gray-800">Tables</h1>
-                <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.
-                    For more information about DataTables, please visit the <a target="_blank" href="https://datatables.net">official DataTables documentation</a>.</p>
+                <h1 class="h3 mb-2 text-gray-800">Tabla</h1>
+                <p class="mb-4">Lista de Mis Archivos</p>
 
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Lista</h6>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -68,6 +70,7 @@
                                         <th>Descripcion</th>
                                         <th>Fecha Subida</th>
                                         <th>Acciones</th>
+                                        <th>Marcar Reporte</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
@@ -76,6 +79,7 @@
                                         <th>Descripcion</th>
                                         <th>Fecha Subida</th>
                                         <th>Acciones</th>
+                                        <th>Marcar Reporte</th>
                                     </tr>
                                 </tfoot>
                                 <tbody>
@@ -84,20 +88,24 @@
                                         <td>{{$dataFiles[$m]->name}}</td>
                                         <td><textarea disabled style="width: 100%; height: 180px;">{{$dataFiles[$m]->descripcion}}</textarea></td>
                                         <td>{{$dataFiles[$m]->created_at}}</td>
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <form id="" action="">
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-warning" style="width: 100%" id="btn-edit-proyecto" value="" onclick=""><i class="fas fa-edit"></i></button>
-                                                </form>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <a href="{{$dataFiles[$m]->file}}" target="_blank" type="submit" class="btn btn-success" style="width: 80%"><i class="far fa-eye"></i></a>
+                                                </div>
+                                                <div class="col-6">
+                                                    <form id="form-file-delete" action="{{route('file.delete')}}">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-danger" style="width: 80%" value="" onclick="return deleteFile('{{$dataFiles[$m]->id}}')"><i class="far fa-trash-alt"></i></button>
+                                                    </form>
+                                                </div>
                                             </div>
-                                            <div class="col-6">
-                                                <form id="" action="">
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-danger" style="width: 100%" id="btn-delete-proyecto" value="" onclick=""><i class="far fa-trash-alt"></i></button>
-                                                </form>
+                                        </td>
+                                        <td>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
+                                                <label class="form-check-label" for="flexSwitchCheckChecked">Agregar a reporte</label>
                                             </div>
-                                        </div>
                                         </td>
                                         </tr>
                                         @endfor

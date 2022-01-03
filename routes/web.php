@@ -106,11 +106,9 @@ Route::group(['prefix' => '/', 'middleware' => ['role:Contratista', 'auth']], fu
 
 
     Route::post('files/create', [FileController::class, 'store'])->name('file.store');
+    Route::post('files/delete', [FileController::class, 'destroy'])->name('file.delete');
 
     
-    Route::post('files/show', [FileController::class, 'show'])->name('file.show');
-    Route::post('files/edit', [FileController::class, 'edit'])->name('file.edit');
-    Route::post('files/delete', [FileController::class, 'destroy'])->name('file.delete');
 });
 
 

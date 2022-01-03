@@ -8,5 +8,5 @@ class File extends Model
 {
     protected $table = 'files';
 
-    protected $fillable = ['name','descripcion','file','aceptacion'];
+    protected $fillable = ['name', 'name_drive','descripcion','file','aceptacion','created_at'];
 }
