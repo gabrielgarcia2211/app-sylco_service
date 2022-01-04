@@ -6,7 +6,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class TestMail extends Mailable implements ShouldQueue
+class NotificacionMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -30,6 +30,6 @@ class TestMail extends Mailable implements ShouldQueue
     public function build()
     {
         return $this->from(env('MAIL_FROM_ADDRESS'),env('MAIL_FROM_NAME'))
-        ->view('email.testMail')->subject('Notificacion')->with($this->data);
+        ->view('email.notificacionEmail')->subject('Notificacion')->with($this->data);
     }
 }

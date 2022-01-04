@@ -64,12 +64,9 @@ class ContratistaController extends Controller
 
     public function report()
     {
-
-
         $arrayData = $_POST['data'];
         $name = $_POST['proyecto'];
 
-        //$proyecto = Proyecto::find($id);
 
         $user = User::select('users.email', 'users.name', 'users.last_name')->role('Aux')
             ->join('proyecto_users', 'proyecto_users.user_nit', '=', 'users.nit')

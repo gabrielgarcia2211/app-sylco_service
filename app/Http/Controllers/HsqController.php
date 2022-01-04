@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Proyecto;
+use App\Mail\NotificacionMail;
+use Mail;
+
 
 class HsqController extends Controller
 {
@@ -51,5 +54,32 @@ class HsqController extends Controller
         $JString = json_encode($data);
         echo $JString;
         return;
+    }
+
+
+    public function report()
+    {
+        $arraySend = [
+            'name' =>  $_POST['name'],
+            'descripcion' => $_POST['descripcion']
+        ];
+
+        $email = $_POST['email'];
+
+
+        try {
+            Mail::to($email)->send(new NotificacionMail($arraySend));
+
+            return [
+                'response' => true,
+                'message' => 'Correo Enviado!'
+            ];
+        } catch (\Exception $e) {
+
+            return [
+                'response' => false,
+                'message' => $e->getMessage()
+            ];
+        }
     }
 }

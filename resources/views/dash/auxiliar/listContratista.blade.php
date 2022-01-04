@@ -17,7 +17,7 @@
             @include('dash.auxiliar.nav.navs')
 
             <!-- Begin Page Content -->
-            <div class="container-fluid" >
+            <div class="container-fluid">
 
                 <!-- Page Heading -->
                 <h1 class="h3 mb-2 text-gray-800">{{$name}}</h1>
@@ -37,6 +37,7 @@
                                         <th>Nombre</th>
                                         <th>Apellido</th>
                                         <th>Correo</th>
+                                        <th>Enviar Correo</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
@@ -46,6 +47,7 @@
                                         <th>Nombre</th>
                                         <th>Apellido</th>
                                         <th>Correo</th>
+                                        <th>Enviar Correo</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </tfoot>
@@ -59,9 +61,19 @@
                                         <td>
                                             <div class="row" style="justify-content: center;">
                                                 <div class="col-4">
+                                                    <form id="formu-contratista-send" action="{{route('contratista.file.report')}}" method="POST">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-primary" style="margin:auto" id="btn-show-proyecto" onclick="return sendEmail('{{$dataFiles[$m]->email}}')"><i class="fas fa-envelope"></i></button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="row" style="justify-content: center;">
+                                                <div class="col-4">
                                                     <form id="formu-contratista-show" action="{{route('contratista.proyecto.list')}}" method="POST">
                                                         @csrf
-                                                        <button type="submit" class="btn btn-primary" style="margin:auto" id="btn-show-proyecto"  onclick="return findFilesUser('{{$dataFiles[$m]->nit}}', '{{$dataFiles[$m]->proyecto}}')"><i class="fas fa-info-circle"></i></button>
+                                                        <button type="submit" class="btn btn-warning" style="margin:auto" id="btn-show-proyecto" onclick="return findFilesUser('{{$dataFiles[$m]->nit}}', '{{$dataFiles[$m]->proyecto}}')"><i class="fas fa-info-circle"></i></button>
                                                     </form>
                                                 </div>
                                             </div>

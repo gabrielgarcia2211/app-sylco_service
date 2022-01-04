@@ -33,7 +33,7 @@
                                     </div>
 
                                     <div class="form-group" style="padding: 10px; text-align: center;">
-                                        <textarea class="form-control" id="descripcion" name="descripcion" maxlength="200" aria-describedby="emailHelp"></textarea>
+                                        <textarea class="form-control" id="descripcion" name="descripcion" placeholder="Descripcion" maxlength="200" aria-describedby="emailHelp"></textarea>
                                     </div>
 
                                     <div class="form-group" style="padding: 10px; text-align: center;">

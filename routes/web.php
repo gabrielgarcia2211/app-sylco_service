@@ -112,6 +112,7 @@ Route::group(['prefix' => 'auxiliar/', 'middleware' => ['role:Aux', 'auth']], fu
     Route::get('contratista/showProyecto/{name}', [HsqController::class, 'showProyecto'])->name('contratista.showProyecto');
     Route::get('contratista/proyecto/list', [HsqController::class, 'index'])->name('contratista.proyecto.list');
     Route::post('contratista/proyecto/list', [HsqController::class, 'showFile'])->name('contratista.proyecto.list');
+    Route::post('contratista/files/report', [HsqController::class, 'report'])->name('contratista.file.report');
 
 
 });//LISTO
