@@ -17,7 +17,39 @@
             @include('dash.auxiliar.nav.navs')
 
             <div class="container-fluid">
-                
+                <div class="row">
+
+                    <!-- Content Column -->
+                    <div class="col-lg-12 mb-6">
+
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Proyecto</h6>
+                            </div>
+                            <div class="card-body">
+
+                                @isset($dataProyecto)
+                                <?php $cont = 0 ?>
+                                @for($m = 0; $m < count($dataProyecto) / 3; $m++) <div class="row">
+                                    @for ($i = $cont; $i < count($dataProyecto); $i++) <div class="col-lg mb-4">
+                                        <div class="card text-white shadow" style="background: {{$dataProyecto[$i][2]}}">
+                                            <div class="card-body">
+                                                {{$dataProyecto[$i][0]}}
+                                                <div class="text-white-50 small">Cantidad de Archivos Subidos: {{$dataProyecto[$i][1]}}</div>
+                                            </div>
+                                        </div>
+                            </div>
+                            <?php $cont++ ?>
+                            @if (($cont % 3) == 0)
+                            @break
+                            @endif
+                            @endfor
+                        </div>
+                        @endfor
+                        @endisset
+                    </div>
+
+                </div>
             </div>
 
 

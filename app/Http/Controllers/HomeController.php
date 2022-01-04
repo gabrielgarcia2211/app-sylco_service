@@ -60,7 +60,22 @@ class HomeController extends Controller
 
             return view('dash.contratista.index')->with(compact('dataProyecto'));
         } else if (auth()->user()->hasRole('Aux')) {
-            return view('dash.auxiliar.index');
+
+
+            $data = DB::select("SELECT  DISTINCT proyectos.name AS proyecto, COUNT(files.name) AS cantidad
+            FROM files, proyectos 
+            INNER JOIN proyecto_users ON proyecto_users.proyecto_id = proyectos.id
+            INNER JOIN users ON users.nit = proyecto_users.user_nit
+            WHERE files.proyecto_id = proyectos.id AND users.nit =". auth()->user()->nit . "
+            GROUP BY (proyecto)");
+
+            $dataProyecto = array();
+
+
+            for ($i = 0; $i < count($data); $i++) {
+                array_push($dataProyecto, [$data[$i]->proyecto, $data[$i]->cantidad,  $this->randColor()]);
+            }
+            return view('dash.auxiliar.index')->with(compact('dataProyecto'));
         } else {
             dd("nada");
         }

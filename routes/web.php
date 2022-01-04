@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\RolController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
@@ -11,6 +10,7 @@ use App\Http\Controllers\ContratistaController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\DriveController;
+use App\Http\Controllers\HsqController;
 
 /*
 |--------------------------------------------------------------------------
@@ -98,6 +98,20 @@ Route::group(['prefix' => 'contratista/', 'middleware' => ['role:Contratista', '
     Route::post('files/create', [FileController::class, 'store'])->name('file.store');
     Route::post('files/delete', [FileController::class, 'destroy'])->name('file.delete');
     Route::post('files/report', [ContratistaController::class, 'report'])->name('file.report');
+
+
+});//LISTO
+
+
+
+/** ----------------------------------------------------------------------------------------------------------------
+ * CONTROL DE FILES */
+
+Route::group(['prefix' => 'auxiliar/', 'middleware' => ['role:Aux', 'auth']], function () {
+
+    Route::get('contratista/showProyecto/{name}', [HsqController::class, 'showProyecto'])->name('contratista.showProyecto');
+    Route::get('contratista/proyecto/list', [HsqController::class, 'index'])->name('contratista.proyecto.list');
+    Route::post('contratista/proyecto/list', [HsqController::class, 'showFile'])->name('contratista.proyecto.list');
 
 
 });//LISTO

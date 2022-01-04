@@ -1,20 +1,20 @@
-@extends('layouts.coordinador')
+@extends('layouts.auxiliar')
 
 
-@section('content')
+@section('contentAux')
 
 <!-- Page Wrapper -->
 <div id="wrapper">
 
     <!-- Sidebar -->
-    @include('dash.coordinador.nav.navi')
+    @include('dash.auxiliar.nav.navi')
 
     <div id="content-wrapper" class="d-flex flex-column">
 
         <!-- Main Content -->
         <div id="content">
 
-            @include('dash.coordinador.nav.navs')
+            @include('dash.auxiliar.nav.navs')
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
@@ -27,7 +27,7 @@
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary">Listado de Archivos</h6>
-                        <a href="{{route('user.list')}}" class="btn btn-warning">Volver</a>
+                        <a href="{{url()->previous()}}" class="btn btn-warning">Volver</a>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -50,7 +50,7 @@
                                         <th>Ver</th>
                                     </tr>
                                 </tfoot>
-                                <tbody class="artur">
+                                <tbody id="artur2">
                                     
                                 </tbody>
                             </table>
@@ -107,8 +107,8 @@
 
     <script>
 		window.onload=function() {
-            var template = localStorage.getItem('info');
-			$(".artur").html(template)
+            var template = localStorage.getItem('infoC');
+			$("#artur2").html(template)
 		}
 	</script>
 
@@ -118,6 +118,6 @@
     @endsection
 
 
-    @section('script')
-    <script src="{{asset('js/coordinador/index.js')}}"></script>
+    @section('scriptAux')
+    <script src="{{asset('js/auxiliar/index.js')}}"></script>
     @endsection
