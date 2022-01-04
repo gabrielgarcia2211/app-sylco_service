@@ -7,6 +7,8 @@ use App\Models\File;
 use App\Models\Proyecto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Mail\TestMail;
+use Mail;
 
 class ContratistaController extends Controller
 {
@@ -58,5 +60,40 @@ class ContratistaController extends Controller
 
 
             return view('dash.contratista.listProyecto')->with(compact('name','dataFiles'));
+    }
+
+    public function report()
+    {
+
+
+        $arrayData = $_POST['data'];
+        $name = $_POST['proyecto'];
+
+        //$proyecto = Proyecto::find($id);
+
+        $user = User::select('users.email', 'users.name', 'users.last_name')->role('Aux')
+            ->join('proyecto_users', 'proyecto_users.user_nit', '=', 'users.nit')
+            ->join('proyectos', 'proyecto_users.proyecto_id', '=', 'proyectos.id')
+            ->where('proyectos.name',  $name)
+            ->get();
+
+
+        for ($k = 0; $k < count($user); $k++) {
+
+            try {
+                Mail::to($user[$k]->email)->send(new TestMail($arrayData)); 
+            
+                return [
+                    'response' => true,
+                    'message' => 'Reporte Enviado!'
+                ];
+            } catch (\Exception $e) {
+
+                return [
+                    'response' => false,
+                    'message' => $e->getMessage()
+                ];
+            }
+        }
     }
 }

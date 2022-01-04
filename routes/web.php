@@ -51,16 +51,6 @@ Route::post('routes/password/reset', [ResetPasswordController::class, 'reset'])-
 //LISTO
 
 /** ----------------------------------------------------------------------------------------------------------------
- * CONTROL DE ROLES */
-
-Route::group(['prefix' => '/', 'middleware' => []], function () {
-
-    //Route::get('rol/list', [RolController::class, 'index'])->name('rol.list');
-    //Route::post('rol/list', [RolController::class, 'findRolUser'])->name('rol.user.list');
-  
-});
-
-/** ----------------------------------------------------------------------------------------------------------------
  * CONTROL DE USUARIOS */
 
 Route::group(['prefix' => 'coordinador/', 'middleware' => ['role:Coordinador', 'auth']], function () {
@@ -107,10 +97,10 @@ Route::group(['prefix' => 'contratista/', 'middleware' => ['role:Contratista', '
     Route::get('files/showProyecto/{name}', [ContratistaController::class, 'showProyecto'])->name('file.showProyecto');
     Route::post('files/create', [FileController::class, 'store'])->name('file.store');
     Route::post('files/delete', [FileController::class, 'destroy'])->name('file.delete');
-    Route::post('files/report', [FileController::class, 'report'])->name('file.report');
+    Route::post('files/report', [ContratistaController::class, 'report'])->name('file.report');
 
 
-});
+});//LISTO
 
 
 Route::get('/test2', function(){

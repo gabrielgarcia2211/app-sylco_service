@@ -59,8 +59,9 @@ class HomeController extends Controller
 
 
             return view('dash.contratista.index')->with(compact('dataProyecto'));
+        } else if (auth()->user()->hasRole('Aux')) {
+            return view('dash.auxiliar.index');
         } else {
-
             dd("nada");
         }
     }
