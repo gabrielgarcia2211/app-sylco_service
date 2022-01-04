@@ -113,6 +113,8 @@ Route::group(['prefix' => 'contratista/', 'middleware' => ['role:Contratista', '
 });
 
 
-Route::get('/test2', [FileController::class, 'store']);
+Route::get('/test2', function(){
+    return view('email.testMail');
+});
 
 Route::get('/test', [App\Http\Controllers\DriveController::class, 'getMail']);

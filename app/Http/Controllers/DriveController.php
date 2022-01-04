@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Mail\TestMail;
-use Mail;
 
 class DriveController extends Controller
 {
@@ -203,15 +201,7 @@ class DriveController extends Controller
     }
 
 
-    public function getMail($data = "hola")
-    {
-        $data = [
-            "name" => 'gabriel',
-            "message" => 'message',
-            "asunto" => 'prueba'
-        ];
-        Mail::to('garciaquinteroga@gmail.com')->send(new TestMail($data)); //aca se cambie por el remitente
-    }
+    
 
 
 

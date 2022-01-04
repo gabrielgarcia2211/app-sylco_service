@@ -138,12 +138,30 @@ function sendReport() {
             _token: $("meta[name='csrf-token']").attr("content"),
             data: arrayReport,
             proyecto: proyecto,
-        }).done(function (s) {
-            alert(s);
+        }).
+        done(function (response) {
+            if (response["response"]) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Hecho!",
+                    text: response["message"],
+                });
+                location.reload();
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: response["message"],
+                });
+            }
         }).fail(function (s) {
-            alert(s);
+            alert(s.responseText);
         });
     } else {
-        console.log("llene!");
+        Swal.fire({
+            icon: "warning",
+            title: "Error!",
+            text: "Por favor seleccione los documentos",
+        });
     }
 }

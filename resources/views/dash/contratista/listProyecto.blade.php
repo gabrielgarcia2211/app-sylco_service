@@ -87,7 +87,7 @@
                                     @isset($dataFiles)
                                     @for($m = 0; $m < count($dataFiles); $m++) <tr>
                                         <td>{{$dataFiles[$m]->name}}</td>
-                                        <td><textarea disabled style="width: 100%; height: 180px;">{{$dataFiles[$m]->descripcion}}</textarea></td>
+                                        <td><textarea disabled style="width: 100%; height: 180px;resize: none;">{{$dataFiles[$m]->descripcion}}</textarea></td>
                                         <td>{{$dataFiles[$m]->created_at}}</td>
                                         <td>
                                             <div class="row">
@@ -97,15 +97,15 @@
                                                 <div class="col-6">
                                                     <form id="form-file-delete" action="{{route('file.delete')}}">
                                                         @csrf
-                                                        <button type="submit" class="btn btn-danger" style="width: 80%" value="" onclick="return deleteFile('{{$dataFiles[$m]->id}}')"><i class="far fa-trash-alt"></i></button>
+                                                        <button type="submit" class="btn btn-danger" style="width: 80%"  onclick="return deleteFile('{{$dataFiles[$m]->id}}')"><i class="far fa-trash-alt"></i></button>
                                                     </form>
-                                                </div>
-                                                <div class="col-6">
-                                                    <input type="checkbox" class="btn-check" id="{{$dataFiles[$m]->id}}" onchange="return capturarReport('{{$dataFiles[$m]}}');" />
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
+                                            <div class="col-12" style="text-align: center;margin-top:5%">
+                                                <input type="checkbox" class="btn-check" id="{{$dataFiles[$m]->id}}" style="transform: scale(2);" onchange="return capturarReport('{{$dataFiles[$m]}}');"></input>
+                                            </div>
                                         </td>
                                         </tr>
                                         @endfor

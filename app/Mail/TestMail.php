@@ -6,7 +6,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class TestMail extends Mailable
+class TestMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -16,6 +16,7 @@ class TestMail extends Mailable
      * @return void
      */
     public $data;
+
     public function __construct($data)
     {
         $this->data = $data;

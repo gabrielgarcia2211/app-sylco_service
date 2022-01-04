@@ -8,6 +8,9 @@ use App\Http\Controllers\DriveController;
 use App\Models\File_User;
 use App\Models\Proyecto;
 use App\Models\User;
+use App\Mail\TestMail;
+use Mail;
+
 
 class FileController extends Controller
 {
@@ -108,7 +111,8 @@ class FileController extends Controller
     }
 
 
-    public function report(){
+    public function report()
+    {
 
 
         $arrayData = $_POST['data'];
@@ -117,17 +121,28 @@ class FileController extends Controller
         //$proyecto = Proyecto::find($id);
 
         $user = User::select('users.email', 'users.name', 'users.last_name')->role('Aux')
-        ->join('proyecto_users', 'proyecto_users.user_nit', '=', 'users.nit')
-        ->join('proyectos', 'proyecto_users.proyecto_id' , '=' , 'proyectos.id')
-        ->where('proyectos.name',  $name)
-        ->get();
+            ->join('proyecto_users', 'proyecto_users.user_nit', '=', 'users.nit')
+            ->join('proyectos', 'proyecto_users.proyecto_id', '=', 'proyectos.id')
+            ->where('proyectos.name',  $name)
+            ->get();
 
 
-        for($k=0; $k < count($user);$k++){
-            //llamamos la funcion derl correo y enviamos el arreglo de seleccionados a la vista
-            echo($user[$k]->email);
+        for ($k = 0; $k < count($user); $k++) {
+
+            try {
+                Mail::to($user[$k]->email)->send(new TestMail($arrayData)); 
+            
+                return [
+                    'response' => true,
+                    'message' => 'Reporte Enviado!'
+                ];
+            } catch (\Exception $e) {
+
+                return [
+                    'response' => false,
+                    'message' => $e->getMessage()
+                ];
+            }
         }
-
-      
     }
 }
