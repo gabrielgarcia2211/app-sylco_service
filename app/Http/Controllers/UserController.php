@@ -77,7 +77,6 @@ class UserController extends Controller
                 $this->driveData->createDirectory(strtoupper($request->nombre));
             }
 
-
             try {
 
                 $user = User::create([
@@ -102,6 +101,8 @@ class UserController extends Controller
                     'response' => true,
                     'message' => 'Usuario Creado'
                 ];
+
+
             } catch (\Exception $e) {
                 return [
                     'response' => false,

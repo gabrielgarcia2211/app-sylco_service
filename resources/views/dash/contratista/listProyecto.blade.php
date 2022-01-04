@@ -27,7 +27,7 @@
                             @csrf
                             <div class="row">
                                 <div class="col">
-                                    <input  id="proyecto" name="proyecto" type="hidden" value="{{$name}}"></input>
+                                    <input id="proyecto" name="proyecto" type="hidden" value="{{$name}}"></input>
                                     <div class="form-group" style="padding: 10px; text-align: center;">
                                         <input type="text" class="form-control form-control-user" id="nombre" name="nombre" maxlength="50" aria-describedby="emailHelp" placeholder="Nombre">
                                     </div>
@@ -100,13 +100,12 @@
                                                         <button type="submit" class="btn btn-danger" style="width: 80%" value="" onclick="return deleteFile('{{$dataFiles[$m]->id}}')"><i class="far fa-trash-alt"></i></button>
                                                     </form>
                                                 </div>
+                                                <div class="col-6">
+                                                    <input type="checkbox" class="btn-check" id="{{$dataFiles[$m]->id}}" onchange="return capturarReport('{{$dataFiles[$m]}}');" />
+                                                </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked">
-                                                <label class="form-check-label" for="flexSwitchCheckChecked">Agregar a reporte</label>
-                                            </div>
                                         </td>
                                         </tr>
                                         @endfor
@@ -117,7 +116,7 @@
                     </div>
                 </div>
                 <div style="display: flex; justify-content: center;margin:20px">
-                    <button type="button" class="btn btn-primary" style="width: 200px;">Enviar Correo</button>
+                    <button type="submit" class="btn btn-primary" style="width: 200px;" onclick="return sendReport()">Enviar Correo</button>
                 </div>
             </div>
 

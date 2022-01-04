@@ -1,3 +1,6 @@
+
+let arrayReport = Array();
+
 function addFile() {
     event.preventDefault();
     var file = $("#archivo").val();
@@ -5,9 +8,9 @@ function addFile() {
     var descripcion = $("#nombre").val();
     if (file == "" || nombre == "" || descripcion == "") {
         Swal.fire({
-            icon: 'warning',
-            title: 'Oops...',
-            text: 'Por favor llene todos los campos!'
+            icon: "warning",
+            title: "Oops...",
+            text: "Por favor llene todos los campos!",
         });
         return;
     }
@@ -50,12 +53,11 @@ function addFile() {
         error: function (r) {
             alert(r);
             swal.close();
-        }
+        },
     });
 }
 
-
-function deleteFile(id){
+function deleteFile(id) {
     event.preventDefault();
     Swal.fire({
         title: "Desea eliminar el archivo?",
@@ -110,4 +112,38 @@ function deleteFile(id){
             });
         }
     });
+}
+
+function capturarReport(objProyecto) {
+
+    objProyecto = JSON.parse(objProyecto);
+    var id = objProyecto["id"];
+    var name = objProyecto['name'];
+    var descripcion = objProyecto['descripcion'];
+    var fecha = objProyecto['created_at'];
+
+    if (document.getElementById(id).checked == true) {
+        arrayReport.push([name,descripcion,fecha]);
+        console.log("entra" + id);
+    } else {
+        arrayReport.pop([name,descripcion,fecha]);
+        console.log("salio" + id);
+    }
+}
+
+function sendReport() {
+    var proyecto = $("#proyecto").val();
+    if (arrayReport.length != 0) {
+        $.post("../report", {
+            _token: $("meta[name='csrf-token']").attr("content"),
+            data: arrayReport,
+            proyecto: proyecto,
+        }).done(function (s) {
+            alert(s);
+        }).fail(function (s) {
+            alert(s);
+        });
+    } else {
+        console.log("llene!");
+    }
 }

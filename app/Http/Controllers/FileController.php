@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\DriveController;
 use App\Models\File_User;
 use App\Models\Proyecto;
+use App\Models\User;
 
 class FileController extends Controller
 {
@@ -104,5 +105,29 @@ class FileController extends Controller
                 'message' => $e->getMessage()
             ];
         }
+    }
+
+
+    public function report(){
+
+
+        $arrayData = $_POST['data'];
+        $name = $_POST['proyecto'];
+
+        //$proyecto = Proyecto::find($id);
+
+        $user = User::select('users.email', 'users.name', 'users.last_name')->role('Aux')
+        ->join('proyecto_users', 'proyecto_users.user_nit', '=', 'users.nit')
+        ->join('proyectos', 'proyecto_users.proyecto_id' , '=' , 'proyectos.id')
+        ->where('proyectos.name',  $name)
+        ->get();
+
+
+        for($k=0; $k < count($user);$k++){
+            //llamamos la funcion derl correo y enviamos el arreglo de seleccionados a la vista
+            echo($user[$k]->email);
+        }
+
+      
     }
 }

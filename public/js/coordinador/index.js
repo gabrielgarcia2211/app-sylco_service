@@ -220,11 +220,11 @@ function guardarUsuario() {
         beforeSend: function () {
             Swal.fire({
                 title: "Cargando",
-                text: "Creando proyecto...",
+                text: "Creando usuario...",
                 imageUrl: "https://img.webme.com/pic/a/andwas/cargando5.gif",
                 imageWidth: 200,
                 imageHeight: 180,
-                imageAlt: "Creando proyecto",
+                imageAlt: "Creando usuario",
                 showCancelButton: false,
                 showConfirmButton: false,
             });
