@@ -145,6 +145,14 @@ function addFile(){
     var file = $("#archivo").val();
     var nombre = $("#nombre").val();
     var descripcion = $("#descripcion").val();
+
+
+    var fileSize = $('#archivo')[0].files[0].size;
+    var sizekiloBytes = parseInt(fileSize / 1024);
+
+   
+
+
     if (file == "" || nombre == "" || descripcion == "") {
         Swal.fire({
             icon: "warning",
@@ -153,6 +161,17 @@ function addFile(){
         });
         return;
     }
+
+    if(sizekiloBytes > 10240){
+        Swal.fire({
+            icon: "warning",
+            title: "Oops...",
+            text: "Limite de peso maximo permitido 10MB",
+        });
+        return;
+    }
+
+    
     var url = $("#form-upload-contratista").attr("action");
     var parametros = new FormData($("#form-upload-contratista")[0]);
     $.ajax({

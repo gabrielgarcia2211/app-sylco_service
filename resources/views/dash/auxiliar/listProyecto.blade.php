@@ -71,7 +71,6 @@
                                         <th>Descripcion</th>
                                         <th>Fecha Subida</th>
                                         <th>Acciones</th>
-                                        <th>Marcar Reporte</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
@@ -80,7 +79,6 @@
                                         <th>Descripcion</th>
                                         <th>Fecha Subida</th>
                                         <th>Acciones</th>
-                                        <th>Marcar Reporte</th>
                                     </tr>
                                 </tfoot>
                                 <tbody>
@@ -92,7 +90,7 @@
                                         <td>
                                             <div class="row">
                                                 <div class="col-6">
-                                                    <a href="" target="_blank" type="submit" class="btn btn-success" style="width: 80%"><i class="far fa-eye"></i></a>
+                                                    <a href="{{$dataFiles[$m]->file}}" target="_blank" type="submit" class="btn btn-success" style="width: 80%"><i class="far fa-eye"></i></a>
                                                 </div>
                                                 <div class="col-6">
                                                     <form id="form-file-delete" action="">
@@ -100,11 +98,6 @@
                                                         <button type="submit" class="btn btn-danger" style="width: 80%"  onclick="return deleteFile('{{$dataFiles[$m]->id}}')"><i class="far fa-trash-alt"></i></button>
                                                     </form>
                                                 </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="col-12" style="text-align: center;margin-top:5%">
-                                                <input type="checkbox" class="btn-check" id="{{$dataFiles[$m]->id}}" style="transform: scale(2);" onchange="return capturarReport('{{$dataFiles[$m]}}');"></input>
                                             </div>
                                         </td>
                                         </tr>

@@ -38,6 +38,7 @@
                                         <th>Apellido</th>
                                         <th>Correo</th>
                                         <th>Proyecto Asociado</th>
+                                        <th>Rol</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
@@ -48,6 +49,7 @@
                                         <th>Apellido</th>
                                         <th>Correo</th>
                                         <th>Proyecto Asociado</th>
+                                        <th>Rol</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </tfoot>
@@ -59,6 +61,7 @@
                                         <td>{{$dataUser[$m]->last_name}}</td>
                                         <td>{{$dataUser[$m]->email}}</td>
                                         <td>{{$dataUser[$m]->proyecto}}</td>
+                                        <td>{{$dataUser[$m]->getRoleNames()[0]}}</td>
                                         <td>
                                             <div class="row">
                                                 <div class="col-4">

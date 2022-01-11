@@ -115,7 +115,7 @@ class LoginController extends Controller
 
         } catch (\Exception $e) {
 
-            array_push($ingresoError,"¡Ah ocurrido un error!");
+            array_push($ingresoError, $e->getMessage());
             return view('auth.login')->with(compact('ingresoError'));
 
         }

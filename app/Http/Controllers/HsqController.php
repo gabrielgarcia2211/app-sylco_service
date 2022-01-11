@@ -94,13 +94,15 @@ class HsqController extends Controller
 
     function uploadFile($name){
 
-
+        $proyecto = Proyecto::where('name', $name)->first();
+        
         $dataFiles = File::select('files.*')
         ->join('file_users', 'file_users.file_id', '=', 'files.id')
         ->join('users', 'users.nit', '=', 'file_users.user_nit')
         ->join('proyecto_users', 'proyecto_users.user_nit', '=', 'users.nit')
         ->join('proyectos', 'proyectos.id', '=', 'proyecto_users.proyecto_id')
         ->where('users.nit', auth()->user()->nit)
+        ->where('files.proyecto_id', $proyecto->id)
         ->distinct()
         ->get();
 
@@ -123,11 +125,14 @@ class HsqController extends Controller
         $nombreProyecto =  $request->input('proyecto');
 
 
-        return [
-            'response' => false,
-            'message' =>   var_dump($files)
-        ];
 
+        if( round($_FILES['archivo']['size']/1024) > 10240){
+            return [
+                'response' => false,
+                'message' =>   'Limite de peso excedido, peso permitido 10MB'
+            ];
+        }
+     
 
         try {
 
