@@ -29,8 +29,10 @@ class UserController extends Controller
         $dataProyecto = Proyecto::all(['id', 'name']);
         
         $dataUser = User::select('users.*', 'proyectos.name AS proyecto', 'proyectos.id AS proyectoId')
-            ->join('proyecto_users', 'proyecto_users.user_nit', '=', 'users.nit')
-            ->join('proyectos', 'proyecto_users.proyecto_id', '=', 'proyectos.id')->get();
+            ->leftjoin('proyecto_users', 'proyecto_users.user_nit', '=', 'users.nit')
+            ->leftjoin('proyectos', 'proyecto_users.proyecto_id', '=', 'proyectos.id')
+            ->role(['Contratista', 'Aux'])
+            ->get();
 
         return view('dash.coordinador.listUsuario')->with(compact('dataUser', 'dataProyecto'));
     }
@@ -57,7 +59,7 @@ class UserController extends Controller
             if (empty($role) || empty($proyecto)) {
                 return [
                     'response' => false,
-                    'message' => 'Oppsxd!'
+                    'message' => 'Opps falta informacion!'
                 ];
             }
 
