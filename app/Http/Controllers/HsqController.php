@@ -20,10 +20,9 @@ class HsqController extends Controller
     public function showProyecto($name)
     {
 
-        $dataFiles = User::select('users.*', 'proyectos.name AS proyecto', 'proyectos.id AS proyectoId')
-            ->join('proyecto_users', 'proyecto_users.user_nit', '=', 'users.nit')
-            ->join('proyectos', 'proyecto_users.proyecto_id', '=', 'proyectos.id')
+        $dataFiles = User::select('users.*', 'proyectos.name AS proyecto', 'proyectos.id AS proyectoId')->join('proyecto_users', 'proyecto_users.user_nit', '=', 'users.nit')->join('proyectos', 'proyecto_users.proyecto_id', '=', 'proyectos.id')
             ->where('proyectos.name', $name)
+            ->role('Contratista')
             ->distinct()
             ->get();
 
