@@ -1,175 +1,112 @@
--- SQLINES DEMO *** ---------------------------------------
--- SQLINES DEMO ***              127.0.0.1
--- SQLINES DEMO *** idor:         5.7.33 - MySQL Community Server (GPL)
--- SQLINES DEMO ***              Win64
--- SQLINES DEMO *** :             11.2.0.6213
--- SQLINES DEMO *** ---------------------------------------
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Versión del servidor:         5.7.33 - MySQL Community Server (GPL)
+-- SO del servidor:              Win64
+-- HeidiSQL Versión:             11.2.0.6213
+-- --------------------------------------------------------
 
-/* SQLINES DEMO *** ARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/* SQLINES DEMO *** tf8 */;
-/* SQLINES DEMO *** tf8mb4 */;
-/* SQLINES DEMO *** REIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/* SQLINES DEMO *** L_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/* SQLINES DEMO *** L_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
--- SQLINES DEMO *** ra para tabla contratista.roles
--- SQLINES LICENSE FOR EVALUATION USE ONLY
-CREATE SEQUENCE roles_seq;
-
-CREATE TABLE IF NOT EXISTS roles (
-  id bigint check (id > 0) NOT NULL DEFAULT NEXTVAL ('roles_seq'),
-  name varchar(255) NOT NULL,
-  guard_name varchar(255) NOT NULL,
-  created_at timestamp(0) NULL DEFAULT NULL,
-  updated_at timestamp(0) NULL DEFAULT NULL,
-  PRIMARY KEY (id),
-  CONSTRAINT roles_name_guard_name_unique UNIQUE  (name,guard_name)
-)   ;
-
-ALTER SEQUENCE roles_seq RESTART WITH 4;
-
--- SQLINES DEMO *** ra la tabla contratista.roles: ~0 rows (aproximadamente)
-/* SQLINES DEMO ***  `roles` DISABLE KEYS */;
-INSERT INTO roles (id, name, guard_name, created_at, updated_at) VALUES
-	(1, 'Coordinador', 'web', '2021-12-29 18:56:39', '2021-12-29 18:56:39'),
-	(2, 'Aux', 'web', '2021-12-29 18:56:39', '2021-12-29 18:56:39'),
-	(3, 'Contratista', 'web', '2021-12-29 18:56:39', '2021-12-29 18:56:39');
-/* SQLINES DEMO ***  `roles` ENABLE KEYS */;
-
--- SQLINES DEMO *** ra para tabla contratista.role_has_permissions
--- SQLINES LICENSE FOR EVALUATION USE ONLY
-
--- SQLINES DEMO *** ra para tabla contratista.failed_jobs
--- SQLINES LICENSE FOR EVALUATION USE ONLY
-CREATE SEQUENCE failed_jobs_seq;
-
-CREATE TABLE IF NOT EXISTS failed_jobs (
-  id bigint check (id > 0) NOT NULL DEFAULT NEXTVAL ('failed_jobs_seq'),
-  uuid varchar(255) NOT NULL,
-  connection text NOT NULL,
-  queue text NOT NULL,
-  payload text NOT NULL,
-  exception text NOT NULL,
-  failed_at timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  CONSTRAINT failed_jobs_uuid_unique UNIQUE (uuid)
-)  ;
-
--- SQLINES DEMO *** ra la tabla contratista.failed_jobs: ~0 rows (aproximadamente)
-/* SQLINES DEMO ***  `failed_jobs` DISABLE KEYS */;
-/* SQLINES DEMO ***  `failed_jobs` ENABLE KEYS */;
-
--- SQLINES DEMO *** ra para tabla contratista.files
--- SQLINES LICENSE FOR EVALUATION USE ONLY
-CREATE SEQUENCE files_seq;
-
-CREATE TABLE IF NOT EXISTS files (
-  id bigint check (id > 0) NOT NULL DEFAULT NEXTVAL ('files_seq'),
-  name varchar(255) NOT NULL,
-  descripcion varchar(255) NOT NULL,
-  file varchar(255) NOT NULL,
-  aceptacion varchar(255) NOT NULL,
-  created_at timestamp(0) NULL DEFAULT NULL,
-  updated_at timestamp(0) NULL DEFAULT NULL,
-  PRIMARY KEY (id)
-)   ;
-
-ALTER SEQUENCE files_seq RESTART WITH 16;
-
--- SQLINES DEMO *** ra la tabla contratista.files: ~6 rows (aproximadamente)
-/* SQLINES DEMO ***  `files` DISABLE KEYS */;
-INSERT INTO files (id, name, descripcion, file, aceptacion, created_at, updated_at) VALUES
-	(9, 'data', 'holaaaa', 'https://drive.google.com/uc?id=1eoekee9psvDnoGwcyfDvrUGg0Gvtszpe&export=media', '0', '2021-12-29 21:11:22', '2021-12-29 21:11:22'),
-	(10, 'data', 'holaaaa', 'https://drive.google.com/uc?id=14_HZLH9jZkYezso8krviT14l06h7m7sd&export=media', '0', '2021-12-29 21:11:28', '2021-12-29 21:11:28'),
-	(11, 'data', 'holaaaa', 'https://drive.google.com/uc?id=1ql-bVzEQKK7sdSbSHO8y-Kej95MWozl_&export=media', '0', '2021-12-29 21:11:55', '2021-12-29 21:11:55'),
-	(12, 'data', 'holaaaa', 'https://drive.google.com/uc?id=14vb4M7blnXbl9eeL8LcVkKSELDwh-ftY&export=media', '0', '2021-12-29 21:12:03', '2021-12-29 21:12:03'),
-	(13, 'data', 'holaaaa', 'https://drive.google.com/uc?id=1HRF_VepgGGCEQF2U-u05rBTmUff2M-wh&export=media', '0', '2021-12-29 21:12:08', '2021-12-29 21:12:08'),
-	(15, 'data', 'holaaaa', 'https://drive.google.com/uc?id=1JaKRaoeUqtn_pGZoV8Ek0-JxrSGUOAbY&export=media', '0', '2021-12-29 22:18:35', '2021-12-29 22:18:35');
-/* SQLINES DEMO ***  `files` ENABLE KEYS */;
-
--- SQLINES DEMO *** ra para tabla contratista.file_users
--- SQLINES LICENSE FOR EVALUATION USE ONLY
-
------
-
--- SQLINES DEMO *** ra para tabla contratista.users
--- SQLINES LICENSE FOR EVALUATION USE ONLY
-CREATE SEQUENCE users_seq;
-
-CREATE TABLE IF NOT EXISTS users (
-  id bigint check (id > 0) NOT NULL DEFAULT NEXTVAL ('users_seq'),
-  nit int NOT NULL,
-  name varchar(255) NOT NULL,
-  last_name varchar(255) NOT NULL,
-  email varchar(255) NOT NULL,
-  email_verified_at timestamp(0) NULL DEFAULT NULL,
-  password varchar(255) NOT NULL,
-  remember_token varchar(100) DEFAULT NULL,
-  created_at timestamp(0) NULL DEFAULT NULL,
-  updated_at timestamp(0) NULL DEFAULT NULL,
-  PRIMARY KEY (id),
-  CONSTRAINT users_nit_unique UNIQUE (nit),
-  CONSTRAINT users_email_unique UNIQUE  (email)
-)   ;
-
-ALTER SEQUENCE users_seq RESTART WITH 5;
-
--- SQLINES DEMO *** ra la tabla contratista.users: ~0 rows (aproximadamente)
-/* SQLINES DEMO ***  `users` DISABLE KEYS */;
-INSERT INTO users (id, nit, name, last_name, email, email_verified_at, password, remember_token, created_at, updated_at) VALUES
-	(1, 1004804515, 'GABRIEL', 'GARCIA', 'GABRIELARTUROGQ@UFPS.EDU.CO', '2021-12-29 13:55:53', '$2y$10$gwJyiolLGrD/NQScrtO45OfjOtAIGG6ZdF5YJADQ29bpUv20EO/Em', 'DNj1rqMSBuOanVsWjF1TLyJLunjodCH7uPq2Ek1NpfSMQpN5Z6qdTGG87bkH', '2021-12-29 13:55:55', '2021-12-30 20:51:41'),
-	(2, 1, 'ARTUR', 'QUINTERO', 'arturo@gmaila.com', '2021-12-30 08:05:30', '$2y$10$Z2bK.NZzx/iyo.UEAewpneKhrLM7rAg.59giFZkQP4YwK1vj4HwD.', NULL, '2021-12-29 19:00:11', '2021-12-29 19:01:06'),
-	(3, 1151654, 'LUIS', 'PEDRAZA', 'l@g.com', '2021-12-30 08:05:31', '$2y$10$lPr1p345f5VmePze8I6XzelUCMSr1Qc5s1YK3QGL1OzDfCHIPURzi', NULL, '2021-12-29 19:25:24', '2021-12-29 19:25:24'),
-	(4, 13, 'DAVID', 'VALENCIA', 'g@mm.com', '2021-12-30 08:05:32', '$2y$10$yaAQ2ELS/ZRTRd7tZeT2s.iWvaO4nMuoSvuMPWg0XiUTaeFe9yADq', NULL, '2021-12-29 22:16:30', '2021-12-29 22:16:30');
-/* SQLINES DEMO ***  `users` ENABLE KEYS */;
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
------
-CREATE SEQUENCE file_users_seq;
+-- Volcando estructura de base de datos para contratista
+CREATE DATABASE IF NOT EXISTS `contratista` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_spanish_ci */;
+USE `contratista`;
 
-CREATE TABLE IF NOT EXISTS file_users (
-  id bigint check (id > 0) NOT NULL DEFAULT NEXTVAL ('file_users_seq'),
-  user_nit int NOT NULL,
-  file_id bigint check (file_id > 0) NOT NULL,
-  date timestamp(0) NOT NULL,
-  PRIMARY KEY (id)
- ,
-  CONSTRAINT file_users_file_id_foreign FOREIGN KEY (file_id) REFERENCES files (id),
-  CONSTRAINT file_users_user_nit_foreign FOREIGN KEY (user_nit) REFERENCES users (nit)
-)   ;
+-- Volcando estructura para tabla contratista.failed_jobs
+CREATE TABLE IF NOT EXISTS `failed_jobs` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `connection` text COLLATE utf8_unicode_ci NOT NULL,
+  `queue` text COLLATE utf8_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8_unicode_ci NOT NULL,
+  `exception` longtext COLLATE utf8_unicode_ci NOT NULL,
+  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-ALTER SEQUENCE file_users_seq RESTART WITH 10;
+-- Volcando datos para la tabla contratista.failed_jobs: ~0 rows (aproximadamente)
+/*!40000 ALTER TABLE `failed_jobs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `failed_jobs` ENABLE KEYS */;
 
--- SQLINES DEMO *** ra la tabla contratista.file_users: ~6 rows (aproximadamente)
-/* SQLINES DEMO ***  `file_users` DISABLE KEYS */;
+-- Volcando estructura para tabla contratista.files
+CREATE TABLE IF NOT EXISTS `files` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `name_drive` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `descripcion` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `file` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `aceptacion` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `proyecto_id` bigint(20) unsigned NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `files_proyecto_id_foreign` (`proyecto_id`),
+  CONSTRAINT `files_proyecto_id_foreign` FOREIGN KEY (`proyecto_id`) REFERENCES `proyectos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE INDEX file_users_user_nit_foreign ON file_users (user_nit);
-CREATE INDEX file_users_file_id_foreign ON file_users (file_id);
-INSERT INTO file_users (id, user_nit, file_id, date) VALUES
-	(3, 1, 9, '2021-12-29 21:11:22'),
-	(4, 1, 10, '2021-12-29 21:11:28'),
-	(5, 1, 11, '2021-12-29 21:11:55'),
-	(6, 1, 12, '2021-12-29 21:12:03'),
-	(7, 1, 13, '2021-12-29 21:12:08'),
-	(9, 13, 15, '2021-12-29 22:18:35');
-/* SQLINES DEMO ***  `file_users` ENABLE KEYS */;
+-- Volcando datos para la tabla contratista.files: ~0 rows (aproximadamente)
+/*!40000 ALTER TABLE `files` DISABLE KEYS */;
+INSERT INTO `files` (`id`, `name`, `name_drive`, `descripcion`, `file`, `aceptacion`, `proyecto_id`, `created_at`, `updated_at`) VALUES
+	(1, 'referendo', '164190955858', 'tres', 'https://drive.google.com/uc?id=1Og9_gxfM_zhLlwC2cjHyymv4NZ1nDpSx&export=media', '0', 1, '2022-01-11 08:59:23', '2022-01-11 08:59:23'),
+	(2, 'detalle', '164191024478', 'detalle', 'https://drive.google.com/uc?id=1AXT6Jt9Tk6DlxFC4IxSFeqoS4RpyEN4v&export=media', '0', 1, '2022-01-11 09:10:49', '2022-01-11 09:10:49'),
+	(4, 'a', '16419197762', 'a', 'https://drive.google.com/uc?id=19uA_6RMj2RxIvoEZDePVWeGVi7NE0V1_&export=media', '0', 1, '2022-01-11 11:49:40', '2022-01-11 11:49:40');
+/*!40000 ALTER TABLE `files` ENABLE KEYS */;
 
--- SQLINES DEMO *** ra para tabla contratista.migrations
--- SQLINES LICENSE FOR EVALUATION USE ONLY
-CREATE SEQUENCE migrations_seq;
+-- Volcando estructura para tabla contratista.file_users
+CREATE TABLE IF NOT EXISTS `file_users` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_nit` int(11) NOT NULL,
+  `file_id` bigint(20) unsigned NOT NULL,
+  `date` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `file_users_user_nit_foreign` (`user_nit`),
+  KEY `file_users_file_id_foreign` (`file_id`),
+  CONSTRAINT `file_users_file_id_foreign` FOREIGN KEY (`file_id`) REFERENCES `files` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `file_users_user_nit_foreign` FOREIGN KEY (`user_nit`) REFERENCES `users` (`nit`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS migrations (
-  id int check (id > 0) NOT NULL DEFAULT NEXTVAL ('migrations_seq'),
-  migration varchar(255) NOT NULL,
-  batch int NOT NULL,
-  PRIMARY KEY (id)
-)   ;
+-- Volcando datos para la tabla contratista.file_users: ~0 rows (aproximadamente)
+/*!40000 ALTER TABLE `file_users` DISABLE KEYS */;
+INSERT INTO `file_users` (`id`, `user_nit`, `file_id`, `date`) VALUES
+	(1, 1234, 1, '2022-01-11 08:59:23'),
+	(2, 1234, 2, '2022-01-11 09:10:49'),
+	(4, 4343, 4, '2022-01-11 11:49:40');
+/*!40000 ALTER TABLE `file_users` ENABLE KEYS */;
 
-ALTER SEQUENCE migrations_seq RESTART WITH 10;
+-- Volcando estructura para tabla contratista.jobs
+CREATE TABLE IF NOT EXISTS `jobs` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `queue` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8_unicode_ci NOT NULL,
+  `attempts` tinyint(3) unsigned NOT NULL,
+  `reserved_at` int(10) unsigned DEFAULT NULL,
+  `available_at` int(10) unsigned NOT NULL,
+  `created_at` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `jobs_queue_index` (`queue`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- SQLINES DEMO *** ra la tabla contratista.migrations: ~9 rows (aproximadamente)
-/* SQLINES DEMO ***  `migrations` DISABLE KEYS */;
-INSERT INTO migrations (id, migration, batch) VALUES
+-- Volcando datos para la tabla contratista.jobs: ~0 rows (aproximadamente)
+/*!40000 ALTER TABLE `jobs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `jobs` ENABLE KEYS */;
+
+-- Volcando estructura para tabla contratista.migrations
+CREATE TABLE IF NOT EXISTS `migrations` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `migration` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `batch` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- Volcando datos para la tabla contratista.migrations: ~10 rows (aproximadamente)
+/*!40000 ALTER TABLE `migrations` DISABLE KEYS */;
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 	(1, '2014_10_12_000000_create_users_table', 1),
 	(2, '2014_10_12_100000_create_password_resets_table', 1),
 	(3, '2019_08_19_000000_create_failed_jobs_table', 1),
@@ -178,135 +115,164 @@ INSERT INTO migrations (id, migration, batch) VALUES
 	(6, '2021_12_15_195915_create_proyectos_table', 1),
 	(7, '2021_12_15_200206_create_proyecto_users_table', 1),
 	(8, '2021_12_15_200251_create_files_table', 1),
-	(9, '2021_12_15_200305_create_file_users_table', 1);
-/* SQLINES DEMO ***  `migrations` ENABLE KEYS */;
+	(9, '2021_12_15_200305_create_file_users_table', 1),
+	(10, '2022_01_04_153514_create_jobs_table', 1);
+/*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
 
+-- Volcando estructura para tabla contratista.model_has_permissions
+CREATE TABLE IF NOT EXISTS `model_has_permissions` (
+  `permission_id` bigint(20) unsigned NOT NULL,
+  `model_type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `model_id` bigint(20) unsigned NOT NULL,
+  PRIMARY KEY (`permission_id`,`model_id`,`model_type`),
+  KEY `model_has_permissions_model_id_model_type_index` (`model_id`,`model_type`),
+  CONSTRAINT `model_has_permissions_permission_id_foreign` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- SQLINES DEMO *** ra para tabla contratista.model_has_roles
--- SQLINES LICENSE FOR EVALUATION USE ONLY
-CREATE TABLE IF NOT EXISTS model_has_roles (
-  role_id bigint check (role_id > 0) NOT NULL,
-  model_type varchar(255) NOT NULL,
-  model_id bigint check (model_id > 0) NOT NULL,
-  PRIMARY KEY (role_id,model_id,model_type)
- ,
-  CONSTRAINT model_has_roles_role_id_foreign FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE CASCADE
-)  ;
+-- Volcando datos para la tabla contratista.model_has_permissions: ~0 rows (aproximadamente)
+/*!40000 ALTER TABLE `model_has_permissions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `model_has_permissions` ENABLE KEYS */;
 
-CREATE INDEX model_has_roles_model_id_model_type_index ON model_has_roles (model_id,model_type);
+-- Volcando estructura para tabla contratista.model_has_roles
+CREATE TABLE IF NOT EXISTS `model_has_roles` (
+  `role_id` bigint(20) unsigned NOT NULL,
+  `model_type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `model_id` bigint(20) unsigned NOT NULL,
+  PRIMARY KEY (`role_id`,`model_id`,`model_type`),
+  KEY `model_has_roles_model_id_model_type_index` (`model_id`,`model_type`),
+  CONSTRAINT `model_has_roles_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- SQLINES DEMO *** ra la tabla contratista.model_has_roles: ~4 rows (aproximadamente)
-/* SQLINES DEMO ***  `model_has_roles` DISABLE KEYS */;
-INSERT INTO model_has_roles (role_id, model_type, model_id) VALUES
-	(1, 'AppModelsUser', 1),
-	(3, 'AppModelsUser', 2),
-	(3, 'AppModelsUser', 3),
-	(2, 'AppModelsUser', 4);
-/* SQLINES DEMO ***  `model_has_roles` ENABLE KEYS */;
+-- Volcando datos para la tabla contratista.model_has_roles: ~0 rows (aproximadamente)
+/*!40000 ALTER TABLE `model_has_roles` DISABLE KEYS */;
+INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
+	(1, 'App\\Models\\User', 1),
+	(3, 'App\\Models\\User', 2),
+	(2, 'App\\Models\\User', 4);
+/*!40000 ALTER TABLE `model_has_roles` ENABLE KEYS */;
 
--- SQLINES DEMO *** ra para tabla contratista.password_resets
--- SQLINES LICENSE FOR EVALUATION USE ONLY
-CREATE TABLE IF NOT EXISTS password_resets (
-  email varchar(255) NOT NULL,
-  token varchar(255) NOT NULL,
-  created_at timestamp(0) NULL DEFAULT NULL
-)  ;
+-- Volcando estructura para tabla contratista.password_resets
+CREATE TABLE IF NOT EXISTS `password_resets` (
+  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `token` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  KEY `password_resets_email_index` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE INDEX password_resets_email_index ON password_resets (email);
+-- Volcando datos para la tabla contratista.password_resets: ~0 rows (aproximadamente)
+/*!40000 ALTER TABLE `password_resets` DISABLE KEYS */;
+/*!40000 ALTER TABLE `password_resets` ENABLE KEYS */;
 
--- SQLINES DEMO *** ra la tabla contratista.password_resets: ~0 rows (aproximadamente)
-/* SQLINES DEMO ***  `password_resets` DISABLE KEYS */;
-/* SQLINES DEMO ***  `password_resets` ENABLE KEYS */;
+-- Volcando estructura para tabla contratista.permissions
+CREATE TABLE IF NOT EXISTS `permissions` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `guard_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `permissions_name_guard_name_unique` (`name`,`guard_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- SQLINES DEMO *** ra para tabla contratista.permissions
--- SQLINES LICENSE FOR EVALUATION USE ONLY
-CREATE SEQUENCE permissions_seq;
+-- Volcando datos para la tabla contratista.permissions: ~0 rows (aproximadamente)
+/*!40000 ALTER TABLE `permissions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `permissions` ENABLE KEYS */;
 
-CREATE TABLE IF NOT EXISTS permissions (
-  id bigint check (id > 0) NOT NULL DEFAULT NEXTVAL ('permissions_seq'),
-  name varchar(255) NOT NULL,
-  guard_name varchar(255) NOT NULL,
-  created_at timestamp(0) NULL DEFAULT NULL,
-  updated_at timestamp(0) NULL DEFAULT NULL,
-  PRIMARY KEY (id),
-  CONSTRAINT permissions_name_guard_name_unique UNIQUE  (name,guard_name)
-)  ;
+-- Volcando estructura para tabla contratista.proyectos
+CREATE TABLE IF NOT EXISTS `proyectos` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `descripcion` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `ubicacion` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `proyectos_name_unique` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- SQLINES DEMO *** ra la tabla contratista.permissions: ~0 rows (aproximadamente)
-/* SQLINES DEMO ***  `permissions` DISABLE KEYS */;
-/* SQLINES DEMO ***  `permissions` ENABLE KEYS */;
+-- Volcando datos para la tabla contratista.proyectos: ~0 rows (aproximadamente)
+/*!40000 ALTER TABLE `proyectos` DISABLE KEYS */;
+INSERT INTO `proyectos` (`id`, `name`, `descripcion`, `ubicacion`) VALUES
+	(1, 'NATURA', 'nuevo proyecto', 'calle 12'),
+	(2, 'RESUMEN', 'segundo proyecto', 'calle 21');
+/*!40000 ALTER TABLE `proyectos` ENABLE KEYS */;
 
--- SQLINES DEMO *** ra para tabla contratista.proyectos
--- SQLINES LICENSE FOR EVALUATION USE ONLY
-CREATE SEQUENCE proyectos_seq;
+-- Volcando estructura para tabla contratista.proyecto_users
+CREATE TABLE IF NOT EXISTS `proyecto_users` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_nit` int(11) NOT NULL,
+  `proyecto_id` bigint(20) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `proyecto_users_user_nit_foreign` (`user_nit`),
+  KEY `proyecto_users_proyecto_id_foreign` (`proyecto_id`),
+  CONSTRAINT `proyecto_users_proyecto_id_foreign` FOREIGN KEY (`proyecto_id`) REFERENCES `proyectos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `proyecto_users_user_nit_foreign` FOREIGN KEY (`user_nit`) REFERENCES `users` (`nit`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS proyectos (
-  id bigint check (id > 0) NOT NULL DEFAULT NEXTVAL ('proyectos_seq'),
-  name varchar(255) NOT NULL,
-  descripcion varchar(255) NOT NULL,
-  ubicacion varchar(255) NOT NULL,
-  PRIMARY KEY (id),
-  CONSTRAINT proyectos_name_unique UNIQUE  (name)
-)   ;
+-- Volcando datos para la tabla contratista.proyecto_users: ~0 rows (aproximadamente)
+/*!40000 ALTER TABLE `proyecto_users` DISABLE KEYS */;
+INSERT INTO `proyecto_users` (`id`, `user_nit`, `proyecto_id`) VALUES
+	(1, 1234, 1),
+	(3, 4343, 1);
+/*!40000 ALTER TABLE `proyecto_users` ENABLE KEYS */;
 
-ALTER SEQUENCE proyectos_seq RESTART WITH 4;
+-- Volcando estructura para tabla contratista.roles
+CREATE TABLE IF NOT EXISTS `roles` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `guard_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `roles_name_guard_name_unique` (`name`,`guard_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- SQLINES DEMO *** ra la tabla contratista.proyectos: ~3 rows (aproximadamente)
-/* SQLINES DEMO ***  `proyectos` DISABLE KEYS */;
-INSERT INTO proyectos (id, name, descripcion, ubicacion) VALUES
-	(1, 'NATURA', 'proyecto 1', 'calle'),
-	(2, 'RESUMEN', 'proyecto 2', 'calle'),
-	(3, 'TERRAVIVA', 'proyecto 3', 'calle');
-/* SQLINES DEMO ***  `proyectos` ENABLE KEYS */;
+-- Volcando datos para la tabla contratista.roles: ~0 rows (aproximadamente)
+/*!40000 ALTER TABLE `roles` DISABLE KEYS */;
+INSERT INTO `roles` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
+	(1, 'Coordinador', 'web', '2022-01-11 08:52:54', '2022-01-11 08:52:54'),
+	(2, 'Aux', 'web', '2022-01-11 08:53:06', '2022-01-11 08:53:06'),
+	(3, 'Contratista', 'web', '2022-01-11 08:53:19', '2022-01-11 08:53:20');
+/*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 
--- SQLINES DEMO *** ra para tabla contratista.proyecto_users
--- SQLINES LICENSE FOR EVALUATION USE ONLY
-CREATE SEQUENCE proyecto_users_seq;
+-- Volcando estructura para tabla contratista.role_has_permissions
+CREATE TABLE IF NOT EXISTS `role_has_permissions` (
+  `permission_id` bigint(20) unsigned NOT NULL,
+  `role_id` bigint(20) unsigned NOT NULL,
+  PRIMARY KEY (`permission_id`,`role_id`),
+  KEY `role_has_permissions_role_id_foreign` (`role_id`),
+  CONSTRAINT `role_has_permissions_permission_id_foreign` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `role_has_permissions_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS proyecto_users (
-  id bigint check (id > 0) NOT NULL DEFAULT NEXTVAL ('proyecto_users_seq'),
-  user_nit int NOT NULL,
-  proyecto_id bigint check (proyecto_id > 0) NOT NULL,
-  PRIMARY KEY (id)
- ,
-  CONSTRAINT proyecto_users_proyecto_id_foreign FOREIGN KEY (proyecto_id) REFERENCES proyectos (id) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT proyecto_users_user_nit_foreign FOREIGN KEY (user_nit) REFERENCES users (nit) ON DELETE CASCADE ON UPDATE CASCADE
-)   ;
+-- Volcando datos para la tabla contratista.role_has_permissions: ~0 rows (aproximadamente)
+/*!40000 ALTER TABLE `role_has_permissions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `role_has_permissions` ENABLE KEYS */;
 
-ALTER SEQUENCE proyecto_users_seq RESTART WITH 11;
+-- Volcando estructura para tabla contratista.users
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `nit` int(11) NOT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `last_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `email_verified_at` timestamp NULL DEFAULT NULL,
+  `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `remember_token` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `users_nit_unique` (`nit`),
+  UNIQUE KEY `users_email_unique` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- SQLINES DEMO *** ra la tabla contratista.proyecto_users: ~0 rows (aproximadamente)
-/* SQLINES DEMO ***  `proyecto_users` DISABLE KEYS */;
+-- Volcando datos para la tabla contratista.users: ~0 rows (aproximadamente)
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` (`id`, `nit`, `name`, `last_name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
+	(1, 1004804515, 'gabriel', 'garcia', 'gabrielarturogq@ufps.edu.co', '2022-01-11 08:54:16', '12345', NULL, '2022-01-11 08:54:21', '2022-01-11 08:54:22'),
+	(2, 1234, 'ARTURO', 'QUINTERO', 'garciaquinteroga@gmail.com', '2022-01-11 09:00:52', '$2y$10$EBLDXj4aQmFURZlrXChSoO7iObD5TgqpFDnVE2MEKa9WR.572eOSO', NULL, '2022-01-11 08:57:11', '2022-01-11 08:57:11'),
+	(4, 4343, 'BRIGGET', 'CACERES', 'ingcaceresbrigget@gmail.com', NULL, '$2y$10$ym.4EgUTN8FBQ8RtpOQ5Dea4u9SxT2.G5i2L8bF7Mm290grPQItJ.', NULL, '2022-01-11 08:58:34', '2022-01-11 08:58:34');
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
-CREATE INDEX proyecto_users_user_nit_foreign ON proyecto_users (user_nit);
-CREATE INDEX proyecto_users_proyecto_id_foreign ON proyecto_users (proyecto_id);
-INSERT INTO proyecto_users (id, user_nit, proyecto_id) VALUES
-	(3, 13, 2),
-	(5, 1, 2),
-	(7, 1151654, 2),
-	(9, 1151654, 1),
-	(10, 1151654, 3);
-/* SQLINES DEMO ***  `proyecto_users` ENABLE KEYS */;
-
-
-CREATE TABLE IF NOT EXISTS role_has_permissions (
-  permission_id bigint check (permission_id > 0) NOT NULL,
-  role_id bigint check (role_id > 0) NOT NULL,
-  PRIMARY KEY (permission_id,role_id)
- ,
-  CONSTRAINT role_has_permissions_permission_id_foreign FOREIGN KEY (permission_id) REFERENCES permissions (id) ON DELETE CASCADE,
-  CONSTRAINT role_has_permissions_role_id_foreign FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE CASCADE
-)  ;
-
-CREATE INDEX role_has_permissions_role_id_foreign ON role_has_permissions (role_id);
-
--- SQLINES DEMO *** ra la tabla contratista.role_has_permissions: ~0 rows (aproximadamente)
-/* SQLINES DEMO ***  `role_has_permissions` DISABLE KEYS */;
-/* SQLINES DEMO ***  `role_has_permissions` ENABLE KEYS */;
-
-
-
-/* SQLINES DEMO *** E=IFNULL(@OLD_SQL_MODE, '') */;
-/* SQLINES DEMO *** _KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
-/* SQLINES DEMO *** ER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/* SQLINES DEMO *** ES=IFNULL(@OLD_SQL_NOTES, 1) */;
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;

@@ -73,7 +73,7 @@ class UserController extends Controller
                 ];
             }
 
-            if ($request->role == 'Contratista') {
+            if ($request->role == 'Contratista' || $request->role == 'Aux') {
                 $this->driveData->createDirectory(strtoupper($request->nombre));
             }
 
@@ -243,7 +243,7 @@ class UserController extends Controller
             ];
         }
 
-        if ($user->hasRole('Contratista')) {
+        if ($user->hasRole('Contratista') || $user->hasRole('Aux')) {
             $carp = $this->driveData->deleteFile(strtoupper($user->name), 2);
 
             try {
