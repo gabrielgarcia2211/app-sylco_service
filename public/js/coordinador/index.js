@@ -60,7 +60,7 @@ function eliminarProyecto(nombre) {
     event.preventDefault();
     Swal.fire({
         title: "Desea eliminar el proyecto?",
-        text: "Esta operacion es irreversible",
+        text: "Esta operacion es irreversible se borraran todos los documentos relacionados al proyecto",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
