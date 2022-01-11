@@ -115,6 +115,7 @@ Route::group(['prefix' => 'auxiliar/', 'middleware' => ['role:Aux', 'auth']], fu
     Route::post('contratista/files/create', [HsqController::class, 'store'])->name('contratista.file.store');
     Route::post('contratista/proyecto/list', [HsqController::class, 'showFile'])->name('contratista.proyecto.list');
     Route::post('contratista/files/report', [HsqController::class, 'report'])->name('contratista.file.report');
+    Route::post('files/delete', [FileController::class, 'destroy'])->name('contratista.file.delete');
 
 
 });//LISTO

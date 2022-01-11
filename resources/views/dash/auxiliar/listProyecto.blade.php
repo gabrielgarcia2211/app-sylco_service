@@ -93,7 +93,7 @@
                                                     <a href="{{$dataFiles[$m]->file}}" target="_blank" type="submit" class="btn btn-success" style="width: 80%"><i class="far fa-eye"></i></a>
                                                 </div>
                                                 <div class="col-6">
-                                                    <form id="form-file-delete" action="">
+                                                    <form id="form-file-delete" action="{{route('contratista.file.delete')}}">
                                                         @csrf
                                                         <button type="submit" class="btn btn-danger" style="width: 80%"  onclick="return deleteFile('{{$dataFiles[$m]->id}}')"><i class="far fa-trash-alt"></i></button>
                                                     </form>

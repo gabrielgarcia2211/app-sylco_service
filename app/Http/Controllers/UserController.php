@@ -244,7 +244,7 @@ class UserController extends Controller
         }
 
         if ($user->hasRole('Contratista') || $user->hasRole('Aux')) {
-            $carp = $this->driveData->deleteFile(strtoupper($user->name), 2);
+            $carp = $this->driveData->deleteFile(strtoupper($user->name), '' , 2);
 
             try {
                 if ($carp['response']) {

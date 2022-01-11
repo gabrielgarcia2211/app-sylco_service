@@ -284,7 +284,7 @@ async function editUsuario(proyecto, listProyecto) {
             `<input id="swal-input2" class="swal2-input" placeholder="Nombre" value="${data["name"]}">` +
             `<input id="swal-input3" class="swal2-input" placeholder="Apellido" value="${data["last_name"]}">` +
             `<input id="swal-input4" class="swal2-input" placeholder="Correo" value="${data["email"]}">` +
-            `<select id="swal-input5" class="swal2-input"> ` +
+            `<select id="swal-input5" class="swal2-input" style="display:none"> ` +
             listaP +
             `</select>`,
 

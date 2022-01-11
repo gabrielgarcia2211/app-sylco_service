@@ -42,15 +42,6 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    public function username()
-    {
-        User::create([
-            'username' => 'gabriel21',
-            'name' => 'arturo',
-            'password' => Hash::make('hola'),
-            'email' => 'garciaquinteroga@gmail.com',
-        ]);
-    }
 
     public function showLoginForm(){
         return view('auth.login');
@@ -76,13 +67,16 @@ class LoginController extends Controller
 
         $user = User::where('email',$request['email'])->get();
 
-        if(!is_null($user) && Hash::check( $request['password'] , $user->first()->password )){
-            $this->guard()->login($user[0]);
-            return redirect('/home');
-        }else{
-            array_push($ingresoError,"¡Datos incorrectos!");
-            return view('auth.login')->with(compact('ingresoError'));
-        }     
+
+        if(count($user) > 0){
+            if(!is_null($user) && Hash::check( $request['password'] , $user->first()->password )){
+                $this->guard()->login($user[0]);
+                return redirect('/home');
+            }
+        } 
+        
+        array_push($ingresoError,"¡Datos incorrectos!");
+        return view('auth.login')->with(compact('ingresoError'));    
 
     }
 
