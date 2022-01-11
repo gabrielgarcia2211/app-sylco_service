@@ -139,3 +139,59 @@ async function sendEmail(email) {
         }
     }
 }
+
+function addFile(){
+    event.preventDefault();
+    var file = $("#archivo").val();
+    var nombre = $("#nombre").val();
+    var descripcion = $("#descripcion").val();
+    if (file == "" || nombre == "" || descripcion == "") {
+        Swal.fire({
+            icon: "warning",
+            title: "Oops...",
+            text: "Por favor llene todos los campos!",
+        });
+        return;
+    }
+    var url = $("#form-upload-contratista").attr("action");
+    var parametros = new FormData($("#form-upload-contratista")[0]);
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: parametros,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            Swal.fire({
+                title: "Cargando",
+                text: "Subiendo archvio...",
+                imageUrl: "https://img.webme.com/pic/a/andwas/cargando5.gif",
+                imageWidth: 200,
+                imageHeight: 180,
+                imageAlt: "Subiendo archvio",
+                showCancelButton: false,
+                showConfirmButton: false,
+            });
+        },
+        success: function (response) {
+            if (response["response"]) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Hecho!",
+                    text: response["message"],
+                });
+                location.reload();
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: response["message"],
+                });
+            }
+        },
+        error: function (r) {
+            alert(r.responseText);
+            swal.close();
+        },
+    });
+}

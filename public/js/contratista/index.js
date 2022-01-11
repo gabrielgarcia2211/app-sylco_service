@@ -5,7 +5,7 @@ function addFile() {
     event.preventDefault();
     var file = $("#archivo").val();
     var nombre = $("#nombre").val();
-    var descripcion = $("#nombre").val();
+    var descripcion = $("#descripcion").val();
     if (file == "" || nombre == "" || descripcion == "") {
         Swal.fire({
             icon: "warning",

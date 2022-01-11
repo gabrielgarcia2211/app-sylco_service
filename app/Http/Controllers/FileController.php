@@ -63,7 +63,7 @@ class FileController extends Controller
 
                 return [
                     'response' => true,
-                    'message' => 'file upload'
+                    'message' => 'Archivo subido!'
                 ];
             } else {
 
