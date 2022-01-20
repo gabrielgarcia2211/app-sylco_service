@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\File;
-use App\Models\Proyecto;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use App\Mail\TestMail;
 use Mail;
+use App\Models\File;
+use App\Models\User;
+use App\Mail\TestMail;
+use App\Models\Proyecto;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
 
 class ContratistaController extends Controller
 {
@@ -44,7 +44,6 @@ class ContratistaController extends Controller
     public function showProyecto($name)
     {
 
-
         $proyecto = Proyecto::where('name', $name)->first();
 
         $dataFiles = File::select('files.*')
@@ -58,8 +57,13 @@ class ContratistaController extends Controller
             ->get();
 
 
+        $file = Storage::get('GABRIEL/' . $dataFiles[0]->file);
 
-            return view('dash.contratista.listProyecto')->with(compact('name','dataFiles'));
+        return response()->download($file);
+
+
+
+        //return view('dash.contratista.listProyecto')->with(compact('name', 'dataFiles', 'file'));
     }
 
     public function report()
@@ -78,8 +82,8 @@ class ContratistaController extends Controller
         for ($k = 0; $k < count($user); $k++) {
 
             try {
-                Mail::to($user[$k]->email)->send(new TestMail($arrayData)); 
-            
+                Mail::to($user[$k]->email)->send(new TestMail($arrayData));
+
                 return [
                     'response' => true,
                     'message' => 'Reporte Enviado!'

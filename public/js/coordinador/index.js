@@ -256,8 +256,9 @@ function guardarUsuario() {
                     "</li></ul>";
             });
             //I use SweetAlert2 for this
+            //+ jqXhr.status + ": " + errorThrown,
             Swal.fire({
-                title: "Error " + jqXhr.status + ": " + errorThrown, // this will output "Error 422: Unprocessable Entity"
+                title: "Error ",  // this will output "Error 422: Unprocessable Entity"
                 html: errorsHtml,
                 width: "auto",
                 icon: "error",

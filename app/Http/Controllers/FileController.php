@@ -4,13 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\File;
 use Illuminate\Http\Request;
-use App\Http\Controllers\DriveController;
+use App\Http\Controllers\StorageController;
 use App\Models\File_User;
 use App\Models\Proyecto;
-use App\Models\User;
-use App\Mail\TestMail;
-use Mail;
-
 
 class FileController extends Controller
 {
@@ -19,7 +15,7 @@ class FileController extends Controller
 
     function __construct()
     {
-        $this->driveData = new DriveController();
+        $this->driveData = new StorageController();
     }
 
     public function store(Request $request)

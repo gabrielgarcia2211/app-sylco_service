@@ -9,7 +9,7 @@ use App\Models\Proyecto_User;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use RealRashid\SweetAlert\Facades\Alert;
-use App\Http\Controllers\DriveController;
+use App\Http\Controllers\StorageController;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -20,9 +20,8 @@ class UserController extends Controller
 
     function __construct()
     {
-        $this->driveData = new DriveController();
+        $this->driveData = new StorageController();
     }
-
 
     public function index()
     {
@@ -263,7 +262,7 @@ class UserController extends Controller
                     'response' => false,
                     'message' =>  "Usuario no registrado!"
                 ];
-            } catch (\Illuminate\Database\QueryException $e) {
+            } catch (\Exception $e) {
 
                 return response()->json([
                     'response' => false,
@@ -279,12 +278,12 @@ class UserController extends Controller
                     'response' => true,
                     'message' =>  'Usuario eliminado'
                 ];
-            } catch (\Illuminate\Database\QueryException $e) {
+            } catch (\Exception $e) {
 
-                return response()->json([
+                return [
                     'response' => false,
-                    'message' => $e->getMessage()
-                ]);
+                    'message' =>  $e->getMessage()
+                ];
             }
         }
     }

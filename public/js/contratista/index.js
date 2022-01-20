@@ -51,7 +51,7 @@ function addFile() {
             }
         },
         error: function (r) {
-            alert(r);
+            alert(r.responseText);
             swal.close();
         },
     });

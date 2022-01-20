@@ -1,16 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HsqController;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DriveController;
 use App\Http\Controllers\ProyectoController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ContratistaController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
-use App\Http\Controllers\DriveController;
-use App\Http\Controllers\HsqController;
 
 /*
 |--------------------------------------------------------------------------
@@ -122,7 +123,8 @@ Route::group(['prefix' => 'auxiliar/', 'middleware' => ['role:Aux', 'auth']], fu
 
 
 Route::get('/test2', function(){
-    return view('email.testMail');
+    Storage::rename('ARTUR', 'ARTURO');
+   
 });
 
 Route::get('/test', [App\Http\Controllers\DriveController::class, 'getMail']);
