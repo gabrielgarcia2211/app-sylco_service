@@ -7,8 +7,7 @@ use App\Models\File;
 use App\Models\User;
 use App\Mail\TestMail;
 use App\Models\Proyecto;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
 
 class ContratistaController extends Controller
 {
@@ -57,13 +56,13 @@ class ContratistaController extends Controller
             ->get();
 
 
-        $file = Storage::get('GABRIEL/' . $dataFiles[0]->file);
 
-        return response()->download($file);
+        // $path = storage_path() . '/' . 'app' . '/GABRIEL/' .  $dataFiles[0]->file;
+        // if (file_exists($path)) {
+        //     return Response::download($path);
+        // }
 
-
-
-        //return view('dash.contratista.listProyecto')->with(compact('name', 'dataFiles', 'file'));
+        return view('dash.contratista.listProyecto')->with(compact('name', 'dataFiles', 'file'));
     }
 
     public function report()
