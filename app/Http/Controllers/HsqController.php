@@ -9,6 +9,7 @@ use App\Models\Proyecto;
 use App\Models\File_User;
 use Illuminate\Http\Request;
 use App\Mail\NotificacionMail;
+use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\StorageController;
 
 
@@ -179,4 +180,19 @@ class HsqController extends Controller
             ];
         }
     }
+
+
+    public function dowloandFile($archivo){
+
+        $propietario = auth()->user()->name;
+        $path = storage_path() . '/' . 'app' . '/' . $propietario .  '/' . $archivo;
+        if (file_exists($path)) {
+            return Response::download($path);
+        }else{
+               
+            Alert::warning('Opps!', 'Archivo no encontrado');
+            return back();
+        }
+    }
+
 }
