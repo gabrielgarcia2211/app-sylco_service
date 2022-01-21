@@ -82,7 +82,7 @@ class StorageController extends Controller
 
 
     //GUARDAR ARCHIVOS EN DIRECTORIOS (PADRE O HIJO)
-    public function putFile($carpetaPadre = "hola", $file = "test.txt", $name)
+    public function putFile($carpetaPadre, $file, $name)
     {
 
         $dataPadre = $this->findDirectory($carpetaPadre);
@@ -91,24 +91,22 @@ class StorageController extends Controller
 
             if ($dataPadre) {
 
-                Storage::put($carpetaPadre . '/' . $name, $file);
+                //obtenemos el nombre del archivo
+                $nombre = $file->getClientOriginalName();
+                $extension = pathinfo($nombre, PATHINFO_EXTENSION);
 
 
-                $files = Storage::allFiles($carpetaPadre);
+                $nombreFi = $name .'.' . $extension;
 
-
-
-                $dataJson = array();
-
-                foreach ($files as &$file) {
-                    $nameTemp = explode('/', $file);
-                    array_push($dataJson, [$file[0], $nameTemp[1]]);
-                }
+                //indicamos que queremos guardar un nuevo archivo en el disco local
+                Storage::put($carpetaPadre . '/' . $name .'.' . $extension,  \File::get($file));
+    
 
                 return [
                     'response' => true,
-                    'message' =>  $dataJson
+                    'message' =>  $nombreFi
                 ];
+
             } else {
 
                 return [
@@ -126,7 +124,7 @@ class StorageController extends Controller
 
 
     //ELIMINAR DIRECTORIO(PADRE)
-    public function deleteFile($carpetaPadre = "hola", $filename,  $tipo = 4)
+    public function deleteFile($carpetaPadre, $filename,  $tipo = 4)
     {
         /** 
          *  1 -> Archivo
@@ -143,7 +141,7 @@ class StorageController extends Controller
                     ];
                 }
 
-                if (Storage::exists($filename)) {
+                if (Storage::exists($carpetaPadre. '/' .$filename)) {
                     Storage::delete($carpetaPadre . '/' . $filename);
                     return [
                         'response' => true,

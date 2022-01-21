@@ -9,6 +9,7 @@ use App\Models\Proyecto;
 use App\Models\File_User;
 use Illuminate\Http\Request;
 use App\Mail\NotificacionMail;
+use App\Http\Controllers\StorageController;
 
 
 class HsqController extends Controller
@@ -18,7 +19,7 @@ class HsqController extends Controller
 
     function __construct()
     {
-        $this->driveData = new DriveController();
+        $this->driveData = new StorageController();
     }
 
     public function index()
@@ -136,7 +137,7 @@ class HsqController extends Controller
 
         try {
 
-            $file = $this->driveData->putFile($nombreContratista, $files->get(), $name);
+            $file = $this->driveData->putFile($nombreContratista, $files, $name);
 
             if ($file['response']) {
 
@@ -148,7 +149,7 @@ class HsqController extends Controller
                     'name' =>  $nombreArchivo,
                     'name_drive' => $name,
                     'descripcion' =>  $descripcionArchivo,
-                    'file' =>   $file['message'][0][1],
+                    'file' =>   $file['message'],
                     'proyecto_id' => $proyecto->id,
                     'aceptacion' =>  '0'
                 ]);

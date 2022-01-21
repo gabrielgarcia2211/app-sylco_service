@@ -92,7 +92,7 @@
                                         <td>
                                             <div class="row">
                                                 <div class="col-6">
-                                                    <a href="{{$dataFiles[$m]->file}}" target="_blank" class="btn btn-success" style="width: 80%"><i class="far fa-eye"></i></a>
+                                                    <a href="{{ route('file.download', [$dataFiles[$m]->file]) }}"  target="" class="btn btn-success" style="width: 80%"><i class="far fa-eye"></i></a>
                                                 </div>
                                                 <div class="col-6">
                                                     <form id="form-file-delete" action="{{route('file.delete')}}">

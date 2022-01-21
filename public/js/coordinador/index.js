@@ -466,7 +466,7 @@ function findFilesUser(nit, proyecto) {
                         <td >${tasks[g].name}</td>
                         <td >${tasks[g].descripcion}</td>
                         <td >${tasks[g].fecha}</td>
-                        <td style="text-align:center" ><a href="${tasks[g].file}" target="_blank" class="btn btn-primary" ><i class="far fa-eye"></i></a></td>` +
+                        <td style="text-align:center" ><a href="../../files/download/admin/${tasks[g].file}/${tasks[g].propietario}" target="" class="btn btn-primary" ><i class="far fa-eye"></i></a></td>` +
                         `</tr>`;
                 }
 

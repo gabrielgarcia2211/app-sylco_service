@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Mail\TestMail;
 use App\Models\Proyecto;
 use Illuminate\Support\Facades\Response;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class ContratistaController extends Controller
 {
@@ -55,14 +56,7 @@ class ContratistaController extends Controller
             ->distinct()
             ->get();
 
-
-
-        // $path = storage_path() . '/' . 'app' . '/GABRIEL/' .  $dataFiles[0]->file;
-        // if (file_exists($path)) {
-        //     return Response::download($path);
-        // }
-
-        return view('dash.contratista.listProyecto')->with(compact('name', 'dataFiles', 'file'));
+        return view('dash.contratista.listProyecto')->with(compact('name', 'dataFiles'));
     }
 
     public function report()
@@ -96,4 +90,20 @@ class ContratistaController extends Controller
             }
         }
     }
+
+
+    public function dowloandFile($archivo){
+
+        $propietario = auth()->user()->name;
+        $path = storage_path() . '/' . 'app' . '/' . $propietario .  '/' . $archivo;
+        if (file_exists($path)) {
+            return Response::download($path);
+        }else{
+               
+            Alert::warning('Opps!', 'Archivo no encontrado');
+            return back();
+        }
+    }
+
+
 }

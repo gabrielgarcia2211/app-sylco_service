@@ -66,6 +66,8 @@ Route::group(['prefix' => 'coordinador/', 'middleware' => ['role:Coordinador', '
     Route::get('contratista/file/list', [ContratistaController::class, 'index'])->name('contratista.file.list');
     Route::post('contratista/file/list', [ContratistaController::class, 'showFile'])->name('contratista.file.list');
 
+    Route::get('files/download/admin/{archivo}/{propietario}', [FileController::class, 'dowloandFile'])->name('file.download');
+
 });//LISTO
 
 /** ----------------------------------------------------------------------------------------------------------------
@@ -99,7 +101,7 @@ Route::group(['prefix' => 'contratista/', 'middleware' => ['role:Contratista', '
     Route::post('files/create', [FileController::class, 'store'])->name('file.store');
     Route::post('files/delete', [FileController::class, 'destroy'])->name('file.delete');
     Route::post('files/report', [ContratistaController::class, 'report'])->name('file.report');
-
+    Route::get('files/download/{archivo}', [ContratistaController::class, 'dowloandFile'])->name('file.download');
 
 });//LISTO
 
@@ -117,6 +119,7 @@ Route::group(['prefix' => 'auxiliar/', 'middleware' => ['role:Aux', 'auth']], fu
     Route::post('contratista/proyecto/list', [HsqController::class, 'showFile'])->name('contratista.proyecto.list');
     Route::post('contratista/files/report', [HsqController::class, 'report'])->name('contratista.file.report');
     Route::post('files/delete', [FileController::class, 'destroy'])->name('contratista.file.delete');
+    Route::get('files/download/admin/{archivo}/{propietario}', [FileController::class, 'dowloandFile'])->name('file.download');
 
 
 });//LISTO
