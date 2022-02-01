@@ -92,18 +92,22 @@ class ContratistaController extends Controller
     }
 
 
-    public function dowloandFile($archivo){
+    public function dowloandFile($archivo)
+    {
 
         $propietario = auth()->user()->name;
         $path = storage_path() . '/' . 'app' . '/' . $propietario .  '/' . $archivo;
         if (file_exists($path)) {
             return Response::download($path);
-        }else{
-               
+        } else {
             Alert::warning('Opps!', 'Archivo no encontrado');
             return back();
         }
     }
 
 
+    public function uploadUsers()
+    {
+        return view('dash.coordinador.uploadUsuarios');
+    }
 }

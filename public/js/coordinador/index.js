@@ -466,7 +466,7 @@ function findFilesUser(nit, proyecto) {
                         <td >${tasks[g].name}</td>
                         <td >${tasks[g].descripcion}</td>
                         <td >${tasks[g].fecha}</td>
-                        <td style="text-align:center" ><a href="../../files/download/admin/${tasks[g].file}/${tasks[g].propietario}" target="" class="btn btn-primary" ><i class="far fa-eye"></i></a></td>` +
+                        <td style="text-align:center" ><a href="../../files/download/admin/${tasks[g].file}/${tasks[g].propietario}" target="" class="btn btn-primary" ><i class="fas fa-cloud-download-alt"></i></i></a></td>` +
                         `</tr>`;
                 }
 
@@ -591,5 +591,46 @@ function desVincularProyectoUser(proyecto) {
         error: function (response) {
             Swal.close();
         },
+    });
+}
+
+
+
+//-------ARCHIVOS
+
+function info(e){
+    e.preventDefault();
+    Swal.fire(
+        'Carga de datos',
+        'La carga de datos se realiza con la informacion del archivo, si ya existe el registro lo omitira',
+        'question'
+    )
+}
+
+function validarExtension() {
+    $(document).on('change', 'input[type="file"]', function () {
+        var fileName = this.files[0].name;
+        var res = fileName.substring(0, 30);
+        $('.nameArchivo').text(res);
+        var ext = fileName.split('.').pop();
+        console.log(fileName);
+        ext = ext.toLowerCase();
+        switch (ext) {
+            case 'xlsx':
+            case 'xls':
+                $('.respCarga').text("Cargado Correctamente");
+                $('#alert').hide();
+                $('#alert2').show();
+                $("#guardaExcel").prop("disabled", false);
+                break;
+            default:
+                $('.respuesta').text("Error de extension\n, " + ext + "  " + ".Por favor seleccione un archivo .xlsx");
+                $('#alert2').hide();
+                $('#alert').show();
+                $("#guardaExcel").prop("disabled", true);
+                this.value = ''; 
+                this.files[0].name = '';
+        }
+
     });
 }
