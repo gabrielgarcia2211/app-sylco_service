@@ -67,7 +67,8 @@ Route::group(['prefix' => 'coordinador/', 'middleware' => ['role:Coordinador', '
     Route::post('contratista/file/list', [ContratistaController::class, 'showFile'])->name('contratista.file.list');
 
     Route::get('files/download/admin/{archivo}/{propietario}', [FileController::class, 'dowloandFile'])->name('file.download');
-    Route::get('files/upload/', [ContratistaController::class, 'uploadUsers'])->name('file.upload.user');
+    Route::get('files/upload/', [ContratistaController::class, 'viewUploadUsers'])->name('file.upload.user');
+    Route::post('files/upload/', [ContratistaController::class, 'uploadUsers'])->name('file.upload.user');
 
 });//LISTO
 

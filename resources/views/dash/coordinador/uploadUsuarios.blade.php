@@ -32,12 +32,12 @@
                             <div style="border-top: 3px solid #3c8dbc; background-color: white; padding-bottom: 10px;">
                                 <br>
                                 <h6 style="padding-left: 10px;">Seleccionar Archivo</h6>
-                                <form action="" method="POST" enctype="multipart/form-data">
+                                <form action="{{ route('file.upload.user')}}" method="POST" enctype="multipart/form-data">
                                     @csrf
 
                                     <div class="input-group mb-3" style="padding-right: 10px;">
                                         <div class="input-group-prepend">
-                                            <span onclick="" class="input-group-text"
+                                            <span class="input-group-text"
                                                 id="inputGroupFileAddon01">Cargar</span>
                                         </div>
                                         <div class="custom-file">
@@ -51,7 +51,7 @@
                                     </div>
 
 
-                                    <button onclick="" type="submit" id="guardaExcel" class=" btn btn-primary mr-2"
+                                    <button type="submit" id="guardaExcel" class=" btn btn-primary mr-2"
                                         style="display:inline-block; background-color: #dd4b39; border-color: #dd4b39;">Guardar</button>
 
                                     <a href="" style="display:inline-block; text-decoration: none" type="button"

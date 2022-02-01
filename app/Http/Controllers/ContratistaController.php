@@ -7,6 +7,9 @@ use App\Models\File;
 use App\Models\User;
 use App\Mail\TestMail;
 use App\Models\Proyecto;
+use App\Imports\UsersImport;
+use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Response;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -106,8 +109,27 @@ class ContratistaController extends Controller
     }
 
 
-    public function uploadUsers()
+    public function viewUploadUsers()
     {
         return view('dash.coordinador.uploadUsuarios');
+    }
+
+    public function uploadUsers(Request $request)
+    {
+        try {
+            
+            $file = $request->file('file');
+            
+
+            $reponse = Excel::import(new UsersImport, $file, null, \Maatwebsite\Excel\Excel::XLS);
+
+            dd($_SESSION['data']);
+
+
+
+        } catch (\Exception $e) {
+            Alert::error('Error', $e->getMessage());
+            return back();
+        }
     }
 }
