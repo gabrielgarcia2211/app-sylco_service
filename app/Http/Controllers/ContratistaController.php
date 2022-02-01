@@ -117,14 +117,20 @@ class ContratistaController extends Controller
     public function uploadUsers(Request $request)
     {
         try {
-            
+
             $file = $request->file('file');
-            
 
-            $reponse = Excel::import(new UsersImport, $file, null, \Maatwebsite\Excel\Excel::XLS);
 
-            dd($_SESSION['data']);
+            //$reponse = Excel::import(new UsersImport, $file, null, \Maatwebsite\Excel\Excel::XLS);
+            //dd($_SESSION['data']);
 
+            $import = new UsersImport();
+            $import->sheets('Hoja1', 'Hoja2');
+
+            Excel::import($import, $file);
+
+            echo $_SESSION['first'];
+            echo $_SESSION['second'];
 
 
         } catch (\Exception $e) {
