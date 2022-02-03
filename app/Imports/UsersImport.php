@@ -11,27 +11,9 @@ class UsersImport implements WithMultipleSheets
     public function sheets(): array
     {
         return [
-            'Hoja2' =>  new SecondSheetImport(),
-            'Hoja1' =>  new FSheetImport(),
-           
+            'JAZMINES' =>  new JazminesImport(),
+           // 'TERRAS' =>  new TerrasImport(),
+           // 'RESUMEN' =>  new ResumenImport(),
         ];
     }
 }
-
-// use App\User;
-// use Maatwebsite\Excel\Concerns\ToModel;
-// use Maatwebsite\Excel\Concerns\WithHeadingRow;
-// use Maatwebsite\Excel\Imports\HeadingRowFormatter;
-
-
-// HeadingRowFormatter::default('none');
-
-
-// class UsersImport implements ToModel, WithHeadingRow
-// {
-
-//     public function model(array $row)
-//     {
-//         $_SESSION['data'] =  $row['PRIMER APELLIDO'];
-//     }
-// }

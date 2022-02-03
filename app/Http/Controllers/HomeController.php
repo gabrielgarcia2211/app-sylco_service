@@ -38,6 +38,7 @@ class HomeController extends Controller
             }
 
             return view('dash.coordinador.index')->with(compact('dataContratista', 'dataProyecto'));
+
         } else if (auth()->user()->hasRole('Contratista')) {
 
 
@@ -59,6 +60,7 @@ class HomeController extends Controller
 
 
             return view('dash.contratista.index')->with(compact('dataProyecto'));
+            
         } else if (auth()->user()->hasRole('Aux')) {
 
 

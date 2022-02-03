@@ -120,17 +120,14 @@ class ContratistaController extends Controller
 
             $file = $request->file('file');
 
-
-            //$reponse = Excel::import(new UsersImport, $file, null, \Maatwebsite\Excel\Excel::XLS);
-            //dd($_SESSION['data']);
-
             $import = new UsersImport();
-            $import->sheets('Hoja1', 'Hoja2');
+            $import->sheets('JAZMINES');
 
             Excel::import($import, $file);
 
-            echo $_SESSION['first'];
-            echo $_SESSION['second'];
+           // echo $_SESSION['primero'];
+            //echo $_SESSION['segundo'];
+            //echo $_SESSION['tercero'];
 
 
         } catch (\Exception $e) {
