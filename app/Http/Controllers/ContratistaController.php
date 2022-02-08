@@ -43,7 +43,6 @@ class ContratistaController extends Controller
         return;
     }
 
-
     public function showProyecto($name)
     {
 
@@ -94,7 +93,6 @@ class ContratistaController extends Controller
         }
     }
 
-
     public function dowloandFile($archivo)
     {
 
@@ -107,7 +105,6 @@ class ContratistaController extends Controller
             return back();
         }
     }
-
 
     public function viewUploadUsers()
     {
@@ -123,16 +120,12 @@ class ContratistaController extends Controller
             $import = new UsersImport();
             $import->sheets('JAZMINES');
 
-            Excel::import($import, $file);
+            $import->import($file);
 
-           // echo $_SESSION['primero'];
-            //echo $_SESSION['segundo'];
-            //echo $_SESSION['tercero'];
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            $failures = $e->failures();
 
-
-        } catch (\Exception $e) {
-            Alert::error('Error', $e->getMessage());
-            return back();
+            dd($failures);
         }
     }
 }

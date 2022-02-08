@@ -14,7 +14,7 @@ class ResumenImport implements ToModel, WithChunkReading, WithHeadingRow
 {
     public function model(array $row)
     {
-        $_SESSION['segundo'] = $row['ITEM'];
+        echo $row['ITEM'];
     }
 
     public function chunkSize(): int

@@ -32,13 +32,12 @@
                             <div style="border-top: 3px solid #3c8dbc; background-color: white; padding-bottom: 10px;">
                                 <br>
                                 <h6 style="padding-left: 10px;">Seleccionar Archivo</h6>
-                                <form action="{{ route('file.upload.user')}}" method="POST" enctype="multipart/form-data">
+                                <form action="{{ route('file.upload.user') }}" method="POST" enctype="multipart/form-data">
                                     @csrf
 
                                     <div class="input-group mb-3" style="padding-right: 10px;">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text"
-                                                id="inputGroupFileAddon01">Cargar</span>
+                                            <span class="input-group-text" id="inputGroupFileAddon01">Cargar</span>
                                         </div>
                                         <div class="custom-file">
                                             <input onchange="validarExtension()" type="file" style="display:none"
@@ -71,6 +70,38 @@
 
                                 </form>
                             </div>
+
+                            <div style="padding: 20px; margin-top:20px" class="container">
+                                @if (session()->has('failures'))
+
+                                    <table id="error" class="table table-danger">
+                                        <tr>
+                                            <th>Fila</th>
+                                            <th>Campo</th>
+                                            <th>Error</th>
+                                            <th>Valor</th>
+                                        </tr>
+                                        @foreach (session()->get('failures') as $validation)
+                                            <tr>
+                                                <td>{{ $validation->row() }}</td>
+                                                <td>{{ $validation->attribute() }}</td>
+                                                <td>
+                                                    <ul>
+                                                        @foreach ($validation->errors() as $e)
+                                                            <li>{{ $e }}</li>
+                                                        @endforeach
+                                                    </ul>
+                                                </td>
+                                                <td>
+                                                    {{ $validation->values()[$validation->attribute()] }}
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </table>
+
+                                @endif
+                            </div>
+
 
                         </div>
 
