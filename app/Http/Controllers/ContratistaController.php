@@ -7,6 +7,9 @@ use App\Models\File;
 use App\Models\User;
 use App\Mail\TestMail;
 use App\Models\Proyecto;
+use App\Imports\UsersImport;
+use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Response;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -92,18 +95,44 @@ class ContratistaController extends Controller
     }
 
 
-    public function dowloandFile($archivo){
+    public function dowloandFile($archivo)
+    {
 
         $propietario = auth()->user()->name;
         $path = storage_path() . '/' . 'app' . '/' . $propietario .  '/' . $archivo;
         if (file_exists($path)) {
             return Response::download($path);
-        }else{
-               
+        } else {
             Alert::warning('Opps!', 'Archivo no encontrado');
             return back();
         }
     }
 
 
+    public function viewUploadUsers()
+    {
+        return view('dash.coordinador.uploadUsuarios');
+    }
+
+    public function uploadUsers(Request $request)
+    {
+        try {
+
+            $file = $request->file('file');
+
+            $import = new UsersImport();
+            $import->sheets('JAZMINES');
+
+            Excel::import($import, $file);
+
+           // echo $_SESSION['primero'];
+            //echo $_SESSION['segundo'];
+            //echo $_SESSION['tercero'];
+
+
+        } catch (\Exception $e) {
+            Alert::error('Error', $e->getMessage());
+            return back();
+        }
+    }
 }

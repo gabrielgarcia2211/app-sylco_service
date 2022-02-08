@@ -67,6 +67,8 @@ Route::group(['prefix' => 'coordinador/', 'middleware' => ['role:Coordinador', '
     Route::post('contratista/file/list', [ContratistaController::class, 'showFile'])->name('contratista.file.list');
 
     Route::get('files/download/admin/{archivo}/{propietario}', [FileController::class, 'dowloandFile'])->name('file.download');
+    Route::get('files/upload/', [ContratistaController::class, 'viewUploadUsers'])->name('file.upload.user');
+    Route::post('files/upload/', [ContratistaController::class, 'uploadUsers'])->name('file.upload.user');
 
 });//LISTO
 
@@ -87,6 +89,7 @@ Route::group(['prefix' => 'coordinador/', 'middleware' => ['role:Coordinador', '
 
     Route::post('proyect/add/user', [ProyectoController::class, 'vincularProyecto'])->name('proyect.user.vincular');
     Route::post('proyect/del/user', [ProyectoController::class, 'desvincularProyecto'])->name('proyect.user.desvincular');
+
 
 });//LISTO
 
@@ -116,7 +119,7 @@ Route::group(['prefix' => 'auxiliar/', 'middleware' => ['role:Aux', 'auth']], fu
     Route::get('contratista/proyecto/list', [HsqController::class, 'index'])->name('contratista.proyecto.list');
     Route::get('contratista/files/uploadFile/{name}', [HsqController::class, 'uploadFile'])->name('contratista.file.upload');
     Route::post('contratista/files/create', [HsqController::class, 'store'])->name('contratista.file.store');
-    Route::post('contratista/proyecto/list', [HsqController::class, 'showFile'])->name('contratista.proyecto.list');
+    Route::post('contratista/proyect/list', [HsqController::class, 'showFile'])->name('contratista.proyecto.list');
     Route::post('contratista/files/report', [HsqController::class, 'report'])->name('contratista.file.report');
     Route::post('files/delete', [FileController::class, 'destroy'])->name('contratista.file.delete');
     Route::get('files/download/{archivo}', [HsqController::class, 'dowloandFile'])->name('file.download.auxiliar');
@@ -124,10 +127,3 @@ Route::group(['prefix' => 'auxiliar/', 'middleware' => ['role:Aux', 'auth']], fu
 
 });//LISTO
 
-
-Route::get('/test2', function(){
-    Storage::rename('ARTUR', 'ARTURO');
-   
-});
-
-Route::get('/test', [App\Http\Controllers\DriveController::class, 'getMail']);
