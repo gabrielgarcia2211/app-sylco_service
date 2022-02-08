@@ -2,15 +2,13 @@
 
 namespace App\Imports;
 
+use App\Imports\JazminesImport;
 use Maatwebsite\Excel\Concerns\Importable;
-use Maatwebsite\Excel\Concerns\SkipsFailures;
-use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
-
-class UsersImport implements WithMultipleSheets, SkipsOnFailure
+class UsersImport implements WithMultipleSheets
 {
-    use Importable, SkipsFailures;
+    use Importable;
 
     public function sheets(): array
     {

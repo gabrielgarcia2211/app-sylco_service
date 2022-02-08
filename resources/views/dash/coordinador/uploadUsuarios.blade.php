@@ -71,7 +71,7 @@
                                 </form>
                             </div>
 
-                            <div style="padding: 20px; margin-top:20px" class="container">
+                            <div style="padding: 20px; margin-top:20px" class="container-mx">
                                 @if (session()->has('failures'))
 
                                     <table id="error" class="table table-danger">

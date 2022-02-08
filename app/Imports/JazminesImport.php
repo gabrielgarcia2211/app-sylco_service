@@ -5,23 +5,28 @@ namespace App\Imports;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\SkipsFailures;
+use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Maatwebsite\Excel\Concerns\WithBatchInserts;
+
 
 
 HeadingRowFormatter::default('none');
 
-class JazminesImport implements ToModel, WithHeadingRow, WithValidation
+class JazminesImport implements ToModel, WithHeadingRow, WithValidation, WithChunkReading, WithBatchInserts
 {
 
     public function model(array $row)
     {
         User::create([
-            'nit' => $row["CEDULA REPRESENTANTE"],
-            'name' => $row['NOMBRE DEL REPRESENTANTE LEGAL'],
-            'last_name' => $row['APELLIDO DEL REPRESENTANTE LEGAL'],
-            'email' => $row['CORREO REPRESENTANTE LEGAL'],
+            'nit' => str_replace(' ', '', $row["CEDULA REPRESENTANTE"]),
+            'name' => str_replace(' ', '', $row['NOMBRE DEL REPRESENTANTE LEGAL']),
+            'last_name' => str_replace(' ', '', $row['APELLIDO DEL REPRESENTANTE LEGAL']),
+            'email' => str_replace(' ', '', $row['CORREO REPRESENTANTE LEGAL']),
             'password' => Hash::make('12345'),
         ]);
     }
@@ -30,6 +35,9 @@ class JazminesImport implements ToModel, WithHeadingRow, WithValidation
     {
         return [
             'CEDULA REPRESENTANTE' => 'required|unique:users,nit',
+            'CORREO REPRESENTANTE LEGAL' => 'required|unique:users,email',
+            'NOMBRE DEL REPRESENTANTE LEGAL' => 'required|string',
+            'APELLIDO DEL REPRESENTANTE LEGAL' => 'required|string',
         ];
     }
 
@@ -41,5 +49,15 @@ class JazminesImport implements ToModel, WithHeadingRow, WithValidation
     public function headingColumn(): int
     {
         return 2;
+    }
+
+    public function batchSize(): int
+    {
+        return 1000;
+    }
+
+    public function chunkSize(): int
+    {
+        return 1000;
     }
 }
