@@ -118,7 +118,7 @@ class ContratistaController extends Controller
             $file = $request->file('file');
 
             $import = new UsersImport();
-            $import->sheets('JAZMINES');
+            //$import->sheets('JAZMINES');
 
             $import->import($file);
 
