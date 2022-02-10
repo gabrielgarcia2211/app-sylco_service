@@ -14,8 +14,8 @@ class UsersImport implements WithMultipleSheets
     {
         return [
             'JAZMINES' =>  new JazminesImport(),
-            'TERRAS' =>  new TerrasImport(),
-            'RESUMEN' =>  new ResumenImport(),
+            //'TERRAS' =>  new TerrasImport(),
+            //'RESUMEN' =>  new ResumenImport(),
         ];
     }
 }

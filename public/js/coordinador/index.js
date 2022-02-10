@@ -548,7 +548,7 @@ function vincularProyectoUser(proyecto) {
 
 function desVincularProyectoUser(proyecto) {
     event.preventDefault();
-    
+
     var nit = localStorage.getItem("nitUser");
     var url = $("#form-user-desv").attr("action");
     var parametros = { proyecto: proyecto, nit: nit };
@@ -602,7 +602,8 @@ function info(e){
     e.preventDefault();
     Swal.fire(
         'Carga de datos',
-        'La carga de datos se realiza con la informacion del archivo, si ya existe el registro lo omitira',
+        'La carga de datos se realiza con la informacion del archivo, toda la informacion debe estar bien ' +
+        'diligenciada.',
         'question'
     )
 }
@@ -628,7 +629,7 @@ function validarExtension() {
                 $('#alert2').hide();
                 $('#alert').show();
                 $("#guardaExcel").prop("disabled", true);
-                this.value = ''; 
+                this.value = '';
                 this.files[0].name = '';
         }
 
