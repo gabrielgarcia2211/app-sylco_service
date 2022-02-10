@@ -118,9 +118,16 @@ class ContratistaController extends Controller
             $file = $request->file('file');
 
             $import = new UsersImport();
-            //$import->sheets('JAZMINES');
+            $import->sheets();
 
             $import->import($file);
+
+            dd($import->failures());
+
+            /*if ($data->failures()->isNotEmpty()) {
+
+                return back()->withFailures($data->failures()->sort());
+            }*/
 
             Alert::success('Carga de datos excel', 'informacion guardada');
             return back();
