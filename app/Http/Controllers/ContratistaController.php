@@ -122,19 +122,19 @@ class ContratistaController extends Controller
 
             $import->import($file);
 
-            dd($import->failures());
+            $import->failures();
 
-            /*if ($data->failures()->isNotEmpty()) {
+            if (!empty($import->failures())) {
+                return back()->withFailures($import->failures());
+            }
 
-                return back()->withFailures($data->failures()->sort());
-            }*/
 
             Alert::success('Carga de datos excel', 'informacion guardada');
             return back();
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
             return back()->withFailures($e->failures());
         } catch (\Exception $e) {
-            Alert::error('Error', $e->getMessage());
+            Alert::error('Error', $e->getFile());
             return back();
         }
     }

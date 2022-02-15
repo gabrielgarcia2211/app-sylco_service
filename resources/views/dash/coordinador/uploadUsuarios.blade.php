@@ -81,7 +81,7 @@
                                             <th>Error</th>
                                             <th>Valor</th>
                                         </tr>
-                                        @foreach (session()->get('failures') as $validation)
+                                        @foreach (session()->get('failures')[0] as $validation)
                                             <tr>
                                                 <td>{{ $validation->row() }}</td>
                                                 <td>{{ $validation->attribute() }}</td>

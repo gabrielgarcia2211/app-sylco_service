@@ -15,10 +15,13 @@ class UsersImport implements WithMultipleSheets
     private $sheets;
     private $fail = array();
 
+
     public function sheets(): array
     {
         $this->sheets = [
-            0 =>  new JazminesImport(),
+            'JAZMINES' =>  new JazminesImport(),
+            'TERRAS' => new TerrasImport(),
+            'RESUMEN' => new ResumenImport(),
         ];
 
         return $this->sheets;
@@ -26,10 +29,10 @@ class UsersImport implements WithMultipleSheets
 
     public function failures()
     {
+
         foreach($this->sheets as $sheet)
         {
-            array_push($this->fail, $sheet->failures());
-
+            array_push( $this->fail, $sheet->failures());
         }
 
         return $this->fail;
