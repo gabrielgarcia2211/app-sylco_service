@@ -7,9 +7,7 @@ use App\Models\Proyecto;
 use App\Models\Proyecto_User;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Maatwebsite\Excel\Concerns\SkipsErrors;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
-use Maatwebsite\Excel\Concerns\SkipsOnError;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -21,10 +19,10 @@ use Maatwebsite\Excel\Concerns\WithBatchInserts;
 HeadingRowFormatter::default('none');
 
 
-class JazminesImport implements ToModel,WithHeadingRow,WithValidation,WithChunkReading,WithBatchInserts,SkipsOnFailure,SkipsOnError
+class JazminesImport implements ToModel,WithHeadingRow,WithValidation,WithChunkReading,WithBatchInserts,SkipsOnFailure
 {
 
-    use SkipsFailures, SkipsErrors;
+    use SkipsFailures;
 
     private $driveData;
     private $id;
