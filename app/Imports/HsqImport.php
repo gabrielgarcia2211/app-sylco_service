@@ -21,7 +21,7 @@ use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 
 
 
-class UsersImport implements ToModel,WithHeadingRow,WithValidation,WithChunkReading,WithBatchInserts
+class HsqImport implements ToModel,WithHeadingRow,WithValidation,WithChunkReading,WithBatchInserts
 {
     use Importable,SkipsFailures, SkipsErrors;
 
@@ -52,24 +52,23 @@ class UsersImport implements ToModel,WithHeadingRow,WithValidation,WithChunkRead
         }
 
 
-        /*CONTRATISTA*/
-        $user_contratista = User::create([
-            'nit' => $row['cedula_representante'],
-            'name' => strtoupper($row['nombre_del_representante_legal']),
-            'last_name' => strtoupper($row['apellido_del_representante_legal']),
-            'email' => $row['correo_representante_legal'],
+        $user_hsq = User::create([
+            'nit' => $row['cedula_hsq'],
+            'name' => strtoupper($row['nombre_hsq']),
+            'last_name' => strtoupper($row['apellido_hsq']),
+            'email' => $row['correo_hsq_encargado'],
             'password' => Hash::make('12345'),
         ]);
 
 
         Proyecto_User::create([
-            'user_nit' => $user_contratista->nit,
+            'user_nit' =>  $user_hsq->nit,
             'proyecto_id' => (empty($data_name)) ? $this->id : $data_name->id,
         ]);
 
-        $user_contratista->assignRole('Contratista');
+        $user_hsq->assignRole('Aux');
 
-        $this->driveData->createDirectory(strtoupper($user_contratista->name));
+        //$this->driveData->createDirectory(strtoupper($user_hsq->name));*/
 
 
 
@@ -78,9 +77,9 @@ class UsersImport implements ToModel,WithHeadingRow,WithValidation,WithChunkRead
     public function rules(): array
     {
         return [
-            'correo_representante_legal' => 'required|unique:users,email',
-            'cedula_representante' => 'required|unique:users,nit',
-            'nombre_del_representante_legal' => 'required|unique:users,name',
+           'correo_hsq_encargado' => ['required','unique:users,email'],
+           'cedula_hsq' => ['required','unique:users,nit'],
+           'nombre_hsq' => ['required','unique:users,name'],
         ];
     }
 

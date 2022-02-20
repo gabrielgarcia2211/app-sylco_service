@@ -35,6 +35,21 @@
                                 <form action="{{ route('file.upload.user') }}" method="POST" enctype="multipart/form-data">
                                     @csrf
 
+                                    <div class="row container mt-3 mb-4">
+                                        <div class="form-check mr-2">
+                                            <input type="radio" class="form-check-input" id="contratistas" name="optradio" value="1" checked>
+                                            <label class="form-check-label" for="contratistas">Contratistas</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" id="hsq" name="optradio" value="2">
+                                            <label class="form-check-label" for="hsq">Hsq</label>
+                                        </div>
+                                    </div>
+
+
+
+
+
                                     <div class="input-group mb-3" style="padding-right: 10px;">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text" id="inputGroupFileAddon01">Cargar</span>
@@ -48,17 +63,10 @@
                                             </label>
                                         </div>
                                     </div>
-
-
                                     <button type="submit" id="guardaExcel" class=" btn btn-primary mr-2"
                                         style="display:inline-block; background-color: #dd4b39; border-color: #dd4b39;">Guardar</button>
-
-                                    <a href="" style="display:inline-block; text-decoration: none" type="button"
-                                        class="btn btn-success mr-2">Descargar Formato</a>
+                                    <a href="{{ route('admin.formato') }}" style="display:inline-block; text-decoration: none" type="button" class="btn btn-success">Descargar Formato</a>
                                     <a onclick="return info(event)" href=""><i class="fas fa-question"></i></a>
-
-
-
                                     <div style="display:none; text-align:center; padding:10px ; margin-top:15px" id="alert"
                                         class="alert alert-warning alert-dismissible fade show" role="alert">
                                         <p class="respuesta" id="respuesta"></p>
@@ -81,7 +89,7 @@
                                             <th>Error</th>
                                             <th>Valor</th>
                                         </tr>
-                                        @foreach (session()->get('failures')[0] as $validation)
+                                        @foreach (session()->get('failures') as $validation)
                                             <tr>
                                                 <td>{{ $validation->row() }}</td>
                                                 <td>{{ $validation->attribute() }}</td>

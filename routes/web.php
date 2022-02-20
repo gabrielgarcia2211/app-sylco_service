@@ -90,6 +90,8 @@ Route::group(['prefix' => 'coordinador/', 'middleware' => ['role:Coordinador', '
     Route::post('proyect/add/user', [ProyectoController::class, 'vincularProyecto'])->name('proyect.user.vincular');
     Route::post('proyect/del/user', [ProyectoController::class, 'desvincularProyecto'])->name('proyect.user.desvincular');
 
+    Route::get('/formato', [ContratistaController::class, 'formato'])->name('admin.formato');
+
 
 });//LISTO
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\HsqImport;
 use Mail;
 use App\Models\File;
 use App\Models\User;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Response;
 use RealRashid\SweetAlert\Facades\Alert;
+use ZipArchive;
 
 class ContratistaController extends Controller
 {
@@ -33,7 +35,7 @@ class ContratistaController extends Controller
             ->join('proyectos', 'proyectos.id', '=', 'proyecto_users.proyecto_id')
             ->join('file_users', 'file_users.user_nit', '=', 'users.nit')
             ->join('files', 'files.id', '=', 'file_users.file_id')
-            ->where('users.nit',  '=', $nit)
+            ->where('users.nit', '=', $nit)
             ->where('files.proyecto_id', $proyecto->id)
             ->distinct()
             ->get();
@@ -70,7 +72,7 @@ class ContratistaController extends Controller
         $user = User::select('users.email', 'users.name', 'users.last_name')->role('Aux')
             ->join('proyecto_users', 'proyecto_users.user_nit', '=', 'users.nit')
             ->join('proyectos', 'proyecto_users.proyecto_id', '=', 'proyectos.id')
-            ->where('proyectos.name',  $name)
+            ->where('proyectos.name', $name)
             ->get();
 
 
@@ -97,7 +99,7 @@ class ContratistaController extends Controller
     {
 
         $propietario = auth()->user()->name;
-        $path = storage_path() . '/' . 'app' . '/' . $propietario .  '/' . $archivo;
+        $path = storage_path() . '/' . 'app' . '/' . $propietario . '/' . $archivo;
         if (file_exists($path)) {
             return Response::download($path);
         } else {
@@ -113,29 +115,92 @@ class ContratistaController extends Controller
 
     public function uploadUsers(Request $request)
     {
+        $var1 = $request->input('optradio');
         try {
 
             $file = $request->file('file');
+            $name =$file->getClientOriginalName();
 
-            $import = new UsersImport();
-            $import->sheets();
 
-            $import->import($file);
+            if (strcmp($var1, 1) === 0 && strcmp($name, 'contratista.xlsx') === 0) {
 
-            $import->failures();
+                $import = new UsersImport();
 
-            if (!empty($import->failures())) {
-                return back()->withFailures($import->failures());
+                $import->import($file);
+
+                if ($import->failures()->isNotEmpty()) {
+
+                    return back()->withFailures($import->failures()->sort());
+                }
+
+                Alert::success('Carga de datos excel', 'informacion guardada');
+                return back();
+            } else {
+
+                $import = new HsqImport();
+
+                $import->import($file);
+                //dd($import->failures());
+
+                if ($import->failures()->isNotEmpty()) {
+
+                    return back()->withFailures($import->failures()->sort());
+                }
+
+                Alert::success('Carga de datos excel', 'informacion guardada');
+                return back();
             }
 
-
-            Alert::success('Carga de datos excel', 'informacion guardada');
-            return back();
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+
             return back()->withFailures($e->failures());
+
+
         } catch (\Exception $e) {
-            Alert::error('Error', $e->getFile());
+            Alert::error('Error', 'Seleccione el item Adecuado');
             return back();
         }
+    }
+
+
+    protected function downloadFile($src)
+    {
+        if(is_file($src)){
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $content_type = finfo_file($finfo, $src);
+            finfo_close($finfo);
+            $file_name = basename($src).PHP_EOL;
+            $size = filesize($src);
+            header("Content-Type: $content_type");
+            header("Content-Disposition: attachment; filename=$file_name");
+            header("Content-Transfer-Encoding: binary");
+            header("Content-Length: $size");
+            readfile($src);
+            return true;
+        } else{
+            return false;
+        }
+    }
+
+    public function formato(){
+        $files = array("contratista.xlsx","hsq.xlsx");
+        $zip = new ZipArchive();
+        $zip_name = time().".zip"; // Zip name
+        $zip->open($zip_name,  ZipArchive::CREATE);
+        foreach ($files as $file) {
+            $path = app_path()."/Files/formato/".$file;
+            if(file_exists($path)){
+                $zip->addFromString(basename($path),  file_get_contents($path));
+            }
+            else{
+                echo"file does not exist";
+            }
+        }
+        $zip->close();
+        header('Content-Type: application/zip');
+        header('Content-disposition: attachment; filename='.$zip_name);
+        header('Content-Length: ' . filesize($zip_name));
+        readfile($zip_name);
+        //$this->downloadFile(app_path()."/Files/formato/hsq.xlsx");
     }
 }
