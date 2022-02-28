@@ -97,7 +97,7 @@ class HsqController extends Controller
     function uploadFile($name){
 
         $proyecto = Proyecto::where('name', $name)->first();
-        
+
         $dataFiles = File::select('files.*')
         ->join('file_users', 'file_users.file_id', '=', 'files.id')
         ->join('users', 'users.nit', '=', 'file_users.user_nit')
@@ -134,7 +134,7 @@ class HsqController extends Controller
                 'message' =>   'Limite de peso excedido, peso permitido 10MB'
             ];
         }
-     
+
 
         try {
 
@@ -189,7 +189,21 @@ class HsqController extends Controller
         if (file_exists($path)) {
             return Response::download($path);
         }else{
-               
+
+            Alert::warning('Opps!', 'Archivo no encontrado');
+            return back();
+        }
+    }
+
+
+    public function dowloandFileContratista($archivo, $nombre){
+
+        $propietario = $nombre;
+        $path = storage_path() . '/' . 'app' . '/' . $propietario .  '/' . $archivo;
+        if (file_exists($path)) {
+            return Response::download($path);
+        }else{
+
             Alert::warning('Opps!', 'Archivo no encontrado');
             return back();
         }
