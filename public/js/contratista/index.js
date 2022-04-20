@@ -1,4 +1,3 @@
-
 let arrayReport = Array();
 
 function addFile() {
@@ -6,6 +5,11 @@ function addFile() {
     var file = $("#archivo").val();
     var nombre = $("#nombre").val();
     var descripcion = $("#descripcion").val();
+
+    var fileSize = $('#archivo')[0].files[0].size;
+    var sizekiloBytes = parseInt(fileSize / 1024);
+
+
     if (file == "" || nombre == "" || descripcion == "") {
         Swal.fire({
             icon: "warning",
@@ -14,6 +18,17 @@ function addFile() {
         });
         return;
     }
+
+    if(sizekiloBytes > 102400){
+        Swal.fire({
+            icon: "warning",
+            title: "Oops...",
+            text: "Limite de peso maximo permitido 10MB",
+        });
+        return;
+    }
+
+
     var url = $("#form-file-contratista").attr("action");
     var parametros = new FormData($("#form-file-contratista")[0]);
     $.ajax({
@@ -70,7 +85,7 @@ function deleteFile(id) {
     }).then((result) => {
         if (result.isConfirmed) {
             var url = $("#form-file-delete").attr("action");
-            var dataSalida = { id: id };
+            var dataSalida = {id: id};
             $.ajax({
                 headers: {
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
@@ -123,10 +138,10 @@ function capturarReport(objProyecto) {
     var fecha = objProyecto['created_at'];
 
     if (document.getElementById(id).checked == true) {
-        arrayReport.push([name,descripcion,fecha]);
+        arrayReport.push([name, descripcion, fecha]);
         console.log("entra" + id);
     } else {
-        arrayReport.pop([name,descripcion,fecha]);
+        arrayReport.pop([name, descripcion, fecha]);
         console.log("salio" + id);
     }
 }
@@ -138,8 +153,7 @@ function sendReport() {
             _token: $("meta[name='csrf-token']").attr("content"),
             data: arrayReport,
             proyecto: proyecto,
-        }).
-        done(function (response) {
+        }).done(function (response) {
             if (response["response"]) {
                 Swal.fire({
                     icon: "success",
@@ -165,3 +179,5 @@ function sendReport() {
         });
     }
 }
+
+

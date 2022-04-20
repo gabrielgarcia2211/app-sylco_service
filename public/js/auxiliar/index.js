@@ -150,7 +150,7 @@ function addFile(){
     var fileSize = $('#archivo')[0].files[0].size;
     var sizekiloBytes = parseInt(fileSize / 1024);
 
-   
+
 
 
     if (file == "" || nombre == "" || descripcion == "") {
@@ -162,7 +162,7 @@ function addFile(){
         return;
     }
 
-    if(sizekiloBytes > 10240){
+    if(sizekiloBytes > 102400){
         Swal.fire({
             icon: "warning",
             title: "Oops...",
@@ -171,7 +171,7 @@ function addFile(){
         return;
     }
 
-    
+
     var url = $("#form-upload-contratista").attr("action");
     var parametros = new FormData($("#form-upload-contratista")[0]);
     $.ajax({

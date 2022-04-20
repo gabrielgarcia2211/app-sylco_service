@@ -3,15 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Imports\HsqImport;
-use Mail;
-use App\Models\File;
-use App\Models\User;
-use App\Mail\TestMail;
-use App\Models\Proyecto;
 use App\Imports\UsersImport;
+use App\Mail\TestMail;
+use App\Models\File;
+use App\Models\Proyecto;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
+use Mail;
 use RealRashid\SweetAlert\Facades\Alert;
 use ZipArchive;
 
@@ -115,14 +115,16 @@ class ContratistaController extends Controller
 
     public function uploadUsers(Request $request)
     {
+
         $var1 = $request->input('optradio');
         try {
 
             $file = $request->file('file');
-            $name =$file->getClientOriginalName();
+            $name = $file->getClientOriginalName();
 
 
-            if (strcmp($var1, 1) === 0 && strcmp($name, 'contratista.xlsx') === 0) {
+            if (strcmp($name, 'contratista.xlsx') === 0) {
+                Log::debug($var1);
 
                 $import = new UsersImport();
 
@@ -135,7 +137,8 @@ class ContratistaController extends Controller
 
                 Alert::success('Carga de datos excel', 'informacion guardada');
                 return back();
-            } else {
+            } else if (strcmp($name, 'hsq.xlsx') === 0) {
+                Log::debug($var1);
 
                 $import = new HsqImport();
 
@@ -149,14 +152,16 @@ class ContratistaController extends Controller
 
                 Alert::success('Carga de datos excel', 'informacion guardada');
                 return back();
+            }else{
+                Alert::error('Error', 'Verifique los nombres de los formatos');
+                return back();
             }
 
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
 
             return back()->withFailures($e->failures());
 
-
-        } catch (\Exception $e) {
+        } catch (\ErrorException $e) {
             Alert::error('Error', 'Seleccione el item Adecuado');
             return back();
         }
@@ -165,11 +170,11 @@ class ContratistaController extends Controller
 
     protected function downloadFile($src)
     {
-        if(is_file($src)){
+        if (is_file($src)) {
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
             $content_type = finfo_file($finfo, $src);
             finfo_close($finfo);
-            $file_name = basename($src).PHP_EOL;
+            $file_name = basename($src) . PHP_EOL;
             $size = filesize($src);
             header("Content-Type: $content_type");
             header("Content-Disposition: attachment; filename=$file_name");
@@ -177,28 +182,28 @@ class ContratistaController extends Controller
             header("Content-Length: $size");
             readfile($src);
             return true;
-        } else{
+        } else {
             return false;
         }
     }
 
-    public function formato(){
-        $files = array("contratista.xlsx","hsq.xlsx");
+    public function formato()
+    {
+        $files = array("contratista.xlsx", "hsq.xlsx");
         $zip = new ZipArchive();
-        $zip_name = time().".zip"; // Zip name
-        $zip->open($zip_name,  ZipArchive::CREATE);
+        $zip_name = time() . ".zip"; // Zip name
+        $zip->open($zip_name, ZipArchive::CREATE);
         foreach ($files as $file) {
-            $path = app_path()."/Files/formato/".$file;
-            if(file_exists($path)){
-                $zip->addFromString(basename($path),  file_get_contents($path));
-            }
-            else{
-                echo"file does not exist";
+            $path = app_path() . "/Files/formato/" . $file;
+            if (file_exists($path)) {
+                $zip->addFromString(basename($path), file_get_contents($path));
+            } else {
+                echo "file does not exist";
             }
         }
         $zip->close();
         header('Content-Type: application/zip');
-        header('Content-disposition: attachment; filename='.$zip_name);
+        header('Content-disposition: attachment; filename=' . $zip_name);
         header('Content-Length: ' . filesize($zip_name));
         readfile($zip_name);
         //$this->downloadFile(app_path()."/Files/formato/hsq.xlsx");

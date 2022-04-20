@@ -14,9 +14,9 @@
             <!-- Main Content -->
             <div id="content">
 
-                @include('dash.coordinador.nav.navs')
+            @include('dash.coordinador.nav.navs')
 
-                <!-- Begin Page Content -->
+            <!-- Begin Page Content -->
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
@@ -32,23 +32,9 @@
                             <div style="border-top: 3px solid #3c8dbc; background-color: white; padding-bottom: 10px;">
                                 <br>
                                 <h6 style="padding-left: 10px;">Seleccionar Archivo</h6>
-                                <form action="{{ route('file.upload.user') }}" method="POST" enctype="multipart/form-data">
+                                <form action="{{ route('file.upload.user') }}" method="POST"
+                                      enctype="multipart/form-data">
                                     @csrf
-
-                                    <div class="row container mt-3 mb-4">
-                                        <div class="form-check mr-2">
-                                            <input type="radio" class="form-check-input" id="contratistas" name="optradio" value="1" checked>
-                                            <label class="form-check-label" for="contratistas">Contratistas</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input type="radio" class="form-check-input" id="hsq" name="optradio" value="2">
-                                            <label class="form-check-label" for="hsq">Hsq</label>
-                                        </div>
-                                    </div>
-
-
-
-
 
                                     <div class="input-group mb-3" style="padding-right: 10px;">
                                         <div class="input-group-prepend">
@@ -56,23 +42,29 @@
                                         </div>
                                         <div class="custom-file">
                                             <input onchange="validarExtension()" type="file" style="display:none"
-                                                class="custom-file-input" id="inputGroupFile01"
-                                                aria-describedby="inputGroupFileAddon01" name="file">
+                                                   class="custom-file-input" id="inputGroupFile01"
+                                                   aria-describedby="inputGroupFileAddon01" name="file">
                                             <label class="custom-file-label" for="inputGroupFile01">
                                                 <p class="nameArchivo">...</p>
                                             </label>
                                         </div>
                                     </div>
                                     <button type="submit" id="guardaExcel" class=" btn btn-primary mr-2"
-                                        style="display:inline-block; background-color: #dd4b39; border-color: #dd4b39;">Guardar</button>
-                                    <a href="{{ route('admin.formato') }}" style="display:inline-block; text-decoration: none" type="button" class="btn btn-success">Descargar Formato</a>
+                                            style="display:inline-block; background-color: #dd4b39; border-color: #dd4b39;">
+                                        Guardar
+                                    </button>
+                                    <a href="{{ route('admin.formato') }}"
+                                       style="display:inline-block; text-decoration: none" type="button"
+                                       class="btn btn-success">Descargar Formato</a>
                                     <a onclick="return info(event)" href=""><i class="fas fa-question"></i></a>
-                                    <div style="display:none; text-align:center; padding:10px ; margin-top:15px" id="alert"
-                                        class="alert alert-warning alert-dismissible fade show" role="alert">
+                                    <div style="display:none; text-align:center; padding:10px ; margin-top:15px"
+                                         id="alert"
+                                         class="alert alert-warning alert-dismissible fade show" role="alert">
                                         <p class="respuesta" id="respuesta"></p>
                                     </div>
-                                    <div style="display:none; text-align:center; padding:10px ; margin-top:15px" id="alert2"
-                                        class="alert alert-success" role="alert">
+                                    <div style="display:none; text-align:center; padding:10px ; margin-top:15px"
+                                         id="alert2"
+                                         class="alert alert-success" role="alert">
                                         <p class="respCarga"></p>
                                     </div>
 
@@ -89,22 +81,24 @@
                                             <th>Error</th>
                                             <th>Valor</th>
                                         </tr>
-                                        @foreach (session()->get('failures') as $validation)
-                                            <tr>
-                                                <td>{{ $validation->row() }}</td>
-                                                <td>{{ $validation->attribute() }}</td>
-                                                <td>
-                                                    <ul>
-                                                        @foreach ($validation->errors() as $e)
-                                                            <li>{{ $e }}</li>
-                                                        @endforeach
-                                                    </ul>
-                                                </td>
-                                                <td>
-                                                    {{ $validation->values()[$validation->attribute()] }}
-                                                </td>
-                                            </tr>
-                                        @endforeach
+                                        @if(count(session()->get('failures'))>0)
+                                            @foreach (session()->get('failures') as $validation)
+                                                <tr>
+                                                    <td>{{ $validation->row() }}</td>
+                                                    <td>{{ $validation->attribute() }}</td>
+                                                    <td>
+                                                        <ul>
+                                                            @foreach ($validation->errors() as $e)
+                                                                <li>{{ $e }}</li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </td>
+                                                    <td>
+                                                        {{ $validation->values()[$validation->attribute()] }}
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        @endif
                                     </table>
 
                                 @endif
@@ -145,7 +139,7 @@
 
         <!-- Logout Modal-->
         <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
+             aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -164,11 +158,8 @@
         </div>
 
 
+        @endsection
 
-
-    @endsection
-
-
-    @section('script')
-        <script src="{{ asset('js/coordinador/index.js') }}"></script>
-    @endsection
+        @section('script')
+            <script src="{{ asset('js/coordinador/index.js') }}"></script>
+@endsection
