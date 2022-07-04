@@ -3,6 +3,31 @@
 
 @section('contentContra')
 
+<?php
+    $ruta = array(
+        'CERTIFICACION ARL SG-SST',
+        'MANUAL DEL SG SST',
+        'HV',
+        'INDUCCION Yo REINDUCCION',
+        'CONDICIONES DE SALUD',
+        'DOTACION Y EPP',
+        'REGLAMENTOS',
+        'AFI SS',
+        'CAPACITACIONES',
+        'INSPECCIONES',
+        'INV AT-EL',
+        'COPASST',
+        'COVILA',
+        'NOTIFICACIONES DE SEGURIDAD',
+        'INFORMES MENSUALES',
+        'MATRIZ IPEVR',
+        'ALTO RIESGO',
+        'PLAN DE EMERGENCIAS',
+        'PAPSO',
+        'REVISION DOCUMENTAL'
+    );
+?>
+
 <!-- Page Wrapper -->
 <div id="wrapper">
 
@@ -34,6 +59,16 @@
 
                                     <div class="form-group" style="padding: 10px; text-align: center;">
                                         <textarea class="form-control" id="descripcion" name="descripcion" placeholder="Descripcion" maxlength="200" aria-describedby="emailHelp"></textarea>
+                                    </div>
+                                    
+                                    <div class="form-group" style="padding: 10px; text-align: center;">
+                                        <select class="form-control" id="carpeta" name="carpeta">
+                                            <option value="">Carpeta...</option>
+                                            <?php for ($m = 0; $m < count($ruta); $m++) : ?>
+                                                <option value="<?php echo rtrim($ruta[$m]) ?>">
+                                                <?php echo rtrim($ruta[$m]) ?></option>
+                                            <?php endfor; ?>
+                                        </select>
                                     </div>
 
                                     <div class="form-group" style="padding: 10px; text-align: center;">

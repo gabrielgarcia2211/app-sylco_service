@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Mail\NotificacionMail;
 use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\StorageController;
+use Illuminate\Support\Facades\Log;
 
 
 class HsqController extends Controller
@@ -125,20 +126,14 @@ class HsqController extends Controller
         $nombreArchivo = $request->input('nombre');
         $descripcionArchivo =  $request->input('descripcion');
         $nombreProyecto =  $request->input('proyecto');
-
-
-
-        if( round($_FILES['archivo']['size']/1024) > 10240){
-            return [
-                'response' => false,
-                'message' =>   'Limite de peso excedido, peso permitido 10MB'
-            ];
-        }
+        $carpetaDestino = $request->input('carpeta');
 
 
         try {
 
-            $file = $this->driveData->putFile($nombreContratista, $files, $name);
+            $ruta = $nombreContratista.'/'.$carpetaDestino;
+
+            $file = $this->driveData->putFile($ruta, $files, $name);
 
             if ($file['response']) {
 
@@ -152,7 +147,8 @@ class HsqController extends Controller
                     'descripcion' =>  $descripcionArchivo,
                     'file' =>   $file['message'],
                     'proyecto_id' => $proyecto->id,
-                    'aceptacion' =>  '0'
+                    'aceptacion' =>  '0',
+                    'ruta' => $ruta
                 ]);
 
 
@@ -184,8 +180,12 @@ class HsqController extends Controller
 
     public function dowloandFile($archivo){
 
-        $propietario = auth()->user()->name;
-        $path = storage_path() . '/' . 'app' . '/' . $propietario .  '/' . $archivo;
+        log::debug($archivo);
+        $propietario = auth()->user()->id;
+        log::debug($propietario);
+        $temp = User::join('file_users','file_users.user_nit','=','users.nit')->join('files','file_users.file_id','=','files.id')->where('users.id',$propietario)->where('files.file',$archivo)->get()->toArray();
+        log::debug($temp);
+        $path = storage_path() . '/' . 'app' . '/' . $temp[0]['ruta'] . '/' . $archivo;
         if (file_exists($path)) {
             return Response::download($path);
         }else{
@@ -198,8 +198,13 @@ class HsqController extends Controller
 
     public function dowloandFileContratista($archivo, $nombre){
 
-        $propietario = $nombre;
-        $path = storage_path() . '/' . 'app' . '/' . $propietario .  '/' . $archivo;
+        $propietario = User::where('users.name',$nombre)->get()->toArray();
+        log::debug($propietario);
+        $id = $propietario[0]['id'];
+        log::debug($id);
+        $temp = User::join('file_users','file_users.user_nit','=','users.nit')->join('files','file_users.file_id','=','files.id')->where('users.id',$id)->where('files.file',$archivo)->get()->toArray();
+        log::debug($temp[0]['ruta']);
+        $path = storage_path() . '/' . 'app' . '/' . $temp[0]['ruta'] . '/' . $archivo;
         if (file_exists($path)) {
             return Response::download($path);
         }else{
