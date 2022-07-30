@@ -97,9 +97,12 @@ class ContratistaController extends Controller
 
     public function dowloandFile($archivo)
     {
-
-        $propietario = auth()->user()->name;
-        $path = storage_path() . '/' . 'app' . '/' . $propietario . '/' . $archivo;
+        log::debug($archivo);
+        $propietario = auth()->user()->id;
+        log::debug($propietario);
+        $temp = User::join('file_users','file_users.user_nit','=','users.nit')->join('files','file_users.file_id','=','files.id')->where('users.id',$propietario)->where('files.file',$archivo)->get()->toArray();
+        log::debug($temp[0]['ruta']);
+        $path = storage_path() . '/' . 'app' . '/' . $temp[0]['ruta'] . '/' . $archivo;
         if (file_exists($path)) {
             return Response::download($path);
         } else {

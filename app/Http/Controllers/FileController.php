@@ -8,6 +8,7 @@ use App\Models\File_User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\StorageController;
+use Illuminate\Support\Facades\Log;
 
 class FileController extends Controller
 {
@@ -31,17 +32,13 @@ class FileController extends Controller
         $nombreArchivo = $request->input('nombre');
         $descripcionArchivo =  $request->input('descripcion');
         $nombreProyecto =  $request->input('proyecto');
-
-        if( round($_FILES['archivo']['size']/1024) > 10240){
-            return [
-                'response' => false,
-                'message' =>   'Limite de peso excedido, peso permitido 10MB'
-            ];
-        }
+        $carpetaDestino = $request->input('carpeta');
 
         try {
 
-            $file = $this->driveData->putFile($nombreContratista, $files, $name);
+            $ruta = $nombreContratista.'/'.$carpetaDestino;
+
+            $file = $this->driveData->putFile($ruta, $files, $name);
 
             if ($file['response']) {
 
@@ -54,7 +51,8 @@ class FileController extends Controller
                     'descripcion' =>  $descripcionArchivo,
                     'file' =>   $file['message'],
                     'proyecto_id' => $proyecto->id,
-                    'aceptacion' =>  '0'
+                    'aceptacion' =>  '0',
+                    'ruta' => $ruta
                 ]);
 
 
@@ -88,9 +86,11 @@ class FileController extends Controller
         $id = $_POST['id'];
         $file = File::Find($id);
 
+        
+
         try {
 
-            $data = $this->driveData->deleteFile(auth()->user()->name,  $file->file, 1);
+            $data = $this->driveData->deleteFile($file->ruta, $file->file, 1);
 
             if ($data['response']) {
                 $file->delete();
@@ -116,8 +116,12 @@ class FileController extends Controller
 
     public function dowloandFile($archivo,$propietario){
 
-      
-        $path = storage_path() . '/' . 'app' . '/' . $propietario .  '/' . $archivo;
+        log::debug($archivo);
+        $propietario = auth()->user()->id;
+        log::debug($propietario);
+        $temp = User::join('file_users','file_users.user_nit','=','users.nit')->join('files','file_users.file_id','=','files.id')->where('users.id',$propietario)->where('files.file',$archivo)->get()->toArray();
+        log::debug($temp[0]['ruta']);
+        $path = storage_path() . '/' . 'app' . '/' . $temp[0]['ruta'] . '/' . $archivo;
         if (file_exists($path)) {
             return Response::download($path);
         }else{

@@ -5,12 +5,9 @@ function addFile() {
     var file = $("#archivo").val();
     var nombre = $("#nombre").val();
     var descripcion = $("#descripcion").val();
+    var carpeta = $("#carpeta").val()
 
-    var fileSize = $('#archivo')[0].files[0].size;
-    var sizekiloBytes = parseInt(fileSize / 1024);
-
-
-    if (file == "" || nombre == "" || descripcion == "") {
+    if (file == "" || nombre == "" || descripcion == "" || carpeta == "") {
         Swal.fire({
             icon: "warning",
             title: "Oops...",
@@ -18,16 +15,6 @@ function addFile() {
         });
         return;
     }
-
-    if(sizekiloBytes > 102400){
-        Swal.fire({
-            icon: "warning",
-            title: "Oops...",
-            text: "Limite de peso maximo permitido 10MB",
-        });
-        return;
-    }
-
 
     var url = $("#form-file-contratista").attr("action");
     var parametros = new FormData($("#form-file-contratista")[0]);
