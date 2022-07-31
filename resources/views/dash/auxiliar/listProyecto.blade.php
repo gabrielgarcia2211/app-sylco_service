@@ -102,6 +102,10 @@
                                     <i class="fas fa-archive"></i>
                                 </a>
                             </div>
+                            <form id="form-full-delete" action="{{route('contratista.remove.all')}}">
+                                @csrf
+                                <button type="submit" class="btn btn-danger" style="width: 10%;float:right;margin-right: 10px"  onclick="return deleteFull()"><i class="far fa-trash-alt"></i></button>
+                            </form>
                         @endif
                         @endisset 
                     </div>

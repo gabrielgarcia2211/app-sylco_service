@@ -6,6 +6,8 @@ use Exception;
 use Illuminate\Support\Facades\Storage;
 use ZipArchive;
 use Illuminate\Support\Facades\File;
+use App\Models\File as FileModel;
+use Illuminate\Support\Facades\DB;
 
 class StorageController extends Controller
 {
@@ -212,7 +214,7 @@ class StorageController extends Controller
     public function backup()
     {
 
-        $name = "app" . "/" .auth()->user()->name;
+        $name = "app" . "/" . auth()->user()->name;
 
         $zip = new ZipArchive;
 
@@ -229,6 +231,43 @@ class StorageController extends Controller
         }
 
         return response()->download(public_path($fileName))->deleteFileAfterSend(true);;
+    }
 
+    public function allRemove()
+    {
+        #$id = $_POST['id'];
+        $id = auth()->user()->id;
+
+        $files = FileModel::select('files.*')
+            ->join('file_users', 'file_users.file_id', 'files.id')
+            ->join('users', 'file_users.user_nit', 'users.nit')
+            ->where('users.id', $id)
+            ->get();
+
+        try {
+            foreach ($files as $file) {
+                $flight = FileModel::find($file->id);
+                $data = $this->deleteFile($file->ruta, $file->file, 1);
+                if ($data['response']) {
+                    $flight->delete();
+                } else {
+                    return [
+                        'response' => false,
+                        'message' =>  'Archivo no encontrado, Elimina manualmente: ' . " " .  $file->ruta
+                    ];
+                }
+            }
+            DB::commit();
+            return [
+                'response' => true,
+                'message' =>  'Archivos eliminados'
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return [
+                'response' => false,
+                'message' => $e->getMessage()
+            ];
+        }
     }
 }

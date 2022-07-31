@@ -259,6 +259,62 @@ function deleteFile(id) {
     });
 }
 
+function deleteFull(){
+    event.preventDefault();
+    Swal.fire({
+        title: "Desea eliminar todos los archivos?, le recomendamos hacer un backup primero.",
+        text: "Esta operacion es irreversible",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Si, Eliminar!",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var url = $("#form-full-delete").attr("action");
+            $.ajax({
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                        "content"
+                    ),
+                },
+                method: "GET",
+                url: url,
+                data: [],
+                beforeSend: function () {
+                    Swal.fire({
+                        title: "Cargando",
+                        text: "Eliminando Archivo...",
+                        imageUrl:
+                            "https://img.webme.com/pic/a/andwas/cargando5.gif",
+                        imageWidth: 200,
+                        imageHeight: 180,
+                        imageAlt: "Eliminando Archivo Maestro",
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                    });
+                },
+                success: function (response) {
+                    if (response["response"]) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Hecho!",
+                            text: response["message"],
+                        });
+                        location.reload();
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: response["message"],
+                        });
+                    }
+                },
+            });
+        }
+    });
+}
+
 function carpeta_filter(){
     $("#form-filter-contratista").submit();
 }
