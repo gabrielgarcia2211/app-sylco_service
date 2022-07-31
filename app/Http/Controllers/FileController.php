@@ -86,8 +86,6 @@ class FileController extends Controller
         $id = $_POST['id'];
         $file = File::Find($id);
 
-        
-
         try {
 
             $data = $this->driveData->deleteFile($file->ruta, $file->file, 1);

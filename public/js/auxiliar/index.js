@@ -258,3 +258,13 @@ function deleteFile(id) {
         }
     });
 }
+
+function carpeta_filter(){
+    $("#form-filter-contratista").submit();
+}
+
+function reset(){
+    window.location.replace("../../files/uploadFile/PRUEBA%201");
+}
+
+

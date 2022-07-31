@@ -89,14 +89,31 @@
                 </div>
                 <br>
                 <!-- Page Heading -->
-                <h1 class="h3 mb-2 text-gray-800">Subir</h1>
                 <p class="mb-4">Lista de Mis Archivos</p>
 
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Lista</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Lista <a onclick="reset()"><i class="fas fa-redo"></i></a></h6>
+                        <div class="col-12">
+                            <a href="{{ route('contratista.backup') }}"  target="" class="btn btn-info" style="width: 10%;float: right;">
+                                <i class="fas fa-archive"></i>
+                            </a>
+                        </div>
                     </div>
+                    <div class="form-group" style="padding: 10px; text-align: center;">
+                        <form id="form-filter-contratista" action="{{ route('contratista.file.filter') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <select class="form-control" id="carpeta_f" name="carpeta_f" onchange="carpeta_filter();">
+                                <option value="">Filtrar por carpeta...</option>
+                                <?php for ($m = 0; $m < count($ruta); $m++) : ?>
+                                    <option value="<?php echo rtrim($ruta[$m]) ?>">
+                                    <?php echo rtrim($ruta[$m]) ?></option>
+                                <?php endfor; ?>
+                            </select>
+                            <input id="proyecto_f" name="proyecto_f" type="hidden" value="{{$name}}"></input>
+                        </form>    
+                        </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">

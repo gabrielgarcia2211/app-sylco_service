@@ -79,7 +79,7 @@ class HomeController extends Controller
             }
             return view('dash.auxiliar.index')->with(compact('dataProyecto'));
         } else {
-            dd("nada");
+            dd("no tiene permisos");
         }
     }
 

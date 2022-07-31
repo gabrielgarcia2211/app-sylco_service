@@ -12,6 +12,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ContratistaController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\StorageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -119,11 +120,13 @@ Route::group(['prefix' => 'auxiliar/', 'middleware' => ['role:Aux', 'auth']], fu
 
     Route::get('contratista/showProyecto/{name}', [HsqController::class, 'showProyecto'])->name('contratista.showProyecto');
     Route::get('contratista/proyecto/list', [HsqController::class, 'index'])->name('contratista.proyecto.list');
-    Route::get('contratista/files/uploadFile/{name}', [HsqController::class, 'uploadFile'])->name('contratista.file.upload');
+    Route::get('files/uploadFile/{name}', [HsqController::class, 'uploadFile'])->name('contratista.file.upload');
+    Route::post('contratista/files/filter', [HsqController::class, 'filterFile'])->name('contratista.file.filter');
     Route::post('contratista/files/create', [HsqController::class, 'store'])->name('contratista.file.store');
     Route::post('contratista/proyect/list', [HsqController::class, 'showFile'])->name('contratista.proyecto.list');
     Route::post('contratista/files/report', [HsqController::class, 'report'])->name('contratista.file.report');
     Route::post('files/delete', [FileController::class, 'destroy'])->name('contratista.file.delete');
+    Route::get('files/backup', [StorageController::class, 'backup'])->name('contratista.backup');
     Route::get('files/download/{archivo}', [HsqController::class, 'dowloandFile'])->name('file.download.auxiliar');
     Route::get('files/download/admin/{archivo}/{nombre}', [HsqController::class, 'dowloandFileContratista'])->name('file.download.auxiliar.contratista');
 

@@ -114,6 +114,28 @@ class HsqController extends Controller
         return view('dash.auxiliar.listProyecto')->with(compact('dataFiles', 'name'));
     }
 
+    function filterFile(Request $request){
+
+        $name = $request->input('proyecto_f');
+        $carpeta = $request->input('carpeta_f');
+
+        $proyecto = Proyecto::where('name', $name)->first();
+
+        $dataFiles = File::select('files.*')
+        ->join('file_users', 'file_users.file_id', '=', 'files.id')
+        ->join('users', 'users.nit', '=', 'file_users.user_nit')
+        ->join('proyecto_users', 'proyecto_users.user_nit', '=', 'users.nit')
+        ->join('proyectos', 'proyectos.id', '=', 'proyecto_users.proyecto_id')
+        ->where('users.nit', auth()->user()->nit)
+        ->where('files.proyecto_id', $proyecto->id)
+        ->where('files.ruta', auth()->user()->name . "/" .  $carpeta)
+        ->distinct()
+        ->get();
+
+        return view('dash.auxiliar.listProyecto')->with(compact('dataFiles', 'name'));
+
+    }
+
     public function store(Request $request)
     {
 

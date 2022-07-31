@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Exception;
 use Illuminate\Support\Facades\Storage;
+use ZipArchive;
+use Illuminate\Support\Facades\File;
 
 class StorageController extends Controller
 {
@@ -38,12 +40,12 @@ class StorageController extends Controller
             if (!Storage::exists($nombre)) {
 
                 Storage::makeDirectory($nombre);
-                
-                for($i = 0; $i < count($ruta); $i++){
-                    $path = $nombre.'/'.$ruta[$i];
+
+                for ($i = 0; $i < count($ruta); $i++) {
+                    $path = $nombre . '/' . $ruta[$i];
                     Storage::makeDirectory($path, 0755, true, true);
                 }
-                
+
                 return [
                     'response' => true,
                     'message' => 'Usuario Creado'
@@ -120,20 +122,20 @@ class StorageController extends Controller
 
                 //obtenemos el nombre del archivo
                 $nombre = $file->getClientOriginalName();
+                #$name = $nombre;
                 $extension = pathinfo($nombre, PATHINFO_EXTENSION);
 
 
-                $nombreFi = $name .'.' . $extension;
+                $nombreFi = $name . '.' . $extension;
 
                 //indicamos que queremos guardar un nuevo archivo en el disco local
-                Storage::put($carpetaPadre . '/' . $name .'.' . $extension,  \File::get($file));
-    
+                Storage::put($carpetaPadre . '/' . $name . '.' . $extension,  File::get($file));
+
 
                 return [
                     'response' => true,
                     'message' =>  $nombreFi
                 ];
-
             } else {
 
                 return [
@@ -168,7 +170,7 @@ class StorageController extends Controller
                     ];
                 }
 
-                if (Storage::exists($carpetaPadre. '/' .$filename)) {
+                if (Storage::exists($carpetaPadre . '/' . $filename)) {
                     Storage::delete($carpetaPadre . '/' . $filename);
                     return [
                         'response' => true,
@@ -210,54 +212,23 @@ class StorageController extends Controller
     public function backup()
     {
 
-        $zip = new ZipArchive();
-        // Ruta absoluta
-        $nombreArchivoZip = __DIR__ . "/4-directorio.zip";
-        $rutaDelDirectorio = __DIR__ . "/imágenes";
+        $name = "app" . "/" .auth()->user()->name;
 
-        if (!$zip->open($nombreArchivoZip, ZipArchive::CREATE | ZipArchive::OVERWRITE)) {
-            exit("Error abriendo ZIP en $nombreArchivoZip");
-        }
-        // Si no hubo problemas, continuamos
+        $zip = new ZipArchive;
 
-        // Crear un iterador recursivo que tendrá un iterador recursivo del directorio
-        $archivos = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($rutaDelDirectorio),
-            RecursiveIteratorIterator::LEAVES_ONLY
-        );
+        $fileName = date("Y-m-d") . '_backup.zip';
 
-        foreach ($archivos as $archivo) {
-            // No queremos agregar los directorios, pues los nombres
-            // de estos se agregarán cuando se agreguen los archivos
-            if ($archivo->isDir()) {
-                continue;
+        if ($zip->open(public_path($fileName), ZipArchive::CREATE) === TRUE) {
+            $files = File::allFiles(storage_path($name));
+
+            foreach ($files as $key => $value) {
+                $zip->addFile($value, auth()->user()->name . "/" . $value->getRelativePathname());
             }
 
-            $rutaAbsoluta = $archivo->getRealPath();
-            // Cortamos para que, suponiendo que la ruta base es: C:\imágenes ...
-            // [C:\imágenes\perro.png] se convierta en [perro.png]
-            // Y no, no es el basename porque:
-            // [C:\imágenes\vacaciones\familia.png] se convierte en [vacaciones\familia.png]
-            $nombreArchivo = substr($rutaAbsoluta, strlen($rutaDelDirectorio) + 1);
-            $zip->addFile($rutaAbsoluta, $nombreArchivo);
-        }
-        // No olvides cerrar el archivo
-        $resultado = $zip->close();
-        if ($resultado) {
-            echo "Archivo creado";
-        } else {
-            echo "Error creando archivo";
+            $zip->close();
         }
 
-        log::debug();
-        return;
-        $nombreAmigable = "backup.zip";
-        header('Content-Type: application/octet-stream');
-        header("Content-Transfer-Encoding: Binary");
-        header("Content-disposition: attachment; filename=$nombreAmigable");
+        return response()->download(public_path($fileName))->deleteFileAfterSend(true);;
 
-        readfile($nombreArchivoZip);
-
-        unlink($nombreArchivoZip);
     }
 }
