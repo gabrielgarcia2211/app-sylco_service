@@ -31,7 +31,7 @@
                                     <form action="{{Route('user.store')}}" class="user" id="form-user" method="POST" onsubmit="return guardarUsuario()">
                                         @csrf
                                         <div class="form-group">
-                                            <input type="number" class="form-control {{ $errors->has('nit') ? ' is-invalid' : '' }} form-control-user" value="{{ old('nit') }}" id="nit" name="nit" maxlength="12" aria-describedby="emailHelp" placeholder="NIT">
+                                            <input type="number" class="form-control {{ $errors->has('nit') ? ' is-invalid' : '' }} form-control-user" value="{{ old('nit') }}" id="nit" name="nit" maxlength="11" aria-describedby="emailHelp" placeholder="NIT">
                                             @if ($errors->has('nit'))
                                             <span style="margin-bottom:18px" class="invalid-feedback" role="alert">
                                                 <strong>{{ $errors->first('nit') }}</strong>

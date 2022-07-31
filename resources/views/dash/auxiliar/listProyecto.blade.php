@@ -95,11 +95,15 @@
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary">Lista <a onclick="reset()"><i class="fas fa-redo"></i></a></h6>
-                        <div class="col-12">
-                            <a href="{{ route('contratista.backup') }}"  target="" class="btn btn-info" style="width: 10%;float: right;">
-                                <i class="fas fa-archive"></i>
-                            </a>
-                        </div>
+                        @isset($dataFiles)
+                        @if(count($dataFiles) > 0)
+                            <div class="col-12">
+                                <a href="{{ route('contratista.backup') }}"  target="" class="btn btn-info" style="width: 10%;float: right;">
+                                    <i class="fas fa-archive"></i>
+                                </a>
+                            </div>
+                        @endif
+                        @endisset 
                     </div>
                     <div class="form-group" style="padding: 10px; text-align: center;">
                         <form id="form-filter-contratista" action="{{ route('contratista.file.filter') }}" method="POST" enctype="multipart/form-data">
