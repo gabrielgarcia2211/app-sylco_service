@@ -258,7 +258,7 @@ function guardarUsuario() {
             //I use SweetAlert2 for this
             //+ jqXhr.status + ": " + errorThrown,
             Swal.fire({
-                title: "Error ",  // this will output "Error 422: Unprocessable Entity"
+                title: "Error ", // this will output "Error 422: Unprocessable Entity"
                 html: errorsHtml,
                 width: "auto",
                 icon: "error",
@@ -495,8 +495,8 @@ function findFilesUser(nit, proyecto) {
 
 function findUser() {
     localStorage.setItem("nitUser", $("#usuarioRol").val());
-   // var url = $("#form-user-rol").attr("action");
-   // $.post(url, $("#form-user-rol").serialize());
+    // var url = $("#form-user-rol").attr("action");
+    // $.post(url, $("#form-user-rol").serialize());
 }
 
 function vincularProyectoUser(proyecto) {
@@ -553,85 +553,102 @@ function desVincularProyectoUser(proyecto) {
     var url = $("#form-user-desv").attr("action");
     var parametros = { proyecto: proyecto, nit: nit };
 
-    $.ajax({
-        headers: {
-            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-        },
-        method: "POST",
-        url: url,
-        data: parametros,
-        beforeSend: function () {
-            Swal.fire({
-                title: "Cargando",
-                text: "Buscando proyectos...",
-                imageUrl: "https://img.webme.com/pic/a/andwas/cargando5.gif",
-                imageWidth: 200,
-                imageHeight: 180,
-                imageAlt: "Buscando proyectos",
-                showCancelButton: false,
-                showConfirmButton: false,
+    Swal.fire({
+        title: "Desea desvincular el proyecto?",
+        text: "Esta operacion es irreversible y se eliminara toda la informacion relacionada",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Si, Desvincular!",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                        "content"
+                    ),
+                },
+                method: "POST",
+                url: url,
+                data: parametros,
+                beforeSend: function () {
+                    Swal.fire({
+                        title: "Cargando",
+                        text: "Buscando proyectos...",
+                        imageUrl:
+                            "https://img.webme.com/pic/a/andwas/cargando5.gif",
+                        imageWidth: 200,
+                        imageHeight: 180,
+                        imageAlt: "Buscando proyectos",
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                    });
+                },
+                success: function (response) {
+                    if (response["response"]) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Hecho!",
+                            text: response["message"],
+                        });
+                        location.reload();
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: response["message"],
+                        });
+                    }
+                },
+                error: function (response) {
+                    Swal.close();
+                },
             });
-        },
-        success: function (response) {
-            if (response["response"]) {
-                Swal.fire({
-                    icon: "success",
-                    title: "Hecho!",
-                    text: response["message"],
-                });
-                location.reload();
-            } else {
-                Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    text: response["message"],
-                });
-            }
-        },
-        error: function (response) {
-            Swal.close();
-        },
+        }
     });
 }
 
-
-
 //-------ARCHIVOS
 
-function info(e){
+function info(e) {
     e.preventDefault();
     Swal.fire(
-        'Carga de datos',
-        'La carga de datos se realiza con la informacion del archivo, toda la informacion debe estar bien ' +
-        'diligenciada.',
-        'question'
-    )
+        "Carga de datos",
+        "La carga de datos se realiza con la informacion del archivo, toda la informacion debe estar bien " +
+            "diligenciada.",
+        "question"
+    );
 }
 
 function validarExtension() {
-    $(document).on('change', 'input[type="file"]', function () {
+    $(document).on("change", 'input[type="file"]', function () {
         var fileName = this.files[0].name;
         var res = fileName.substring(0, 30);
-        $('.nameArchivo').text(res);
-        var ext = fileName.split('.').pop();
+        $(".nameArchivo").text(res);
+        var ext = fileName.split(".").pop();
         console.log(fileName);
         ext = ext.toLowerCase();
         switch (ext) {
-            case 'xlsx':
-            case 'xls':
-                $('.respCarga').text("Cargado Correctamente");
-                $('#alert').hide();
-                $('#alert2').show();
+            case "xlsx":
+            case "xls":
+                $(".respCarga").text("Cargado Correctamente");
+                $("#alert").hide();
+                $("#alert2").show();
                 $("#guardaExcel").prop("disabled", false);
                 break;
             default:
-                $('.respuesta').text("Error de extension\n, " + ext + "  " + ".Por favor seleccione un archivo .xlsx");
-                $('#alert2').hide();
-                $('#alert').show();
+                $(".respuesta").text(
+                    "Error de extension\n, " +
+                        ext +
+                        "  " +
+                        ".Por favor seleccione un archivo .xlsx"
+                );
+                $("#alert2").hide();
+                $("#alert").show();
                 $("#guardaExcel").prop("disabled", true);
-                this.value = '';
-                this.files[0].name = '';
+                this.value = "";
+                this.files[0].name = "";
         }
-
     });
 }
