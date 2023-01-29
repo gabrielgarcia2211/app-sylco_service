@@ -29,7 +29,7 @@ class HomeController extends Controller
         if (auth()->user()->hasRole('Coordinador')) {
 
             $dataContratista = DB::select("SELECT count('role_id') as contratista FROM model_has_roles WHERE role_id = 3 ");
-            $dataFiles = User::select('users.*', 'proyectos.name AS proyecto', 'proyectos.id AS proyectoId')->join('proyecto_users', 'proyecto_users.user_nit', '=', 'users.nit')->join('proyectos', 'proyecto_users.proyecto_id', '=', 'proyectos.id')->get();
+            $dataFiles = User::join('file_users', 'file_users.user_nit', '=', 'users.nit')->join('files', 'file_users.file_id', '=', 'files.id')->get();
             $proyectos = Proyecto::select('name', 'descripcion')->where('status', 0)->get();
 
             $dataProyecto = array();

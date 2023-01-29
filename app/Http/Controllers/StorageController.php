@@ -267,7 +267,7 @@ class StorageController extends Controller
         } catch (\Throwable $th) {
             return [
                 'response' => false,
-                'message' => 'Error'
+                'message' => $th->getLine()
             ];
         }
     }
@@ -279,7 +279,6 @@ class StorageController extends Controller
         $files = FileModel::select('files.*')
             ->join('file_users', 'file_users.file_id', 'files.id')
             ->join('users', 'file_users.user_nit', 'users.nit')
-            ->where('users.id', $id)
             ->get();
 
         try {
@@ -296,10 +295,7 @@ class StorageController extends Controller
                 }
             }
             DB::commit();
-            return [
-                'response' => true,
-                'message' =>  'Archivos eliminados'
-            ];
+            return redirect()->back();
         } catch (\Exception $e) {
             DB::rollBack();
             return [

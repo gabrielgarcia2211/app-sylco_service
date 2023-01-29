@@ -259,6 +259,7 @@ function deleteFile(id) {
 }
 
 function deleteFull() {
+    return;
     event.preventDefault();
     Swal.fire({
         title: "Desea eliminar todos los archivos?, le recomendamos hacer un backup primero.",
