@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\File;
+use App\Models\User;
 use App\Models\Proyecto;
 use App\Models\File_User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Response;
-use App\Http\Controllers\StorageController;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Response;
+use RealRashid\SweetAlert\Facades\Alert;
+use App\Http\Controllers\StorageController;
 
 class FileController extends Controller
 {
@@ -36,7 +38,10 @@ class FileController extends Controller
 
         try {
 
-            $ruta = $nombreContratista.'/'.$carpetaDestino;
+            $user = User::where('nit', $nitContratista)->first();
+            $proyecto = Proyecto::where('name', $nombreProyecto)->where('status', 0)->first();
+
+            $ruta = $proyecto->uuid . '/' . $user->uuid . '/' . $carpetaDestino;
 
             $file = $this->driveData->putFile($ruta, $files, $name);
 
@@ -112,22 +117,26 @@ class FileController extends Controller
     }
 
 
-    public function dowloandFile($archivo,$propietario){
+    public function dowloandFile($archivo, $propietario)
+    {
 
-        log::debug($archivo);
-        $propietario = auth()->user()->id;
-        log::debug($propietario);
-        $temp = User::join('file_users','file_users.user_nit','=','users.nit')->join('files','file_users.file_id','=','files.id')->where('users.id',$propietario)->where('files.file',$archivo)->get()->toArray();
-        log::debug($temp[0]['ruta']);
-        $path = storage_path() . '/' . 'app' . '/' . $temp[0]['ruta'] . '/' . $archivo;
-        if (file_exists($path)) {
-            return Response::download($path);
-        }else{
-               
-            Alert::warning('Opps!', 'Archivo no encontrado');
-            return back();
+        try {
+            $temp = User::join('file_users', 'file_users.user_nit', '=', 'users.nit')->join('files', 'file_users.file_id', '=', 'files.id')->where('users.name', $propietario)->where('files.file', $archivo)->get()->toArray();
+            log::debug($temp);
+            $path = storage_path() . '/' . 'app' . '/' . $temp[0]['ruta'] . '/' . $archivo;
+            if (file_exists($path)) {
+                return Response::download($path);
+            } else {
+
+                Alert::warning('Opps!', 'Archivo no encontrado');
+                return back();
+            }
+        } catch (\Exception $e) {
+
+            return [
+                'response' => false,
+                'message' => $e->getMessage()
+            ];
         }
     }
-
-
 }

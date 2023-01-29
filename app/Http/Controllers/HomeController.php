@@ -29,7 +29,8 @@ class HomeController extends Controller
         if (auth()->user()->hasRole('Coordinador')) {
 
             $dataContratista = DB::select("SELECT count('role_id') as contratista FROM model_has_roles WHERE role_id = 3 ");
-            $proyectos = Proyecto::all(['name', 'descripcion']);
+            $dataFiles = User::select('users.*', 'proyectos.name AS proyecto', 'proyectos.id AS proyectoId')->join('proyecto_users', 'proyecto_users.user_nit', '=', 'users.nit')->join('proyectos', 'proyecto_users.proyecto_id', '=', 'proyectos.id')->get();
+            $proyectos = Proyecto::select('name', 'descripcion')->where('status', 0)->get();
 
             $dataProyecto = array();
 
@@ -37,8 +38,7 @@ class HomeController extends Controller
                 array_push($dataProyecto, [$proyectos[$i]->name, $proyectos[$i]->descripcion, $this->randColor()]);
             }
 
-            return view('dash.coordinador.index')->with(compact('dataContratista', 'dataProyecto'));
-
+            return view('dash.coordinador.index')->with(compact('dataContratista', 'dataProyecto', 'dataFiles'));
         } else if (auth()->user()->hasRole('Contratista')) {
 
 
@@ -60,7 +60,6 @@ class HomeController extends Controller
 
 
             return view('dash.contratista.index')->with(compact('dataProyecto'));
-            
         } else if (auth()->user()->hasRole('Aux')) {
 
 
@@ -68,7 +67,7 @@ class HomeController extends Controller
             FROM files, proyectos 
             INNER JOIN proyecto_users ON proyecto_users.proyecto_id = proyectos.id
             INNER JOIN users ON users.nit = proyecto_users.user_nit
-            WHERE files.proyecto_id = proyectos.id AND users.nit =". auth()->user()->nit . "
+            WHERE files.proyecto_id = proyectos.id AND users.nit =" . auth()->user()->nit . "
             GROUP BY (proyecto)");
 
             $dataProyecto = array();

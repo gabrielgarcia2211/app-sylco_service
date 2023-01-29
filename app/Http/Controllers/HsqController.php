@@ -32,18 +32,14 @@ class HsqController extends Controller
 
     public function showProyecto($name)
     {
-
         $dataFiles = User::select('users.*', 'proyectos.name AS proyecto', 'proyectos.id AS proyectoId')->join('proyecto_users', 'proyecto_users.user_nit', '=', 'users.nit')->join('proyectos', 'proyecto_users.proyecto_id', '=', 'proyectos.id')
             ->where('proyectos.name', $name)
             ->role('Contratista')
             ->distinct()
             ->get();
 
-
-
         return view('dash.auxiliar.listContratista')->with(compact('dataFiles', 'name'));
     }
-
 
     public function showFile()
     {
@@ -52,7 +48,7 @@ class HsqController extends Controller
 
         $proyecto = Proyecto::where('name', $proyecto)->first();
 
-        $data = User::select('files.*', 'file_users.date AS fecha', 'users.name AS propietario')
+        $data = User::select('files.*', 'file_users.date AS fecha', 'users.name AS propietario', 'users.id AS user_id')
             ->join('proyecto_users', 'proyecto_users.user_nit', '=', 'users.nit')
             ->join('proyectos', 'proyectos.id', '=', 'proyecto_users.proyecto_id')
             ->join('file_users', 'file_users.user_nit', '=', 'users.nit')
@@ -67,7 +63,6 @@ class HsqController extends Controller
         echo $JString;
         return;
     }
-
 
     public function report()
     {
@@ -95,26 +90,27 @@ class HsqController extends Controller
         }
     }
 
-    function uploadFile($name){
-
+    function uploadFile($name)
+    {
         $proyecto = Proyecto::where('name', $name)->first();
 
         $dataFiles = File::select('files.*')
-        ->join('file_users', 'file_users.file_id', '=', 'files.id')
-        ->join('users', 'users.nit', '=', 'file_users.user_nit')
-        ->join('proyecto_users', 'proyecto_users.user_nit', '=', 'users.nit')
-        ->join('proyectos', 'proyectos.id', '=', 'proyecto_users.proyecto_id')
-        ->where('users.nit', auth()->user()->nit)
-        ->where('files.proyecto_id', $proyecto->id)
-        ->distinct()
-        ->get();
+            ->join('file_users', 'file_users.file_id', '=', 'files.id')
+            ->join('users', 'users.nit', '=', 'file_users.user_nit')
+            ->join('proyecto_users', 'proyecto_users.user_nit', '=', 'users.nit')
+            ->join('proyectos', 'proyectos.id', '=', 'proyecto_users.proyecto_id')
+            ->where('users.nit', auth()->user()->nit)
+            ->where('files.proyecto_id', $proyecto->id)
+            ->distinct()
+            ->get();
 
 
 
         return view('dash.auxiliar.listProyecto')->with(compact('dataFiles', 'name'));
     }
 
-    function filterFile(Request $request){
+    function filterFile(Request $request)
+    {
 
         $name = $request->input('proyecto_f');
         $carpeta = $request->input('carpeta_f');
@@ -122,18 +118,17 @@ class HsqController extends Controller
         $proyecto = Proyecto::where('name', $name)->first();
 
         $dataFiles = File::select('files.*')
-        ->join('file_users', 'file_users.file_id', '=', 'files.id')
-        ->join('users', 'users.nit', '=', 'file_users.user_nit')
-        ->join('proyecto_users', 'proyecto_users.user_nit', '=', 'users.nit')
-        ->join('proyectos', 'proyectos.id', '=', 'proyecto_users.proyecto_id')
-        ->where('users.nit', auth()->user()->nit)
-        ->where('files.proyecto_id', $proyecto->id)
-        ->where('files.ruta', auth()->user()->name . "/" .  $carpeta)
-        ->distinct()
-        ->get();
+            ->join('file_users', 'file_users.file_id', '=', 'files.id')
+            ->join('users', 'users.nit', '=', 'file_users.user_nit')
+            ->join('proyecto_users', 'proyecto_users.user_nit', '=', 'users.nit')
+            ->join('proyectos', 'proyectos.id', '=', 'proyecto_users.proyecto_id')
+            ->where('users.nit', auth()->user()->nit)
+            ->where('files.proyecto_id', $proyecto->id)
+            ->where('files.ruta', auth()->user()->name . "/" .  $carpeta)
+            ->distinct()
+            ->get();
 
         return view('dash.auxiliar.listProyecto')->with(compact('dataFiles', 'name'));
-
     }
 
     public function store(Request $request)
@@ -153,15 +148,16 @@ class HsqController extends Controller
 
         try {
 
-            $ruta = $nombreContratista.'/'.$carpetaDestino;
+            $user = User::where('nit', $nitContratista)->first();
+            $proyecto = Proyecto::where('name', $nombreProyecto)->where('status', 0)->first();
+
+            $ruta = $proyecto->uuid . '/' . $user->uuid . '/' . $carpetaDestino;
 
             $file = $this->driveData->putFile($ruta, $files, $name);
 
             if ($file['response']) {
 
-
                 $proyecto = Proyecto::where('name', $nombreProyecto)->first();
-
 
                 $fileUp = File::create([
                     'name' =>  $nombreArchivo,
@@ -188,52 +184,51 @@ class HsqController extends Controller
 
                 return [
                     'response' => false,
-                    'message' =>  $file['message']
+                    'message' =>  'Proyecto no existe!'
                 ];
             }
         } catch (\Exception $e) {
             return [
                 'response' => false,
-                'message' => $e->getMessage()
+                'message' => 'Proyecto no existe!'
             ];
         }
     }
 
-
-    public function dowloandFile($archivo){
+    public function dowloandFile($archivo)
+    {
 
         log::debug($archivo);
         $propietario = auth()->user()->id;
         log::debug($propietario);
-        $temp = User::join('file_users','file_users.user_nit','=','users.nit')->join('files','file_users.file_id','=','files.id')->where('users.id',$propietario)->where('files.file',$archivo)->get()->toArray();
+        $temp = User::join('file_users', 'file_users.user_nit', '=', 'users.nit')->join('files', 'file_users.file_id', '=', 'files.id')->where('users.id', $propietario)->where('files.file', $archivo)->get()->toArray();
         log::debug($temp);
         $path = storage_path() . '/' . 'app' . '/' . $temp[0]['ruta'] . '/' . $archivo;
         if (file_exists($path)) {
             return Response::download($path);
-        }else{
+        } else {
 
             Alert::warning('Opps!', 'Archivo no encontrado');
             return back();
         }
     }
 
+    public function dowloandFileContratista($archivo, $id)
+    {
 
-    public function dowloandFileContratista($archivo, $nombre){
-
-        $propietario = User::where('users.name',$nombre)->get()->toArray();
+        $propietario = User::where('users.id', $id)->get()->toArray();
         log::debug($propietario);
         $id = $propietario[0]['id'];
         log::debug($id);
-        $temp = User::join('file_users','file_users.user_nit','=','users.nit')->join('files','file_users.file_id','=','files.id')->where('users.id',$id)->where('files.file',$archivo)->get()->toArray();
+        $temp = User::join('file_users', 'file_users.user_nit', '=', 'users.nit')->join('files', 'file_users.file_id', '=', 'files.id')->where('users.id', $id)->where('files.file', $archivo)->get()->toArray();
         log::debug($temp[0]['ruta']);
         $path = storage_path() . '/' . 'app' . '/' . $temp[0]['ruta'] . '/' . $archivo;
         if (file_exists($path)) {
             return Response::download($path);
-        }else{
+        } else {
 
             Alert::warning('Opps!', 'Archivo no encontrado');
             return back();
         }
     }
-
 }

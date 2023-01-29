@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\File;
 use App\Models\Proyecto;
 use Illuminate\Http\Request;
 use App\Models\Proyecto_User;
@@ -25,11 +26,12 @@ class UserController extends Controller
 
     public function index()
     {
-        $dataProyecto = Proyecto::all(['id', 'name']);
-        
-        $dataUser = User::select('users.*', 'proyectos.name AS proyecto', 'proyectos.id AS proyectoId')
+        $dataProyecto = Proyecto::select('name')->where('status', 0)->get();
+
+        $dataUser = User::select('users.*', 'proyectos.name AS proyecto', 'proyectos.id AS proyectoId', 'proyectos.uuid as Uuid')
             ->leftjoin('proyecto_users', 'proyecto_users.user_nit', '=', 'users.nit')
             ->leftjoin('proyectos', 'proyecto_users.proyecto_id', '=', 'proyectos.id')
+            ->where('proyectos.status', '0')
             ->role(['Contratista', 'Aux'])
             ->get();
 
@@ -39,7 +41,7 @@ class UserController extends Controller
     public function indexStore()
     {
         $dataRol = Role::all(['name']);
-        $dataProyecto = Proyecto::all(['name']);
+        $dataProyecto = Proyecto::select('name')->where('status', 0)->get();
         return view('dash.coordinador.addUsuario')->with(compact('dataRol', 'dataProyecto'));
     }
 
@@ -48,12 +50,10 @@ class UserController extends Controller
 
         $respError = $this->validateStore($request);
 
-
         if (!$respError) {
 
             $role = Role::where('name', $request->role)->first();
             $proyecto = Proyecto::where('name', $request->proyecto)->first();
-
 
             if (empty($role) || empty($proyecto)) {
                 return [
@@ -61,13 +61,10 @@ class UserController extends Controller
                     'message' => 'Opps falta informacion!'
                 ];
             }
-
-
-            $dataUser = $this->driveData->findDirectory(strtoupper($request->nombre));
-
+            $name_clean = str_replace(' ', '', strtolower($request->nombre));
+            $dataUser = $this->driveData->findDirectory($proyecto->uuid . "/" . $name_clean);
 
             if (!empty($dataUser)) {
-
                 return [
                     'response' => false,
                     'message' => 'Nombre de Usuario ya Existe'
@@ -75,7 +72,14 @@ class UserController extends Controller
             }
 
             if ($request->role == 'Contratista' || $request->role == 'Aux') {
-                $this->driveData->createDirectory(strtoupper($request->nombre));
+                $response = $this->driveData->createDirectory($request->nombre, $proyecto->uuid);
+            }
+
+            if (!isset($response["uuid"])) {
+                return [
+                    'response' => false,
+                    'message' => 'Nombre ya existe'
+                ];
             }
 
             try {
@@ -86,7 +90,8 @@ class UserController extends Controller
                     'last_name' =>  strtoupper($request->apellido),
                     'email' =>  $request->correo,
                     'password' => Hash::make($request->contrasenia),
-                    'role' =>  $request->rol
+                    'role' =>  $request->rol,
+                    'uuid' => $response["uuid"],
                 ]);
 
                 Proyecto_User::create([
@@ -94,16 +99,12 @@ class UserController extends Controller
                     'proyecto_id' =>  $proyecto->id
                 ]);
 
-
                 $user->assignRole($role);
-
 
                 return [
                     'response' => true,
                     'message' => 'Usuario Creado'
                 ];
-
-
             } catch (\Exception $e) {
                 return [
                     'response' => false,
@@ -148,23 +149,15 @@ class UserController extends Controller
         $apellido = $_POST['apellido'];
         $correo = $_POST['correo'];
         $nit = $_POST['nit'];
-        $nuevoProyecto = $_POST['nuevoProyecto'];
-        $antProyecto = $_POST['antProyecto'];
-
-
 
         $user = User::where('nit', '=',  $nit)->first();
 
-
         if (empty($user)) {
-
             return [
                 'response' => false,
                 'message' => 'Usuario no Encontrado'
             ];
         }
-
-
 
         $userNuevo = User::where('nit', '=',  $nuevoId)->first();
 
@@ -175,9 +168,7 @@ class UserController extends Controller
             ];
         }
 
-
         $userEmail = User::where('email', '=',  $correo)->first();
-
 
         if (!empty($userEmail) && $correo != $user->email) {
             return [
@@ -185,9 +176,6 @@ class UserController extends Controller
                 'message' => 'Correo ya Existe!'
             ];
         }
-
-
-        $dataUser = $this->driveData->findDirectory(strtoupper($nombre));
 
         if (!empty($dataUser) && $nombre != $user->name) {
 
@@ -197,23 +185,14 @@ class UserController extends Controller
             ];
         }
 
-
         try {
-
-            $findUserp = Proyecto_User::where('user_nit', '=', $nit)->where('proyecto_id', '=', $antProyecto)->first();
-            $this->driveData->editDirectory($user->name, strtoupper($nombre));
-
 
             $user->nit = $nuevoId;
             $user->last_name = strtoupper($apellido);
             $user->email = $correo;
             $user->name = strtoupper($nombre);
 
-            $findUserp->user_nit = $nuevoId;
-            $findUserp->proyecto_id = $nuevoProyecto;
-
             $user->update();
-            $findUserp->update();
 
             return [
                 'response' => true,
@@ -231,27 +210,45 @@ class UserController extends Controller
     public function destroy()
     {
 
-        $nit = $_POST['nit'];
-
-
-        $user = User::where('nit', '=',  $nit)->first();
+        $response = json_decode($_POST['user']);
+        $user = User::where('nit', '=',  $response->nit)->first();
 
         if (empty($user)) {
-
             return [
                 'response' => false,
                 'message' => 'Usuario no Encontrado'
             ];
         }
 
+        $files = User::select('files.id', 'files.file')
+        ->join('file_users', 'file_users.user_nit', '=', 'users.nit')
+        ->join('files', 'files.id', '=', 'file_users.file_id')
+        ->where('files.proyecto_id', $response->proyectoId )
+        ->get()->toArray();
+
+
         if ($user->hasRole('Contratista') || $user->hasRole('Aux')) {
-            $carp = $this->driveData->deleteFile(strtoupper($user->name), '' , 2);
+
+            $carp = $this->driveData->deleteFileV2($response->Uuid . "/" . $user->uuid);
 
             try {
                 if ($carp['response']) {
 
+                    Proyecto_User::where('user_nit', $user->nit)->where('proyecto_id', $response->proyectoId)->delete();
 
-                    $user->delete();
+                    $proyecto = User::select('proyectos.uuid AS uuid')
+                        ->leftjoin('proyecto_users', 'proyecto_users.user_nit', '=', 'users.nit')
+                        ->leftjoin('proyectos', 'proyecto_users.proyecto_id', '=', 'proyectos.id')
+                        ->where('proyecto_users.user_nit', '=', $response->nit)
+                        ->get()->toArray();
+
+                    if (count($proyecto) == 0) {
+                        User::where('nit', $user->nit)->delete();
+                    }
+
+                    for ($i=0; $i < count($files); $i++) { 
+                        File::where('id', $files[$i]['id'])->delete();
+                    }
 
                     return [
                         'response' => true,
@@ -269,23 +266,6 @@ class UserController extends Controller
                     'message' => $e->getMessage()
                 ]);
             }
-        } else {
-            try {
-
-                $user->delete();
-
-                return [
-                    'response' => true,
-                    'message' =>  'Usuario eliminado'
-                ];
-            } catch (\Exception $e) {
-
-                return [
-                    'response' => false,
-                    'message' =>  $e->getMessage()
-                ];
-            }
         }
     }
-
 }

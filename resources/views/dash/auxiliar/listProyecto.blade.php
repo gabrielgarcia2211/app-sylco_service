@@ -94,20 +94,7 @@
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Lista <a onclick="reset()"><i class="fas fa-redo"></i></a></h6>
-                        @isset($dataFiles)
-                        @if(count($dataFiles) > 0)
-                            <div class="col-12">
-                                <a href="{{ route('contratista.backup') }}"  target="" class="btn btn-info" style="width: 10%;float: right;">
-                                    <i class="fas fa-archive"></i>
-                                </a>
-                            </div>
-                            <form id="form-full-delete" action="{{route('contratista.remove.all')}}">
-                                @csrf
-                                <button type="submit" class="btn btn-danger" style="width: 10%;float:right;margin-right: 10px"  onclick="return deleteFull()"><i class="far fa-trash-alt"></i></button>
-                            </form>
-                        @endif
-                        @endisset 
+                        <h6 class="m-0 font-weight-bold text-primary">Lista <a onclick="reset('<?php echo $name?>')"><i class="fas fa-redo"></i></a></h6>
                     </div>
                     <div class="form-group" style="padding: 10px; text-align: center;">
                         <form id="form-filter-contratista" action="{{ route('contratista.file.filter') }}" method="POST" enctype="multipart/form-data">

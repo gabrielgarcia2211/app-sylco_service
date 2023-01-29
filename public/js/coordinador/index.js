@@ -372,7 +372,7 @@ async function editUsuario(proyecto, listProyecto) {
     }
 }
 
-function eliminarUsuario(nit) {
+function eliminarUsuario(user) {
     event.preventDefault();
     Swal.fire({
         title: "Desea eliminar el usuario?",
@@ -385,7 +385,7 @@ function eliminarUsuario(nit) {
     }).then((result) => {
         if (result.isConfirmed) {
             var url = $("#formu-user-delete").attr("action");
-            var dataSalida = { nit: nit };
+            var dataSalida = { user: user };
             $.ajax({
                 headers: {
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(

@@ -63,6 +63,9 @@ Route::group(['prefix' => 'coordinador/', 'middleware' => ['role:Coordinador', '
     Route::post('user/edit', [UserController::class, 'edit'])->name('user.edit');
     Route::post('user/delete', [UserController::class, 'destroy'])->name('user.delete');
 
+
+    Route::get('files/backup', [StorageController::class, 'backup'])->name('contratista.backup');
+
     // CONTRATISTA
     Route::get('contratista/file/list', [ContratistaController::class, 'index'])->name('contratista.file.list');
     Route::post('contratista/file/list', [ContratistaController::class, 'showFile'])->name('contratista.file.list');
@@ -70,6 +73,8 @@ Route::group(['prefix' => 'coordinador/', 'middleware' => ['role:Coordinador', '
     Route::get('files/download/admin/{archivo}/{propietario}', [FileController::class, 'dowloandFile'])->name('file.download');
     Route::get('files/upload/', [ContratistaController::class, 'viewUploadUsers'])->name('file.upload.user');
     Route::post('files/upload/', [ContratistaController::class, 'uploadUsers'])->name('file.upload.user');
+
+
 
 });//LISTO
 
@@ -127,7 +132,6 @@ Route::group(['prefix' => 'auxiliar/', 'middleware' => ['role:Aux', 'auth']], fu
     Route::post('contratista/files/report', [HsqController::class, 'report'])->name('contratista.file.report');
     Route::post('files/delete', [FileController::class, 'destroy'])->name('contratista.file.delete');
     Route::get('files/all-delete', [StorageController::class, 'allRemove'])->name('contratista.remove.all');
-    Route::get('files/backup', [StorageController::class, 'backup'])->name('contratista.backup');
     Route::get('files/download/{archivo}', [HsqController::class, 'dowloandFile'])->name('file.download.auxiliar');
     Route::get('files/download/admin/{archivo}/{nombre}', [HsqController::class, 'dowloandFileContratista'])->name('file.download.auxiliar.contratista');
 

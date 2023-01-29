@@ -2,24 +2,23 @@
 
 namespace App\Http\Controllers;
 
-Use Alert;
+
 use App\Models\User;
 use App\Models\Proyecto;
-use App\Models\Proyecto_User;
 use Illuminate\Http\Request;
+use App\Models\Proyecto_User;
 use Illuminate\Support\Facades\DB;
-
-
-
-
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use RealRashid\SweetAlert\Facades\Alert;
+use App\Models\File;
 
 class ProyectoController extends Controller
 {
 
-
     public function index()
     {
-        $dataProyecto = Proyecto::all();
+        $dataProyecto = Proyecto::where('status', 0)->get();
         return view('dash.coordinador.listProyecto')->with(compact('dataProyecto'));
     }
 
@@ -33,17 +32,22 @@ class ProyectoController extends Controller
     {
 
         $this->validateStore($request);
+        $dataProyecto = Proyecto::where('name', strtoupper($request->nombre))->where('status', 0)->first();
 
-        $dataProyecto = Proyecto::where('name', strtoupper($request->nombre))->first();
         if (empty($dataProyecto)) {
 
             try {
 
+                $uuid = "proyecto_" . uniqid();
+
                 Proyecto::create([
                     'name' =>  strtoupper($request->nombre),
+                    'uuid' =>  $uuid,
                     'descripcion' =>  $request->descripcion,
                     'ubicacion' =>  $request->ubicacion,
                 ]);
+
+                Storage::makeDirectory($uuid);
 
                 return [
                     'response' => true,
@@ -58,10 +62,8 @@ class ProyectoController extends Controller
         } else {
 
             return [
-
                 'response' => false,
                 'message' => 'El Proyecto ya Existe!'
-
             ];
         }
     }
@@ -102,8 +104,6 @@ class ProyectoController extends Controller
             ];
         }
 
-
-
         try {
 
             $proyect->name =  $name;
@@ -131,9 +131,21 @@ class ProyectoController extends Controller
 
         try {
 
-            $proyect = Proyecto::where('name', $nombre)->first();
+            $proyecto = Proyecto::where('name', $nombre)->first();
+            $files = User::select('files.id', 'files.file')
+                ->join('file_users', 'file_users.user_nit', '=', 'users.nit')
+                ->join('files', 'files.id', '=', 'file_users.file_id')
+                ->where('files.proyecto_id', $proyecto->id)
+                ->get()->toArray();
 
-            $proyect->delete();
+
+            Storage::deleteDirectory($proyecto->uuid);
+
+            for ($i = 0; $i < count($files); $i++) {
+                File::where('id', $files[$i]['id'])->delete();
+            }
+
+            $proyecto->delete();
 
             return [
                 'response' => true,
@@ -155,7 +167,6 @@ class ProyectoController extends Controller
 
     public function FindProyecto()
     {
-        //$JString = array();
 
         if (!empty($_POST['usuario'])) {
 
@@ -164,23 +175,22 @@ class ProyectoController extends Controller
             $user = User::where('nit', $id)->first();
 
             if (empty($user)) {
-                
+
                 Alert::error('Opps!', 'Usuario no Registrado');
                 return back();
-
             }
-
 
             $userAdd = Proyecto::select('proyectos.name')
                 ->join('proyecto_users', 'proyecto_users.proyecto_id', '=', 'proyectos.id')
                 ->join('users', 'users.nit', '=', 'proyecto_users.user_nit')
+                ->where('proyectos.status', '=',  '0')
                 ->where('users.nit', '=',  $id)->get();
 
 
             $userDelete = DB::select("SELECT  DISTINCT proyectos.name FROM proyectos 
             LEFT JOIN proyecto_users ON proyecto_users.proyecto_id = proyectos.id
             LEFT JOIN users ON users.nit = proyecto_users.user_nit
-            WHERE  proyectos.name  NOT IN
+            WHERE  proyectos.status = 0 AND proyectos.name  NOT IN
             ( SELECT  proyectos.name FROM proyectos
                 INNER JOIN proyecto_users ON proyecto_users.proyecto_id = proyectos.id
                 INNER JOIN users ON users.nit = proyecto_users.user_nit 
@@ -188,21 +198,18 @@ class ProyectoController extends Controller
 
             $JString = array();
 
-
             $JString = [
                 'agregar' => $userDelete,
                 'eliminar' => $userAdd
             ];
 
             return view('dash.coordinador.vincularProyecto')->with(compact('JString'));
-            
         } else {
-           
+
             Alert::warning('Opps!', 'Pro favor, Ingrese Nit');
             return back();
         }
     }
-
 
     public function vincularProyecto()
     {
@@ -213,12 +220,26 @@ class ProyectoController extends Controller
         try {
 
             $user = User::where('nit', $nit)->first();
-            $proyecto = Proyecto::where('name', $proyecto)->first();
+            $proyecto = Proyecto::where('name', $proyecto)->where('status', 0)->first();
 
             Proyecto_User::create([
                 'user_nit' =>    $user->nit,
                 'proyecto_id' =>  $proyecto->id
             ]);
+
+            $response = self::controlVinculados($user->uuid, true);
+
+            $init = storage_path("app");
+
+            if ($response["status"]) {
+                self::recurse_copy(
+                    $init . "/" . $response["proyecto"] . "/" . $user->uuid,
+                    $init . "/" . $proyecto->uuid . "/" . $user->uuid
+                );
+            } else {
+                $new_path = "desvinculados";
+                Storage::move($new_path . "/" . $user->uuid, $proyecto->uuid . "/" . $user->uuid);
+            }
 
             return [
                 'response' => true,
@@ -233,7 +254,6 @@ class ProyectoController extends Controller
         }
     }
 
-
     public function desvincularProyecto()
     {
         $proyecto =  $_POST['proyecto'];
@@ -242,10 +262,30 @@ class ProyectoController extends Controller
         try {
 
             $user = User::where('nit', $nit)->first();
-            $proyecto = Proyecto::where('name', $proyecto)->first();
-
+            $proyecto = Proyecto::where('name', $proyecto)->where('status', '0')->first();
             Proyecto_User::where('user_nit', $user->nit)->where('proyecto_id', $proyecto->id)->delete();
+            $response = self::controlVinculados($user->uuid);
+            if ($response == 1) {
+                $new_path = "desvinculados";
+                $init = storage_path("app");
+                if (!Storage::exists($new_path)) {
+                    Storage::makeDirectory($new_path, 0755, true, true);
+                }
+                self::recurse_copy($init . "/" . $proyecto->uuid . "/" . $user->uuid, $init . "/" . $new_path . "/" . $user->uuid);
+                Storage::deleteDirectory($proyecto->uuid . "/" . $user->uuid);
+            } else {
+                Storage::deleteDirectory($proyecto->uuid . "/" . $user->uuid);
+            }
 
+            $files = User::select('files.id', 'files.file')
+                ->join('file_users', 'file_users.user_nit', '=', 'users.nit')
+                ->join('files', 'files.id', '=', 'file_users.file_id')
+                ->where('files.proyecto_id', $proyecto->id)
+                ->get()->toArray();
+
+            for ($i = 0; $i < count($files); $i++) {
+                File::where('id', $files[$i]['id'])->delete();
+            }
 
             return [
                 'response' => true,
@@ -258,5 +298,48 @@ class ProyectoController extends Controller
                 'message' => $e->getMessage()
             ];
         }
+    }
+
+    private function controlVinculados($user_uuid, $vincular = false)
+    {
+        $proyect = Proyecto::where('status', 0)->get()->toArray();
+        if (!$vincular) {
+            $cont = 0;
+            for ($i = 0; $i < count($proyect); $i++) {
+                if (Storage::exists($proyect[$i]["uuid"] . "/" . $user_uuid)) {
+                    $cont++;
+                }
+            }
+            return $cont;
+        } else {
+
+            for ($i = 0; $i < count($proyect); $i++) {
+                if (Storage::exists($proyect[$i]["uuid"] . "/" . $user_uuid)) {
+                    return [
+                        "status" => true,
+                        "proyecto" => $proyect[$i]["uuid"]
+                    ];
+                }
+            }
+
+            return [
+                "status" => false,
+                "proyecto" => null
+            ];
+        }
+    }
+
+    private function recurse_copy($src, $dst)
+    {
+        $dir = opendir($src);
+        @mkdir($dst);
+        while (false !== ($file = readdir($dir))) {
+            if (($file != '.') && ($file != '..')) {
+                if (is_dir($src . '/' . $file)) {
+                    self::recurse_copy($src . '/' . $file, $dst . '/' . $file);
+                }
+            }
+        }
+        closedir($dir);
     }
 }

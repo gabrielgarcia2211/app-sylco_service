@@ -27,6 +27,7 @@
                 <h6 class="collapse-header">Nombres:</h6>
                 <?php $proyectos = App\Models\Proyecto::select('proyectos.name')->join('proyecto_users', 'proyecto_users.proyecto_id', '=', 'proyectos.id')
                     ->join('users', 'users.nit', '=', 'proyecto_users.user_nit')
+                    ->where('proyectos.status', '0')
                     ->where('users.nit', auth()->user()->nit)
                     ->get() ?>
 

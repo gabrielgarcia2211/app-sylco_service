@@ -14,7 +14,9 @@ class Proyecto extends Model
     protected $fillable =[
      'name',
      'descripcion',
-     'ubicacion'
+     'ubicacion',
+     'uuid',
+     'status'
     ];
 
 }

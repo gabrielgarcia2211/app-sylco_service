@@ -27,7 +27,6 @@ function findFilesUser(nit, proyecto) {
             let tasks = JSON.parse(response);
             let template = "";
             if (tasks != "") {
-                console.log(tasks.length);
                 for (let g = 0; g < tasks.length; g++) {
                     template +=
                         `<tr>
@@ -35,7 +34,7 @@ function findFilesUser(nit, proyecto) {
                         <td >${tasks[g].name}</td>
                         <td >${tasks[g].descripcion}</td>
                         <td >${tasks[g].fecha}</td>
-                        <td style="text-align:center" ><a href="../../files/download/admin/${tasks[g].file}/${tasks[g].propietario}" target="" class="btn btn-primary" ><i class="far fa-eye"></i></a></td>` +
+                        <td style="text-align:center" ><a href="../../files/download/admin/${tasks[g].file}/${tasks[g].user_id}" target="" class="btn btn-primary" ><i class="far fa-eye"></i></a></td>` +
                         `</tr>`;
                 }
 
@@ -69,8 +68,8 @@ async function sendEmail(email) {
             `<input id="swal-input1" class="swal2-input" placeholder="Asunto" value="">` +
             `<textarea id="swal-input2" class="swal2-input" rows="10" maxlength="245" placeholder="Descripcion"></textarea>`,
         focusConfirm: false,
-        confirmButtonText: 'Enviar Correo',
-        cancelButtonText: 'Cancelar',
+        confirmButtonText: "Enviar Correo",
+        cancelButtonText: "Cancelar",
 
         preConfirm: () => {
             return [
@@ -140,13 +139,12 @@ async function sendEmail(email) {
     }
 }
 
-function addFile(){
+function addFile() {
     event.preventDefault();
     var file = $("#archivo").val();
     var nombre = $("#nombre").val();
     var descripcion = $("#descripcion").val();
-    var carpeta = $("#carpeta").val()
-
+    var carpeta = $("#carpeta").val();
 
     if (file == "" || nombre == "" || descripcion == "" || carpeta == "") {
         Swal.fire({
@@ -156,7 +154,6 @@ function addFile(){
         });
         return;
     }
-
 
     var url = $("#form-upload-contratista").attr("action");
     var parametros = new FormData($("#form-upload-contratista")[0]);
@@ -192,6 +189,9 @@ function addFile(){
                     title: "Oops...",
                     text: response["message"],
                 });
+                if (response["message"] == "Proyecto no existe!") {
+                    setTimeout((window.location.href = "/home"), 3000);
+                }
             }
         },
         error: function (r) {
@@ -200,7 +200,6 @@ function addFile(){
         },
     });
 }
-
 
 function deleteFile(id) {
     event.preventDefault();
@@ -259,7 +258,7 @@ function deleteFile(id) {
     });
 }
 
-function deleteFull(){
+function deleteFull() {
     event.preventDefault();
     Swal.fire({
         title: "Desea eliminar todos los archivos?, le recomendamos hacer un backup primero.",
@@ -315,12 +314,11 @@ function deleteFull(){
     });
 }
 
-function carpeta_filter(){
+function carpeta_filter() {
     $("#form-filter-contratista").submit();
 }
 
-function reset(){
-    window.location.replace("../../files/uploadFile/PRUEBA%201");
+function reset(proyectoId) {
+    console.log(proyectoId);
+    window.location.replace("../../files/uploadFile/"+proyectoId);
 }
-
-

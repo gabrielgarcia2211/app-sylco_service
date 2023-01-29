@@ -50,6 +50,9 @@ function addFile() {
                     title: "Oops...",
                     text: response["message"],
                 });
+                if(response["message"] == "Proyecto no existe!"){
+                    location.reload("/home");
+                }
             }
         },
         error: function (r) {

@@ -73,7 +73,7 @@
                                                 <div class="col-4">
                                                     <form id="formu-user-delete" action="{{route('user.delete')}}">
                                                         @csrf
-                                                        <button type="submit" class="btn btn-danger" style="width: 100%" id="btn-delete-proyecto" value="{{$dataUser[$m]->nit}}" onclick="return eliminarUsuario(value)"><i class="far fa-trash-alt"></i></button>
+                                                        <button type="submit" class="btn btn-danger" style="width: 100%" id="btn-delete-proyecto" value="{{$dataUser[$m]}}" onclick="return eliminarUsuario(value)"><i class="far fa-trash-alt"></i></button>
                                                     </form>
                                                 </div>
                                                 @if($dataUser[$m]->hasRole('Contratista') || $dataUser[$m]->hasRole('Aux'))

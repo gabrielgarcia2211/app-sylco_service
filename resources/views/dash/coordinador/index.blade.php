@@ -68,7 +68,7 @@
                                         </div>
                                         <div class="row no-gutters align-items-center">
                                             <div class="col-auto">
-                                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{App\Models\Proyecto::count()}}</div>
+                                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{App\Models\Proyecto::where('status', 0)->count()}}</div>
                                             </div>
                                             <div class="col">
                                                 <div class="progress progress-sm mr-2">
@@ -136,6 +136,37 @@
                         </div>
                         @endfor
                         @endisset
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <!-- Content Column -->
+                    <div class="col-lg-12 mb-6">
+
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Control de Seguridad</h6>
+                            </div>
+                            <div class="card-body">
+                                @isset($dataFiles)
+                                @if(count($dataFiles) > 0)
+                                <div class="col-12">
+                                    <a href="{{ route('contratista.backup') }}" target="" class="btn btn-info" style="width: 10%;float: right;">
+                                        <i class="fas fa-archive"></i>
+                                    </a>
+                                </div>
+                                <form id="form-full-delete" action="{{route('contratista.remove.all')}}">
+                                    @csrf
+                                    <button type="submit" class="btn btn-danger" style="width: 10%;float:right;margin-right: 10px" onclick="return deleteFull()"><i class="far fa-trash-alt"></i></button>
+                                </form>
+                                @endif
+                                @endisset
+
+                            </div>
+
+                        </div>
+
                     </div>
                 </div>
             </div>
